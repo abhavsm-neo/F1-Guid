@@ -5,20 +5,20 @@ const styles = `
 
   * { box-sizing: border-box; margin: 0; padding: 0; }
 
-  body {
+  html, body, #root {
+    width: 100%;
+    min-height: 100vh;
     background: #0a0a0f;
     color: #e8e8f0;
     font-family: 'Exo 2', sans-serif;
   }
 
   .f1-app {
+    width: 100%;
     min-height: 100vh;
     background: #0a0a0f;
     position: relative;
     overflow-x: hidden;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
   }
 
   .grid-bg {
@@ -92,6 +92,7 @@ const styles = `
     position: sticky;
     top: 0;
     z-index: 100;
+    width: 100%;
     justify-content: center;
   }
   .nav-inner {
@@ -127,8 +128,8 @@ const styles = `
   .main {
     padding: 40px 20px;
     max-width: 1200px;
-    margin: 0 auto;
     width: 100%;
+    margin: 0 auto;
   }
 
   /* SECTION HEADER */
