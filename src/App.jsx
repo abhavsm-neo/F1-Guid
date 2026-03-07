@@ -16,6 +16,9 @@ const styles = `
     background: #0a0a0f;
     position: relative;
     overflow-x: hidden;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
   }
 
   .grid-bg {
@@ -29,7 +32,14 @@ const styles = `
     z-index: 0;
   }
 
-  .content { position: relative; z-index: 1; }
+  .content { position: relative; z-index: 1; width: 100%; }
+
+  .hero-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    position: relative;
+    z-index: 1;
+  }
 
   /* HEADER */
   .hero {
@@ -39,6 +49,7 @@ const styles = `
     text-align: center;
     position: relative;
     overflow: hidden;
+    width: 100%;
   }
   .hero::before {
     content: 'F1';
@@ -81,6 +92,15 @@ const styles = `
     position: sticky;
     top: 0;
     z-index: 100;
+    justify-content: center;
+  }
+  .nav-inner {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+    justify-content: center;
+    max-width: 1200px;
+    width: 100%;
   }
   .nav-btn {
     padding: 8px 16px;
@@ -104,7 +124,12 @@ const styles = `
   }
 
   /* MAIN */
-  .main { padding: 40px 20px; max-width: 1200px; margin: 0 auto; }
+  .main {
+    padding: 40px 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+    width: 100%;
+  }
 
   /* SECTION HEADER */
   .section-title {
@@ -1253,11 +1278,13 @@ export default function F1Guide() {
             <div className="hero-sub">The Complete Beginner's Guide · 2018 – 2025</div>
           </div>
           <nav className="nav">
-            {SECTIONS.map(s => (
-              <button key={s.id} className={`nav-btn${active === s.id ? " active" : ""}`} onClick={() => setActive(s.id)}>
-                {s.label}
-              </button>
-            ))}
+            <div className="nav-inner">
+              {SECTIONS.map(s => (
+                <button key={s.id} className={`nav-btn${active === s.id ? " active" : ""}`} onClick={() => setActive(s.id)}>
+                  {s.label}
+                </button>
+              ))}
+            </div>
           </nav>
           <main className="main">
             {active === "how" && <HowItWorks />}
