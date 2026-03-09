@@ -74,6 +74,127 @@ const styles = `
     position: relative; z-index: 1;
   }
 
+  /* ── Countdown ── */
+  .countdown-wrap {
+    position: relative; z-index: 1;
+    margin-top: 18px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+  }
+  .countdown-label {
+    font-size: clamp(8px, 1.8vw, 11px);
+    color: #555;
+    letter-spacing: clamp(2px, 1vw, 5px);
+    text-transform: uppercase;
+    font-family: 'Orbitron', sans-serif;
+  }
+  .countdown-race {
+    font-size: clamp(10px, 2.5vw, 14px);
+    color: #e10600;
+    font-family: 'Orbitron', sans-serif;
+    font-weight: 700;
+    letter-spacing: 2px;
+  }
+  .countdown-tiles {
+    display: flex;
+    gap: clamp(6px, 2vw, 12px);
+    margin-top: 4px;
+  }
+  .countdown-tile {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 3px;
+  }
+  .countdown-num {
+    font-family: 'Orbitron', sans-serif;
+    font-size: clamp(20px, 5vw, 36px);
+    font-weight: 900;
+    color: #fff;
+    background: rgba(225,6,0,0.08);
+    border: 1px solid rgba(225,6,0,0.2);
+    border-radius: 4px;
+    padding: clamp(6px, 1.5vw, 10px) clamp(10px, 2.5vw, 18px);
+    min-width: clamp(44px, 10vw, 70px);
+    text-align: center;
+    line-height: 1;
+  }
+  .countdown-unit {
+    font-size: clamp(7px, 1.5vw, 9px);
+    color: #444;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    font-family: 'Orbitron', sans-serif;
+  }
+
+  /* ── Circuits ── */
+  .circuit-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 300px), 1fr));
+    gap: 14px;
+  }
+  .circuit-card {
+    background: #0d0d15;
+    border: 1px solid #1e1e2e;
+    border-radius: 4px;
+    overflow: hidden;
+    transition: border-color 0.2s, transform 0.2s;
+    cursor: pointer;
+  }
+  .circuit-card:hover { border-color: #e10600; transform: translateY(-2px); }
+  .circuit-card-header {
+    padding: 14px 16px 10px;
+    border-bottom: 1px solid #1a1a2a;
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+  }
+  .circuit-flag { font-size: 28px; line-height: 1; }
+  .circuit-name {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    color: #fff;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin-bottom: 3px;
+  }
+  .circuit-country { font-size: 11px; color: #555; }
+  .circuit-round {
+    margin-left: auto;
+    font-family: 'Orbitron', sans-serif;
+    font-size: 9px;
+    color: #e10600;
+    letter-spacing: 1px;
+    white-space: nowrap;
+  }
+  .circuit-body { padding: 12px 16px 14px; }
+  .circuit-stats {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    margin-bottom: 10px;
+  }
+  .circuit-stat-item { display: flex; flex-direction: column; gap: 2px; }
+  .circuit-stat-lbl { font-size: 9px; color: #444; text-transform: uppercase; letter-spacing: 1px; font-family: 'Orbitron', sans-serif; }
+  .circuit-stat-val { font-size: 12px; color: #ccc; font-weight: 600; }
+  .circuit-desc { font-size: 12px; color: #666; line-height: 1.7; margin-top: 8px; }
+  .circuit-tag {
+    display: inline-block;
+    margin: 3px 3px 0 0;
+    padding: 2px 7px;
+    background: rgba(225,6,0,0.08);
+    border: 1px solid rgba(225,6,0,0.2);
+    border-radius: 2px;
+    font-size: 9px;
+    color: #e10600;
+    letter-spacing: 1px;
+    font-family: 'Orbitron', sans-serif;
+    text-transform: uppercase;
+  }
+
   .nav {
     display: flex;
     justify-content: center;
@@ -424,6 +545,151 @@ const styles = `
   .tag-out { background: rgba(225,6,0,0.15); color: #e10600; border: 1px solid rgba(225,6,0,0.3); }
   .tag-reason { background: rgba(255,200,0,0.1); color: #ffc800; border: 1px solid rgba(255,200,0,0.2); }
 
+  /* ── Glossary ── */
+  .glossary-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 280px), 1fr));
+    gap: 10px;
+  }
+  .glossary-card {
+    background: #0d0d15;
+    border: 1px solid #1e1e2e;
+    border-left: 3px solid #e10600;
+    border-radius: 3px;
+    padding: 14px 16px;
+    cursor: pointer;
+    transition: border-color 0.2s, background 0.2s;
+  }
+  .glossary-card:hover { background: #10101a; border-color: #e10600; }
+  .glossary-term {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    color: #e10600;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin-bottom: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .glossary-def { font-size: 12px; color: #777; line-height: 1.7; }
+  .glossary-cat {
+    display: inline-block;
+    padding: 1px 6px;
+    border-radius: 2px;
+    font-size: 8px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    font-family: 'Orbitron', sans-serif;
+    margin-left: 6px;
+  }
+
+  /* ── Rules ── */
+  .rule-card {
+    background: #0d0d15;
+    border: 1px solid #1e1e2e;
+    border-radius: 4px;
+    overflow: hidden;
+    margin-bottom: 10px;
+    transition: border-color 0.2s;
+  }
+  .rule-card:hover { border-color: #333; }
+  .rule-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 14px 18px;
+    cursor: pointer;
+    user-select: none;
+  }
+  .rule-icon { font-size: 20px; flex-shrink: 0; }
+  .rule-title {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    color: #fff;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    flex: 1;
+  }
+  .rule-chevron { color: #555; font-size: 12px; transition: transform 0.2s; }
+  .rule-chevron.open { transform: rotate(180deg); color: #e10600; }
+  .rule-body { padding: 0 18px 16px; border-top: 1px solid #1a1a2a; }
+  .rule-plain { font-size: 13px; color: #aaa; line-height: 1.8; margin-top: 12px; }
+  .rule-example {
+    margin-top: 10px;
+    padding: 10px 14px;
+    background: rgba(225,6,0,0.05);
+    border-left: 3px solid #e10600;
+    font-size: 12px;
+    color: #888;
+    line-height: 1.7;
+    border-radius: 0 2px 2px 0;
+  }
+
+  /* ── Car Compare ── */
+  .compare-table { width: 100%; border-collapse: collapse; }
+  .compare-table th {
+    padding: 10px 14px;
+    font-family: 'Orbitron', sans-serif;
+    font-size: 10px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    text-align: left;
+  }
+  .compare-table td { padding: 10px 14px; border-bottom: 1px solid #1a1a2a; font-size: 13px; color: #bbb; vertical-align: top; }
+  .compare-table tr:hover td { background: #0d0d15; }
+  .compare-aspect { font-weight: 700; color: #666; font-size: 10px; text-transform: uppercase; letter-spacing: 1px; font-family: 'Orbitron', sans-serif; }
+  .compare-winner { color: #00dc78; font-weight: 700; }
+  .compare-badge {
+    display: inline-block; padding: 2px 7px; border-radius: 2px;
+    font-size: 9px; font-weight: 700; letter-spacing: 1px; font-family: 'Orbitron', sans-serif;
+    text-transform: uppercase; margin-bottom: 3px;
+  }
+
+  /* ── Records ── */
+  .records-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 340px), 1fr));
+    gap: 14px;
+  }
+  .record-card {
+    background: #0d0d15;
+    border: 1px solid #1e1e2e;
+    border-radius: 4px;
+    overflow: hidden;
+  }
+  .record-header {
+    background: linear-gradient(135deg, #12121c, #0d0d15);
+    padding: 12px 16px;
+    border-bottom: 1px solid #1e1e2e;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .record-icon { font-size: 20px; }
+  .record-title { font-family: 'Orbitron', sans-serif; font-size: 10px; color: #e10600; letter-spacing: 2px; text-transform: uppercase; font-weight: 700; }
+  .record-body { padding: 0; }
+  .record-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 16px;
+    border-bottom: 1px solid #12121c;
+    transition: background 0.15s;
+  }
+  .record-row:hover { background: #10101a; }
+  .record-rank {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 10px;
+    font-weight: 900;
+    min-width: 22px;
+    text-align: center;
+  }
+  .record-driver-name { font-size: 13px; color: #ccc; font-weight: 600; flex: 1; }
+  .record-value { font-family: 'Orbitron', sans-serif; font-size: 13px; font-weight: 700; color: #e10600; }
+
   @media (max-width: 600px) {
     .points-wrap { grid-template-columns: 1fr; }
     .card-grid { grid-template-columns: 1fr; }
@@ -526,6 +792,16 @@ const DRIVER_HISTORY = [
     { team: "Haas", out: "Kevin Magnussen", in: "Oliver Bearman", reason: "Magnussen let go after years of solid service. Bearman, 19, earned his seat through stunning substitute performances in 2024." },
     { team: "Alpine", out: "Esteban Ocon", in: "Jack Doohan", reason: "Ocon moved to Haas. Doohan steps up from the Alpine junior programme for his debut year." },
     { team: "RB / VCARB", out: "Ricciardo / Lawson (promoted)", in: "Isack Hadjar", reason: "Lawson promoted to Red Bull. Hadjar, Red Bull's top junior, fills the seat alongside Tsunoda." },
+  ]},
+  { year: "2026", title: "The New Era — A Brand New Grid", context: "The biggest regulation reset in F1 history brings sweeping changes to the driver market too. Two entirely new teams join the grid, a legendary champion switches teams again, and several long-serving drivers lose their seats. F1 has 22 seats for the first time ever.", changes: [
+    { team: "Cadillac F1 (NEW)", out: "N/A — brand new team", in: "Valtteri Bottas & Sergio Perez", reason: "F1's 11th team makes its debut. Both Bottas and Perez sat out 2025 after losing their seats. Cadillac signed them for their combined 530+ race starts of experience — exactly what a new team needs." },
+    { team: "Audi F1 (née Sauber)", out: "Hülkenberg & Bortoleto (retained)", in: "Hülkenberg & Bortoleto (same drivers)", reason: "No change — Audi decided continuity was more valuable than disruption in their first year as a works constructor. The team simply rebrands from Sauber to Audi." },
+    { team: "Alpine", out: "Jack Doohan", in: "Franco Colapinto", reason: "Doohan was dropped mid-2025 after struggling for results. Colapinto, who impressed as a Williams stand-in in 2024, takes the seat. A brutal but unsurprising call from Alpine." },
+    { team: "Red Bull Racing", out: "Liam Lawson", in: "Isack Hadjar", reason: "Lawson was dropped after failing to match Verstappen's pace in 2025. Hadjar, who impressed at Racing Bulls alongside Tsunoda, earns the promotion — the seat Tsunoda was controversially overlooked for in 2024." },
+    { team: "Aston Martin", out: "Lance Stroll & Fernando Alonso", in: "Lance Stroll & Fernando Alonso (retained)", reason: "Alonso, now 44, keeps racing — defying all expectations once again. Stroll stays by virtue of his father owning the team. Aston Martin continues with Honda power units into the 2026 era." },
+    { team: "Racing Bulls", out: "Isack Hadjar (promoted)", in: "Arvid Lindblad", reason: "Hadjar's promotion to Red Bull opens a seat at Racing Bulls. 18-year-old British-Swedish rookie Arvid Lindblad — a Red Bull junior — joins Tsunoda, who stays put having never left the team." },
+    { team: "Haas", out: "Esteban Ocon", in: "Esteban Ocon & Oliver Bearman (retained)", reason: "No change to the Haas lineup. Ocon and Bearman continue into the new regulations. A stable environment heading into the 2026 reset." },
+    { team: "Williams", out: "Alexander Albon & Carlos Sainz (retained)", in: "Alexander Albon & Carlos Sainz (retained)", reason: "Both drivers stay. Sainz remains at Williams to continue their rebuild into the new era. Albon, whose contract was extended, is a key part of the team's long-term culture." },
   ]},
 ];
 
@@ -777,10 +1053,13 @@ function TeamsSection() {
 function HistorySection() {
   return (
     <div>
-      <div className="section-title">Driver <span>Changes</span> 2018–2025</div>
+      <div className="section-title">Driver <span>Changes</span> 2018–2026</div>
       <div className="section-line" />
+      <div style={{ display: "inline-flex", alignItems: "center", gap: 6, padding: "4px 10px", background: "rgba(0,220,120,0.08)", border: "1px solid rgba(0,220,120,0.25)", borderRadius: 2, marginBottom: 12 }}>
+        <span style={{ fontSize: 10, color: "#00dc78", fontFamily: "Orbitron", letterSpacing: 1 }}>NEW FOR 2026 — F1 now has 22 seats with the arrival of Cadillac</span>
+      </div>
       <p style={{ marginBottom: 16, fontSize: 13, color: "#666", lineHeight: 1.7 }}>
-        F1 has only 20 seats. Drivers are dropped, promoted, and shuffled constantly. Here's every major move from 2018 to 2025 — and the real reason behind each one.
+        F1 has only 20 seats (22 from 2026). Drivers are dropped, promoted, and shuffled constantly. Here's every major move from 2018 to 2026 — and the real reason behind each one.
       </p>
       <div className="timeline">
         {DRIVER_HISTORY.map(era => (
@@ -1195,13 +1474,521 @@ function ResultsSection() {
   );
 }
 
+// ─── GLOSSARY DATA ───────────────────────────────────────────────────────────
+const GLOSSARY = [
+  { term: "Undercut", cat: "Strategy", catColor: "#3671C6", def: "Pitting before your rival to fit fresh tyres, hoping the extra pace on new rubber lets you emerge ahead of them after they pit. One of F1's most common tactical weapons." },
+  { term: "Overcut", cat: "Strategy", catColor: "#3671C6", def: "The opposite of an undercut — staying out longer than a rival on old tyres, hoping track position and their slower in-lap gives you the advantage when you finally pit." },
+  { term: "VSC", cat: "Safety", catColor: "#ffc800", def: "Virtual Safety Car. All drivers must slow to a mandated speed. Used for minor incidents. Unlike a full Safety Car, the gaps between cars are frozen — making it less race-changing but still strategically important." },
+  { term: "Safety Car", cat: "Safety", catColor: "#ffc800", def: "A physical car deployed on track after serious incidents. All cars bunch up behind it, gaps are erased, and the pit lane becomes a strategic battleground as teams time their stops." },
+  { term: "Parc Fermé", cat: "Regulations", catColor: "#e10600", def: "French for 'closed park.' After qualifying, cars are placed in parc fermé where only limited work is allowed. Teams cannot make major setup changes. The car you qualify with is essentially the car you race." },
+  { term: "DRS", cat: "Tech", catColor: "#00dc78", def: "Drag Reduction System. Drivers within 1 second of the car ahead can open a flap in the rear wing on designated straights, reducing drag and adding ~10-15 km/h. Being replaced by active aero in 2026." },
+  { term: "Tyre Compound", cat: "Tyres", catColor: "#FF8000", def: "The type of Pirelli tyre. Soft (red) = fastest but wears quickest. Medium (yellow) = balanced. Hard (white) = lasts longest but slowest. Teams must use at least two different compounds per race." },
+  { term: "Degradation", cat: "Tyres", catColor: "#FF8000", def: "How quickly a tyre's performance drops as it wears. High-deg circuits destroy tyres faster, forcing more pit stops and creating strategic variety. Low-deg races tend to be processional." },
+  { term: "Graining", cat: "Tyres", catColor: "#FF8000", def: "A tyre condition where thin strips of rubber peel off and stick back to the surface, causing heavy vibration and slower lap times. Often temporary — drivers sometimes 'cure' it by pushing harder." },
+  { term: "Pole Position", cat: "Qualifying", catColor: "#c0c0c0", def: "Starting first on the grid, earned by setting the fastest lap in Q3. Pole is hugely valuable — starting first, especially at narrow circuits like Monaco, often guarantees victory." },
+  { term: "Q1 / Q2 / Q3", cat: "Qualifying", catColor: "#c0c0c0", def: "The three rounds of qualifying. Q1: all 20 drivers, slowest 5 eliminated. Q2: 15 drivers, slowest 5 eliminated. Q3: the top 10 fight for pole position on a single flying lap each." },
+  { term: "Lap Delta", cat: "Racing", catColor: "#888", def: "The time difference between a driver's current lap and a reference lap (their best, or the VSC target). Displayed on timing screens as + (slower) or − (faster) than the benchmark." },
+  { term: "Outlap", cat: "Strategy", catColor: "#3671C6", def: "The lap a driver does immediately after leaving the pits on cold tyres. Drivers heat their tyres carefully on an outlap before going fast. A slow outlap loses track position; too aggressive wrecks the tyres." },
+  { term: "Purple / Green / Yellow Sector", cat: "Timing", catColor: "#888", def: "Sector colours on timing screens. Purple = fastest anyone has gone in that sector this session. Green = faster than your own previous best. Yellow = slower than your best." },
+  { term: "ERS / MGU-K / MGU-H", cat: "Tech", catColor: "#00dc78", def: "Energy Recovery Systems. MGU-K harvests kinetic energy under braking (like KERS). MGU-H harvests heat from the turbo. Combined they produce up to 160bhp of extra power, deployable by drivers." },
+  { term: "Fuel Load", cat: "Strategy", catColor: "#3671C6", def: "How much fuel a car carries at the start. More fuel = heavier car = slower, but you can run longer. Starting heavy means you're quicker at the end when the fuel burns off. Teams calculate the exact minimum fuel needed." },
+  { term: "Pit Stop Window", cat: "Strategy", catColor: "#3671C6", def: "The range of laps within which a team plans to make their pit stop. Going too early or late hurts — teams watch tyre life, track position and rivals to find the optimal moment." },
+  { term: "Formation Lap", cat: "Racing", catColor: "#888", def: "The warm-up lap before the race where drivers weave to heat their tyres and brakes. Drivers then form up on the grid in qualifying order before the race starts." },
+  { term: "Podium", cat: "Racing", catColor: "#888", def: "The top three finishers in a race — 1st, 2nd and 3rd. The podium ceremony with national anthems and champagne is one of F1's iconic traditions." },
+  { term: "Fastest Lap", cat: "Racing", catColor: "#888", def: "The quickest single lap set by any driver during the race. Awards 1 bonus championship point — but only if you finish in the top 10. Often attempted on the final lap on fresh soft tyres." },
+  { term: "DNF", cat: "Racing", catColor: "#e10600", def: "Did Not Finish. A retirement from the race due to mechanical failure, accident or driver error. DNFs can be season-defining — a single retirement at the wrong moment can cost a championship." },
+  { term: "Backmarker / Lapped Car", cat: "Racing", catColor: "#888", def: "A car that has been lapped (passed) by the race leader. Blue flags are waved to instruct backmarkers to let faster cars through. Failure to respond to blue flags results in penalties." },
+  { term: "Blue Flag", cat: "Flags", catColor: "#3671C6", def: "Waved to tell a driver they are about to be lapped and must let the faster car through. Ignoring three blue flags earns a time penalty." },
+  { term: "Red Flag", cat: "Flags", catColor: "#e10600", def: "Race stopped. Usually due to a serious accident or unsafe conditions. Cars return to the pit lane. The race restarts from a standing or rolling start, sometimes with a reduced number of laps." },
+  { term: "SC Delta", cat: "Safety", catColor: "#ffc800", def: "Under a Virtual Safety Car, drivers must not exceed a target lap time (the VSC delta). Going faster results in a penalty. Teams watch the delta carefully to pit at the optimal moment during the VSC period." },
+  { term: "Tow", cat: "Racing", catColor: "#888", def: "The aerodynamic slipstream effect of following closely behind another car. Reduces drag and increases top speed on straights. Used tactically in qualifying — teams sometimes sacrifice their own lap to give a teammate a tow." },
+  { term: "Floor", cat: "Tech", catColor: "#00dc78", def: "The underside of the car, which generates the majority of downforce through ground effect in the current regulations. The floor is one of the most sensitive and complex parts of a modern F1 car." },
+  { term: "Porpoising", cat: "Tech", catColor: "#00dc78", def: "A bouncing phenomenon experienced by ground-effect cars. When the floor generates too much downforce and stalls aerodynamically, the car bounces violently — a major issue in 2022 when the current regs were introduced." },
+  { term: "Budget Cap", cat: "Regulations", catColor: "#e10600", def: "Introduced in 2021, limits each team's annual spending (currently ~$135M). Designed to stop big teams spending their way to dominance. Applies to most operational costs but excludes driver salaries and marketing." },
+  { term: "Constructors' Championship", cat: "Championship", catColor: "#cd7f32", def: "The team prize — awarded to the team (constructor) whose two drivers score the most combined points. Arguably more valuable than the drivers' title as it determines prize money and prestige." },
+];
+
+const GLOSSARY_CATS = ["All", "Strategy", "Safety", "Regulations", "Tech", "Tyres", "Qualifying", "Racing", "Flags", "Championship", "Timing"];
+
+// ─── RULES DATA ───────────────────────────────────────────────────────────────
+const F1_RULES = [
+  {
+    icon: "🏎️", title: "The 107% Rule",
+    plain: "In Q1, every driver must set a lap time within 107% of the fastest time. If they don't, they're not allowed to start the race — unless the stewards make an exception (e.g. a mechanical problem prevented a proper lap).",
+    example: "Example: If the fastest Q1 lap is 1:30.000, every driver must go faster than 1:36.300. Anyone slower doesn't start Sunday."
+  },
+  {
+    icon: "🔄", title: "The Two-Compound Rule",
+    plain: "Every driver must use at least two different tyre compounds during a dry race (e.g. Soft + Medium). If the race starts behind the Safety Car, or there is a red flag, this rule may be waived depending on circumstances.",
+    example: "Example: If you start on Mediums, you must pit at some point and switch to either Softs or Hards — you cannot run Mediums all race."
+  },
+  {
+    icon: "🚫", title: "Track Limits",
+    plain: "Drivers must keep at least two wheels inside the white lines that define the track. Going all four wheels outside — even if it's faster — results in that lap time being deleted. In races, repeat violations earn time penalties.",
+    example: "Example: Verstappen had his fastest lap deleted at Silverstone 2024 for running wide at Turn 9 with all four wheels outside the white lines."
+  },
+  {
+    icon: "⚖️", title: "Parc Fermé Rules",
+    plain: "After Q1 begins, teams can only make limited changes to the car until the race ends. No setup changes allowed — only fixing genuine damage or safety issues. This means the car you qualify in is the car you race in.",
+    example: "Example: If it's dry in qualifying but wet race day, teams cannot change their suspension setup. They must race with a dry-weather setup in the wet."
+  },
+  {
+    icon: "🔋", title: "Power Unit Allocation",
+    plain: "Each driver gets a limited number of power unit components per season. In 2026, drivers get 4 internal combustion engines, 4 MGU-Ks and other components. Exceeding the allocation triggers automatic grid penalties (5 or 10 places back, or a pit lane start).",
+    example: "Example: Verstappen used his 5th ICE at Monza 2023, earning an automatic 10-place grid penalty."
+  },
+  {
+    icon: "🏁", title: "Sprint Weekends",
+    plain: "Around 6 races per year use a Sprint format. There is no FP2 or FP3 — instead, Sprint Qualifying sets the grid for a mini race (roughly 1/3 of grand prix distance). Sprint results award half-points (8 down to 1) separately from the main race.",
+    example: "Example: At the Bahrain Sprint, Verstappen winning earns 8 points. He then qualifies normally on Saturday evening for Sunday's full grand prix."
+  },
+  {
+    icon: "🔵", title: "Blue Flag Rules",
+    plain: "When a driver is about to be lapped by a car more than one lap ahead, marshals wave blue flags. The slower driver must let the faster car past within three flag signals. Ignoring blue flags earns a 5-second time penalty.",
+    example: "Example: If the race leader is about to lap Bottas, blue flags appear. Bottas must move aside at the next corner or DRS zone."
+  },
+  {
+    icon: "⏱️", title: "Time Penalties",
+    plain: "Stewards issue time penalties (5s, 10s) for infringements like unsafe releases, ignoring blue flags, or causing collisions. The time is added to your final race time. A drive-through or stop-go penalty must be served physically in the pits.",
+    example: "Example: Hamilton gets a 5-second penalty for forcing a rival off track. If he finishes 3 seconds ahead of the car behind, that car is promoted above him."
+  },
+  {
+    icon: "🌧️", title: "Wet Weather Rules",
+    plain: "In wet conditions, only Intermediates or Full Wet tyres can be used (slick tyres are too dangerous). The race director decides when conditions are safe to run slicks again. A Safety Car start may be used if it's too wet to race at full speed.",
+    example: "Example: At Spa 2021, the race was started behind the Safety Car due to heavy rain, completed only 2 laps, and counted as a half-points race."
+  },
+  {
+    icon: "🏆", title: "The Concorde Agreement",
+    plain: "The commercial contract between F1, the FIA and all teams that governs how prize money is split, how teams vote on rule changes, and the overall structure of the sport. Teams must sign it to compete. Its details are kept confidential.",
+    example: "Example: When Andretti tried to enter F1 in 2024, existing teams had influence over the process partly because of commercial rights protections in the Concorde Agreement."
+  },
+];
+
+// ─── CAR COMPARISON DATA ─────────────────────────────────────────────────────
+const CAR_COMPARE = [
+  { aspect: "Power Unit", icon: "⚡", col2025: "1.6L V6 Turbo Hybrid\n~1,000 bhp total\n~80% ICE / ~20% electric", col2026: "1.6L V6 Turbo Hybrid\n~1,200 bhp total\n~50% ICE / ~50% electric", winner: 2026, note: "Massive increase in electrical power — completely changes engine architecture." },
+  { aspect: "ERS Output", icon: "🔋", col2025: "MGU-K: 120 kW\nMGU-H: yes\n~160 bhp electric boost", col2026: "MGU-K: 350 kW\nMGU-H: removed\n~470 bhp electric boost", winner: 2026, note: "The MGU-H (complex, expensive) is removed. MGU-K power nearly triples." },
+  { aspect: "Aerodynamics", icon: "💨", col2025: "Fixed wings\nDRS opens rear wing\nGround effect floor", col2026: "Active aero — moveable front & rear wings\nNo DRS\nGround effect retained", winner: 2026, note: "DRS is gone. Cars automatically adjust their aerodynamics for straight-line speed." },
+  { aspect: "Weight", icon: "⚖️", col2025: "~798 kg minimum\nHeavier due to complex MGU-H", col2026: "~720 kg target\n~80 kg lighter than 2025", winner: 2026, note: "Removing MGU-H and simplifying components brings weight down significantly." },
+  { aspect: "Fuel Type", icon: "⛽", col2025: "E10 fuel (10% bio)\n~110 kg per race", col2026: "E20 fuel (20% bio) minimum\nLess fuel needed due to electrification", winner: 2026, note: "More sustainable fuel — part of F1's path to carbon neutrality by 2030." },
+  { aspect: "Overtaking", icon: "🏁", col2025: "DRS-dependent on straights\nDirty air still an issue", col2026: "Active aero replaces DRS\nDesigned for closer racing without artificial aids", winner: 2026, note: "Goal is to make overtaking feel more natural and less dependent on DRS highway passes." },
+  { aspect: "Cost", icon: "💰", col2025: "PU development frozen\nStabilised costs", col2026: "Brand new PU from scratch\nHuge development costs for new entrants like Audi, Ford/Red Bull", winner: 2025, note: "2026 is extremely expensive for engine manufacturers — a major investment cycle." },
+  { aspect: "Tyre Size", icon: "🔴", col2025: "18-inch Pirelli\n(introduced 2022)", col2026: "18-inch Pirelli retained\nSimilar compound range expected", winner: null, note: "No change to tyre specification — continuity across the regulation shift." },
+  { aspect: "New Manufacturers", icon: "🏭", col2025: "Mercedes, Ferrari, Renault, Honda, Audi (prep)", col2026: "Mercedes, Ferrari, Audi (works), Ford RBPT, Mercedes (Alpine)\nRenault exit", winner: 2026, note: "Audi enters as a full works constructor. Ford returns to F1. Renault exits as PU supplier." },
+  { aspect: "Max Speed", icon: "🚀", col2025: "~360 km/h top speed\nMonza, Baku, Las Vegas", col2026: "Expected ~355–365 km/h\nMore electric torque, less drag with active aero", winner: null, note: "Top speeds likely similar — extra electric power balanced by different aero philosophy." },
+];
+
+// ─── ALL-TIME RECORDS DATA ────────────────────────────────────────────────────
+const ALL_TIME_RECORDS = [
+  {
+    icon: "🏆", title: "Most Race Wins",
+    rows: [
+      { rank: 1, name: "Lewis Hamilton 🇬🇧", value: "103", note: "2007–present" },
+      { rank: 2, name: "Michael Schumacher 🇩🇪", value: "91", note: "1991–2012" },
+      { rank: 3, name: "Max Verstappen 🇳🇱", value: "62+", note: "2015–present" },
+      { rank: 4, name: "Sebastian Vettel 🇩🇪", value: "53", note: "2007–2022" },
+      { rank: 5, name: "Alain Prost 🇫🇷", value: "51", note: "1980–1993" },
+    ]
+  },
+  {
+    icon: "⭐", title: "Most Championships",
+    rows: [
+      { rank: 1, name: "Lewis Hamilton 🇬🇧", value: "7", note: "2008, 2014–2015, 2017–2020" },
+      { rank: 1, name: "Michael Schumacher 🇩🇪", value: "7", note: "1994–1995, 2000–2004" },
+      { rank: 3, name: "Max Verstappen 🇳🇱", value: "4", note: "2021–2024" },
+      { rank: 3, name: "Alain Prost 🇫🇷", value: "4", note: "1985–1986, 1989, 1993" },
+      { rank: 3, name: "Ayrton Senna 🇧🇷", value: "3", note: "1988, 1990–1991" },
+    ]
+  },
+  {
+    icon: "🎯", title: "Most Pole Positions",
+    rows: [
+      { rank: 1, name: "Lewis Hamilton 🇬🇧", value: "104", note: "2007–present" },
+      { rank: 2, name: "Michael Schumacher 🇩🇪", value: "68", note: "1991–2012" },
+      { rank: 3, name: "Ayrton Senna 🇧🇷", value: "65", note: "1984–1994" },
+      { rank: 4, name: "Sebastian Vettel 🇩🇪", value: "57", note: "2007–2022" },
+      { rank: 5, name: "Max Verstappen 🇳🇱", value: "42+", note: "2015–present" },
+    ]
+  },
+  {
+    icon: "⚡", title: "Most Fastest Laps",
+    rows: [
+      { rank: 1, name: "Michael Schumacher 🇩🇪", value: "77", note: "1991–2012" },
+      { rank: 2, name: "Lewis Hamilton 🇬🇧", value: "67", note: "2007–present" },
+      { rank: 3, name: "Kimi Räikkönen 🇫🇮", value: "46", note: "2001–2021" },
+      { rank: 4, name: "Alain Prost 🇫🇷", value: "41", note: "1980–1993" },
+      { rank: 5, name: "Max Verstappen 🇳🇱", value: "33+", note: "2015–present" },
+    ]
+  },
+  {
+    icon: "🏁", title: "Most Race Starts",
+    rows: [
+      { rank: 1, name: "Fernando Alonso 🇪🇸", value: "400+", note: "2001–present" },
+      { rank: 2, name: "Kimi Räikkönen 🇫🇮", value: "349", note: "2001–2021" },
+      { rank: 3, name: "Rubens Barrichello 🇧🇷", value: "326", note: "1993–2011" },
+      { rank: 4, name: "Michael Schumacher 🇩🇪", value: "308", note: "1991–2012" },
+      { rank: 5, name: "Lewis Hamilton 🇬🇧", value: "350+", note: "2007–present" },
+    ]
+  },
+  {
+    icon: "🏅", title: "Most Podiums",
+    rows: [
+      { rank: 1, name: "Lewis Hamilton 🇬🇧", value: "201", note: "2007–present" },
+      { rank: 2, name: "Michael Schumacher 🇩🇪", value: "155", note: "1991–2012" },
+      { rank: 3, name: "Sebastian Vettel 🇩🇪", value: "122", note: "2007–2022" },
+      { rank: 4, name: "Max Verstappen 🇳🇱", value: "112+", note: "2015–present" },
+      { rank: 5, name: "Alain Prost 🇫🇷", value: "106", note: "1980–1993" },
+    ]
+  },
+];
+
+// ─── GLOSSARY SECTION ─────────────────────────────────────────────────────────
+function GlossarySection() {
+  const [search, setSearch] = useState("");
+  const [cat, setCat] = useState("All");
+  const [expanded, setExpanded] = useState({});
+
+  const filtered = GLOSSARY.filter(g => {
+    const q = search.toLowerCase();
+    const matchSearch = g.term.toLowerCase().includes(q) || g.def.toLowerCase().includes(q);
+    const matchCat = cat === "All" || g.cat === cat;
+    return matchSearch && matchCat;
+  });
+
+  return (
+    <div>
+      <div className="section-title">F1 <span>Glossary</span></div>
+      <div className="section-line" />
+      <p style={{ fontSize: 13, color: "#666", lineHeight: 1.7, marginBottom: 16 }}>
+        Every term you'll hear during a race weekend — explained in plain English. Tap any card to expand.
+      </p>
+      <div className="search-wrap">
+        <span className="search-icon">🔍</span>
+        <input className="search-input" placeholder="Search terms..." value={search} onChange={e => setSearch(e.target.value)} />
+      </div>
+      <div className="filter-row">
+        {GLOSSARY_CATS.map(c => (
+          <button key={c} className={`filter-pill${cat === c ? " active" : ""}`} onClick={() => setCat(c)}>{c}</button>
+        ))}
+      </div>
+      <div className="glossary-grid">
+        {filtered.map(g => (
+          <div key={g.term} className="glossary-card" onClick={() => setExpanded(e => ({ ...e, [g.term]: !e[g.term] }))}>
+            <div className="glossary-term">
+              <span>{g.term}</span>
+              <span>
+                <span className="glossary-cat" style={{ background: g.catColor + "22", color: g.catColor, border: `1px solid ${g.catColor}44` }}>{g.cat}</span>
+                <span style={{ color: "#555", marginLeft: 8, fontSize: 10 }}>{expanded[g.term] ? "▲" : "▼"}</span>
+              </span>
+            </div>
+            {expanded[g.term] && <div className="glossary-def">{g.def}</div>}
+            {!expanded[g.term] && <div className="glossary-def" style={{ display: "-webkit-box", WebkitLineClamp: 2, WebkitBoxOrient: "vertical", overflow: "hidden" }}>{g.def}</div>}
+          </div>
+        ))}
+      </div>
+      {filtered.length === 0 && <div style={{ color: "#555", textAlign: "center", padding: 40 }}>No terms found</div>}
+    </div>
+  );
+}
+
+// ─── RULES SECTION ────────────────────────────────────────────────────────────
+function RulesSection() {
+  const [open, setOpen] = useState(null);
+  return (
+    <div>
+      <div className="section-title">Explain <span>The Rules</span></div>
+      <div className="section-line" />
+      <p style={{ fontSize: 13, color: "#666", lineHeight: 1.7, marginBottom: 20 }}>
+        F1's rulebook is enormous. Here are the most confusing rules explained the way a friend would explain them — with real examples.
+      </p>
+      {F1_RULES.map((rule, i) => (
+        <div key={i} className="rule-card">
+          <div className="rule-header" onClick={() => setOpen(open === i ? null : i)}>
+            <span className="rule-icon">{rule.icon}</span>
+            <span className="rule-title">{rule.title}</span>
+            <span className={`rule-chevron${open === i ? " open" : ""}`}>▼</span>
+          </div>
+          {open === i && (
+            <div className="rule-body">
+              <p className="rule-plain">{rule.plain}</p>
+              <div className="rule-example">📌 {rule.example}</div>
+            </div>
+          )}
+        </div>
+      ))}
+    </div>
+  );
+}
+
+// ─── CAR COMPARISON SECTION ───────────────────────────────────────────────────
+function CarCompareSection() {
+  return (
+    <div>
+      <div className="section-title">2025 vs <span>2026 Cars</span></div>
+      <div className="section-line" />
+      <p style={{ fontSize: 13, color: "#666", lineHeight: 1.7, marginBottom: 20 }}>
+        2026 is the biggest regulation reset since 2014. Here's exactly what's changed between the two eras, side by side.
+      </p>
+      <div style={{ overflowX: "auto" }}>
+        <table className="compare-table" style={{ minWidth: 600 }}>
+          <thead>
+            <tr>
+              <th style={{ background: "#0d0d15", color: "#555", width: 120 }}>Aspect</th>
+              <th style={{ background: "#12121c", color: "#888", width: "38%" }}>2025 Car</th>
+              <th style={{ background: "#1a0505", color: "#e10600", width: "38%" }}>2026 Car</th>
+            </tr>
+          </thead>
+          <tbody>
+            {CAR_COMPARE.map(row => (
+              <tr key={row.aspect}>
+                <td>
+                  <div style={{ fontSize: 16, marginBottom: 3 }}>{row.icon}</div>
+                  <div className="compare-aspect">{row.aspect}</div>
+                </td>
+                <td style={{ borderLeft: "1px solid #1a1a2a", background: row.winner === 2025 ? "rgba(0,220,120,0.04)" : "transparent" }}>
+                  {row.winner === 2025 && <span className="compare-badge" style={{ background: "rgba(0,220,120,0.15)", color: "#00dc78", border: "1px solid rgba(0,220,120,0.3)" }}>BETTER</span>}
+                  <div style={{ whiteSpace: "pre-line", color: "#aaa", fontSize: 12, lineHeight: 1.7 }}>{row.col2025}</div>
+                </td>
+                <td style={{ borderLeft: "1px solid #1a1a2a", background: row.winner === 2026 ? "rgba(225,6,0,0.04)" : "transparent" }}>
+                  {row.winner === 2026 && <span className="compare-badge" style={{ background: "rgba(225,6,0,0.12)", color: "#e10600", border: "1px solid rgba(225,6,0,0.3)" }}>NEW ERA</span>}
+                  <div style={{ whiteSpace: "pre-line", color: row.winner === 2026 ? "#fff" : "#aaa", fontSize: 12, lineHeight: 1.7 }}>{row.col2026}</div>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+      <div className="card" style={{ marginTop: 20, borderLeft: "3px solid #e10600" }}>
+        <div style={{ fontFamily: "Orbitron", fontSize: 10, color: "#e10600", letterSpacing: 2, marginBottom: 8 }}>THE BIG PICTURE</div>
+        <p style={{ fontSize: 13, color: "#aaa", lineHeight: 1.8 }}>
+          The 2026 regulations represent the most ambitious overhaul in F1 history. The shift to 50/50 electric/combustion power, the removal of DRS, active aerodynamics, and the arrival of Audi and Ford all happen simultaneously. Every team starts from scratch. History shows that regulation resets create new winners — 2026 could change everything.
+        </p>
+      </div>
+    </div>
+  );
+}
+
+// ─── RECORDS SECTION ──────────────────────────────────────────────────────────
+function RecordsSection() {
+  return (
+    <div>
+      <div className="section-title">All-Time <span>Records</span></div>
+      <div className="section-line" />
+      <p style={{ fontSize: 13, color: "#666", lineHeight: 1.7, marginBottom: 20 }}>
+        F1 spans 75+ years and hundreds of drivers. Here are the records that define greatness.
+      </p>
+      <div className="records-grid">
+        {ALL_TIME_RECORDS.map(cat => (
+          <div key={cat.title} className="record-card">
+            <div className="record-header">
+              <span className="record-icon">{cat.icon}</span>
+              <span className="record-title">{cat.title}</span>
+            </div>
+            <div className="record-body">
+              {cat.rows.map((row, i) => (
+                <div key={i} className="record-row">
+                  <span className="record-rank" style={{ color: row.rank === 1 ? "#ffd700" : row.rank === 2 ? "#c0c0c0" : row.rank === 3 ? "#cd7f32" : "#444" }}>
+                    {row.rank === 1 ? "🥇" : row.rank === 2 ? "🥈" : row.rank === 3 ? "🥉" : `#${row.rank}`}
+                  </span>
+                  <div style={{ flex: 1, minWidth: 0 }}>
+                    <div className="record-driver-name">{row.name}</div>
+                    <div style={{ fontSize: 10, color: "#444", marginTop: 1 }}>{row.note}</div>
+                  </div>
+                  <span className="record-value">{row.value}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        ))}
+      </div>
+      <div style={{ marginTop: 20, padding: 14, background: "#0d0d15", border: "1px solid #1e1e2e", borderRadius: 2, textAlign: "center" }}>
+        <div style={{ fontSize: 11, color: "#444" }}>Records current as of 2026 season start · Active drivers' stats marked with +</div>
+      </div>
+    </div>
+  );
+}
+
+// ─── 2026 Race Calendar ──────────────────────────────────────────────────────
+const RACE_CALENDAR_2026 = [
+  { round: 1,  flag: "🇦🇺", name: "Australian GP",    circuit: "Albert Park",          date: "2026-03-15T05:00:00Z", laps: 58, length: "5.278 km", lapRecord: "1:20.235 (Bottas, 2023)", drs: 3, tags: ["Street-adjacent","Fast","Overtaking"] , desc: "The season opener in Melbourne. A fast, flowing street-adjacent circuit that rewards car balance. The Albert Park lake provides a stunning backdrop." },
+  { round: 2,  flag: "🇨🇳", name: "Chinese GP",       circuit: "Shanghai",             date: "2026-03-22T07:00:00Z", laps: 56, length: "5.451 km", lapRecord: "1:32.238 (M.Schumacher, 2004)", drs: 2, tags: ["High-deg","Technical","Long Pit Lane"], desc: "Shanghai returns after years away. Long back straight enables DRS battles. Tyres take a heavy hit through the sweeping final sector." },
+  { round: 3,  flag: "🇯🇵", name: "Japanese GP",      circuit: "Suzuka",               date: "2026-04-05T05:00:00Z", laps: 53, length: "5.807 km", lapRecord: "1:30.983 (Verstappen, 2023)", drs: 2, tags: ["Driver Favourite","Figure-8","High Speed"], desc: "One of the most beloved circuits in the world. Suzuka's figure-of-eight layout and legendary corners like 130R and the Esses make it a true driver's circuit." },
+  { round: 4,  flag: "🇧🇭", name: "Bahrain GP",       circuit: "Bahrain International",date: "2026-04-19T15:00:00Z", laps: 57, length: "5.412 km", lapRecord: "1:31.447 (De La Rosa, 2005)", drs: 3, tags: ["Night Race","High Deg","Dusty"], desc: "Run under floodlights, Bahrain is famous for heavy tyre degradation and sandy, abrasive asphalt. Sector 2's flowing middle section rewards mechanical grip." },
+  { round: 5,  flag: "🇸🇦", name: "Saudi Arabian GP", circuit: "Jeddah Corniche",      date: "2026-04-26T17:00:00Z", laps: 50, length: "6.174 km", lapRecord: "1:30.734 (Verstappen, 2021)", drs: 3, tags: ["Fastest Street", "Night Race","Walls"], desc: "The fastest street circuit on the calendar. Walls are millimetres away at 300+ km/h. Safety cars are virtually guaranteed. Terrifying and spectacular in equal measure." },
+  { round: 6,  flag: "🇺🇸", name: "Miami GP",         circuit: "Miami International",  date: "2026-05-03T19:00:00Z", laps: 57, length: "5.412 km", lapRecord: "1:29.708 (Verstappen, 2023)", drs: 3, tags: ["Street","Spectacle","Sprint"], desc: "F1's glamorous American showcase. Built around the Hard Rock Stadium. The fake marina is iconic. Often a Sprint weekend." },
+  { round: 7,  flag: "🇮🇹", name: "Emilia Romagna GP",circuit: "Imola",                date: "2026-05-17T13:00:00Z", laps: 63, length: "4.909 km", lapRecord: "1:15.484 (Verstappen, 2022)", drs: 2, tags: ["Classic","Narrow","No Overtaking"], desc: "One of F1's historic venues. Imola is narrow and unforgiving — overtaking is rare, making qualifying crucial. Tifosi in the grandstands create an electric atmosphere." },
+  { round: 8,  flag: "🇲🇨", name: "Monaco GP",        circuit: "Circuit de Monaco",    date: "2026-05-24T13:00:00Z", laps: 78, length: "3.337 km", lapRecord: "1:12.909 (Leclerc, 2024)", drs: 1, tags: ["Iconic","No Overtaking","Prestige"], desc: "The jewel of the F1 calendar. Impossibly narrow streets, yachts in the harbour, zero overtaking. Monaco is about qualifying — P1 Saturday usually means P1 Sunday." },
+  { round: 9,  flag: "🇪🇸", name: "Spanish GP",       circuit: "Barcelona-Catalunya",  date: "2026-06-07T13:00:00Z", laps: 66, length: "4.657 km", lapRecord: "1:16.330 (Verstappen, 2023)", drs: 2, tags: ["Benchmark","High Deg","Testing Venue"], desc: "Teams know this circuit better than any other — it's F1's main winter testing venue. Makes it a true benchmark for car performance. Hard to overtake." },
+  { round: 10, flag: "🇨🇦", name: "Canadian GP",      circuit: "Gilles Villeneuve",    date: "2026-06-14T18:00:00Z", laps: 70, length: "4.361 km", lapRecord: "1:13.078 (Bottas, 2019)", drs: 3, tags: ["Wall of Champions","Braking","Fan Favourite"], desc: "The legendary Wall of Champions has claimed countless cars. Heavy braking zones and long straights create genuine overtaking. The Montreal crowd is famously loud." },
+  { round: 11, flag: "🇦🇹", name: "Austrian GP",      circuit: "Red Bull Ring",        date: "2026-06-28T13:00:00Z", laps: 71, length: "4.318 km", lapRecord: "1:05.619 (Leclerc, 2020)", drs: 3, tags: ["Short Lap","High Speed","Sprint"], desc: "One of F1's shortest laps but packed with high-speed corners. Tifosi and Orange Army fans make the grandstands a cauldron. Often a Sprint weekend." },
+  { round: 12, flag: "🇬🇧", name: "British GP",       circuit: "Silverstone",          date: "2026-07-05T14:00:00Z", laps: 52, length: "5.891 km", lapRecord: "1:27.097 (Hamilton, 2020)", drs: 2, tags: ["High Speed","Home Race","Maggotts/Becketts"], desc: "Home of British motorsport. Maggotts-Becketts-Chapel is arguably the most spectacular sequence in F1. British fans are passionate and knowledgeable." },
+  { round: 13, flag: "🇭🇺", name: "Hungarian GP",     circuit: "Hungaroring",          date: "2026-07-19T13:00:00Z", laps: 70, length: "4.381 km", lapRecord: "1:16.627 (Hamilton, 2020)", drs: 2, tags: ["Monaco of non-streets","Hot","Tactical"], desc: "Often called the Monaco of non-street circuits for its lack of overtaking. Extremely hot and physically demanding. Strategy and qualifying are everything." },
+  { round: 14, flag: "🇧🇪", name: "Belgian GP",       circuit: "Spa-Francorchamps",    date: "2026-08-30T13:00:00Z", laps: 44, length: "7.004 km", lapRecord: "1:46.286 (Bottas, 2018)", drs: 2, tags: ["Longest Circuit","Eau Rouge","Weather"], desc: "The greatest circuit in the world according to many drivers. Eau Rouge/Raidillon is breathtaking. Weather can change lap by lap — dry, wet, and back again." },
+  { round: 15, flag: "🇳🇱", name: "Dutch GP",         circuit: "Zandvoort",            date: "2026-09-06T13:00:00Z", laps: 72, length: "4.259 km", lapRecord: "1:11.097 (Verstappen, 2023)", drs: 2, tags: ["Banked Corners","Orange Army","Narrow"], desc: "Verstappen's home race — the Orange Army takes over the entire country. Unique banked corners. Narrow and difficult to overtake, making it a favourite for qualifying specialists." },
+  { round: 16, flag: "🇮🇹", name: "Italian GP",       circuit: "Monza",                date: "2026-09-06T13:00:00Z", laps: 53, length: "5.793 km", lapRecord: "1:21.046 (Barrichello, 2004)", drs: 3, tags: ["Temple of Speed","Slipstream","Tifosi"], desc: "The Temple of Speed. Monza is all about raw horsepower and slipstreaming battles. The Tifosi are some of sport's most passionate fans. Engine manufacturers' playground." },
+  { round: 17, flag: "🇦🇿", name: "Azerbaijan GP",    circuit: "Baku City Circuit",    date: "2026-09-20T11:00:00Z", laps: 51, length: "6.003 km", lapRecord: "1:43.009 (Leclerc, 2019)", drs: 2, tags: ["Street","Chaos","Longest Straight"], desc: "Baku is F1's chaos capital. The longest straight on the calendar leads into an incredibly tight castle section. Safety cars, crashes, and drama are guaranteed." },
+  { round: 18, flag: "🇸🇬", name: "Singapore GP",     circuit: "Marina Bay",           date: "2026-10-04T12:00:00Z", laps: 62, length: "4.940 km", lapRecord: "1:35.867 (Russell, 2023)", drs: 3, tags: ["Night Race","Street","Humidity"], desc: "The original night race. Stifling humidity and heat make it the most physically demanding event of the year. The Marina Bay skyline at night is breathtaking." },
+  { round: 19, flag: "🇺🇸", name: "US GP",            circuit: "Circuit of the Americas",date:"2026-10-18T19:00:00Z",laps: 56, length: "5.513 km", lapRecord: "1:36.169 (Hamilton, 2019)", drs: 2, tags: ["Sprint","Undulation","Turn 1"], desc: "COTA's dramatic uphill Turn 1 is one of the most iconic starts in F1. Huge elevation changes throughout the lap. Austin fans bring serious American energy." },
+  { round: 20, flag: "🇲🇽", name: "Mexican GP",       circuit: "Hermanos Rodríguez",   date: "2026-10-25T20:00:00Z", laps: 71, length: "4.304 km", lapRecord: "1:17.774 (Bottas, 2021)", drs: 3, tags: ["High Altitude","Low Downforce","Party"],  desc: "High altitude (2,240m) means thin air — engine power is reduced, and downforce behaves differently. Mexico City fans are the most passionate on the calendar." },
+  { round: 21, flag: "🇧🇷", name: "Brazilian GP",     circuit: "Interlagos",           date: "2026-11-08T17:00:00Z", laps: 71, length: "4.309 km", lapRecord: "1:10.540 (Rubens Barrichello, 2004)", drs: 2, tags: ["Sprint","Anticlockwise","Dramatic"], desc: "Interlagos runs anticlockwise. The atmosphere is electric — Brazilian fans are legendary. The circuit has produced some of the greatest moments in F1 history." },
+  { round: 22, flag: "🇺🇸", name: "Las Vegas GP",     circuit: "Las Vegas Strip",      date: "2026-11-21T06:00:00Z", laps: 50, length: "6.201 km", lapRecord: "1:35.490 (Leclerc, 2023)", drs: 2, tags: ["Night Race","Street","Spectacle"], desc: "F1 on the Strip. The longest night race on the calendar through the neon heart of Las Vegas. Bitterly cold race conditions create unexpected tyre behaviour." },
+  { round: 23, flag: "🇶🇦", name: "Qatar GP",         circuit: "Lusail",               date: "2026-11-29T15:00:00Z", laps: 57, length: "5.380 km", lapRecord: "1:24.319 (Russell, 2023)", drs: 2, tags: ["Sprint","High Speed","Night"], desc: "Lusail is a flowing, high-speed circuit under lights. Heavy tyre degradation and physically demanding corners. Often a Sprint weekend." },
+  { round: 24, flag: "🇦🇪", name: "Abu Dhabi GP",     circuit: "Yas Marina",           date: "2026-12-06T13:00:00Z", laps: 58, length: "5.281 km", lapRecord: "1:26.103 (Leclerc, 2023)", drs: 3, tags: ["Season Finale","Twilight","Championships"], desc: "The season finale. Yas Marina runs from sunset into night — stunning visually. Championships are won and lost here, and it's where the paddock says goodbye for another year." },
+];
+
+// ─── Countdown Component ─────────────────────────────────────────────────────
+function RaceCountdown() {
+  const [timeLeft, setTimeLeft] = useState(null);
+  const [nextRace, setNextRace] = useState(null);
+
+  useEffect(() => {
+    const upcoming = RACE_CALENDAR_2026
+      .filter(r => new Date(r.date) > new Date())
+      .sort((a, b) => new Date(a.date) - new Date(b.date));
+    if (!upcoming.length) return;
+    setNextRace(upcoming[0]);
+
+    function tick() {
+      const diff = new Date(upcoming[0].date) - new Date();
+      if (diff <= 0) { setTimeLeft({ d:0,h:0,m:0,s:0 }); return; }
+      setTimeLeft({
+        d: Math.floor(diff / 86400000),
+        h: Math.floor((diff % 86400000) / 3600000),
+        m: Math.floor((diff % 3600000) / 60000),
+        s: Math.floor((diff % 60000) / 1000),
+      });
+    }
+    tick();
+    const id = setInterval(tick, 1000);
+    return () => clearInterval(id);
+  }, []);
+
+  if (!nextRace || !timeLeft) return null;
+  const pad = n => String(n).padStart(2, "0");
+
+  return (
+    <div className="countdown-wrap">
+      <div className="countdown-label">Next Race</div>
+      <div className="countdown-race">{nextRace.flag} {nextRace.name} · Round {nextRace.round}</div>
+      <div className="countdown-tiles">
+        {[["d","Days"],["h","Hours"],["m","Mins"],["s","Secs"]].map(([k, label]) => (
+          <div className="countdown-tile" key={k}>
+            <div className="countdown-num">{pad(timeLeft[k])}</div>
+            <div className="countdown-unit">{label}</div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+// ─── Circuits Section ────────────────────────────────────────────────────────
+function CircuitsSection() {
+  const [search, setSearch] = useState("");
+  const [selected, setSelected] = useState(null);
+
+  const filtered = RACE_CALENDAR_2026.filter(c => {
+    const q = search.toLowerCase();
+    return c.name.toLowerCase().includes(q) || c.circuit.toLowerCase().includes(q) || c.tags.some(t => t.toLowerCase().includes(q));
+  });
+
+  return (
+    <div>
+      <div className="section-title">2026 <span>Circuit Guide</span></div>
+      <div className="section-line" />
+      <p style={{ fontSize: 13, color: "#666", lineHeight: 1.7, marginBottom: 16 }}>
+        All 24 circuits on the 2026 calendar — lap records, key facts, and what makes each one unique.
+      </p>
+
+      <div className="search-wrap" style={{ marginBottom: 20 }}>
+        <span className="search-icon">🔍</span>
+        <input className="search-input" placeholder="Search circuit, country or tag..." value={search} onChange={e => setSearch(e.target.value)} />
+      </div>
+
+      {/* Detail modal */}
+      {selected && (
+        <div style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.85)", zIndex: 200, display: "flex", alignItems: "center", justifyContent: "center", padding: 20 }}
+          onClick={() => setSelected(null)}>
+          <div style={{ background: "#0d0d15", border: "1px solid #e10600", borderRadius: 6, maxWidth: 520, width: "100%", padding: 28, position: "relative" }}
+            onClick={e => e.stopPropagation()}>
+            <button onClick={() => setSelected(null)} style={{ position: "absolute", top: 14, right: 16, background: "none", border: "none", color: "#555", fontSize: 20, cursor: "pointer", lineHeight: 1 }}>✕</button>
+            <div style={{ fontSize: 36, marginBottom: 8 }}>{selected.flag}</div>
+            <div style={{ fontFamily: "Orbitron", fontSize: 14, fontWeight: 900, color: "#fff", textTransform: "uppercase", letterSpacing: 2, marginBottom: 2 }}>{selected.name}</div>
+            <div style={{ fontSize: 11, color: "#e10600", fontFamily: "Orbitron", letterSpacing: 2, marginBottom: 16 }}>ROUND {selected.round} · {selected.circuit}</div>
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12, marginBottom: 16 }}>
+              {[
+                ["Circuit Length", selected.length],
+                ["Race Laps", selected.laps],
+                ["Lap Record", selected.lapRecord],
+                ["DRS Zones", selected.drs],
+                ["Race Date", new Date(selected.date).toLocaleDateString("en-GB", { day:"numeric", month:"long", year:"numeric" })],
+              ].map(([l, v]) => (
+                <div key={l}>
+                  <div style={{ fontSize: 9, color: "#444", textTransform: "uppercase", letterSpacing: 1, fontFamily: "Orbitron", marginBottom: 3 }}>{l}</div>
+                  <div style={{ fontSize: 13, color: "#ccc", fontWeight: 600 }}>{v}</div>
+                </div>
+              ))}
+            </div>
+            <p style={{ fontSize: 13, color: "#888", lineHeight: 1.8, marginBottom: 14 }}>{selected.desc}</p>
+            <div>{selected.tags.map(t => <span key={t} className="circuit-tag">{t}</span>)}</div>
+          </div>
+        </div>
+      )}
+
+      <div className="circuit-grid">
+        {filtered.map(c => (
+          <div key={c.round} className="circuit-card" onClick={() => setSelected(c)}>
+            <div className="circuit-card-header">
+              <div className="circuit-flag">{c.flag}</div>
+              <div style={{ flex: 1, minWidth: 0 }}>
+                <div className="circuit-name">{c.name}</div>
+                <div className="circuit-country">{c.circuit}</div>
+              </div>
+              <div className="circuit-round">R{c.round}</div>
+            </div>
+            <div className="circuit-body">
+              <div className="circuit-stats">
+                <div className="circuit-stat-item">
+                  <span className="circuit-stat-lbl">Length</span>
+                  <span className="circuit-stat-val">{c.length}</span>
+                </div>
+                <div className="circuit-stat-item">
+                  <span className="circuit-stat-lbl">Laps</span>
+                  <span className="circuit-stat-val">{c.laps}</span>
+                </div>
+                <div className="circuit-stat-item">
+                  <span className="circuit-stat-lbl">DRS Zones</span>
+                  <span className="circuit-stat-val">{c.drs}</span>
+                </div>
+                <div className="circuit-stat-item">
+                  <span className="circuit-stat-lbl">Race Date</span>
+                  <span className="circuit-stat-val">{new Date(c.date).toLocaleDateString("en-GB",{day:"numeric",month:"short"})}</span>
+                </div>
+              </div>
+              <div>{c.tags.map(t => <span key={t} className="circuit-tag">{t}</span>)}</div>
+              <div className="circuit-desc" style={{ marginTop: 10, display: "-webkit-box", WebkitLineClamp: 2, WebkitBoxOrient: "vertical", overflow: "hidden" }}>{c.desc}</div>
+              <div style={{ marginTop: 8, fontSize: 10, color: "#e10600", fontFamily: "Orbitron", letterSpacing: 1 }}>TAP FOR DETAILS →</div>
+            </div>
+          </div>
+        ))}
+      </div>
+      {filtered.length === 0 && <div style={{ color: "#555", textAlign: "center", padding: 40 }}>No circuits found</div>}
+    </div>
+  );
+}
+
 const SECTIONS = [
   { id: "how", label: "🏁 How It Works" },
   { id: "points", label: "📊 Points" },
   { id: "drivers", label: "🏎️ Drivers" },
   { id: "teams", label: "🔧 Teams" },
   { id: "history", label: "📅 Changes" },
+  { id: "circuits", label: "🗺️ Circuits" },
   { id: "results", label: "🏆 Results" },
+  { id: "glossary", label: "📖 Glossary" },
+  { id: "rules", label: "📋 Rules" },
+  { id: "compare", label: "⚡ Car Compare" },
+  { id: "records", label: "🎖️ Records" },
 ];
 
 export default function F1Guide() {
@@ -1215,6 +2002,7 @@ export default function F1Guide() {
           <div className="hero">
             <div className="hero-title">FORMULA <span>1</span></div>
             <div className="hero-sub">The Complete Beginner's Guide · 2018 – 2026</div>
+            <RaceCountdown />
           </div>
           <nav className="nav">
             <div className="nav-inner">
@@ -1231,7 +2019,12 @@ export default function F1Guide() {
             {active === "drivers" && <DriversSection />}
             {active === "teams" && <TeamsSection />}
             {active === "history" && <HistorySection />}
+            {active === "circuits" && <CircuitsSection />}
             {active === "results" && <ResultsSection />}
+            {active === "glossary" && <GlossarySection />}
+            {active === "rules" && <RulesSection />}
+            {active === "compare" && <CarCompareSection />}
+            {active === "records" && <RecordsSection />}
           </main>
         </div>
       </div>
