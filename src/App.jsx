@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 const styles = `
   @import url('https://fonts.googleapis.com/css2?family=Exo+2:wght@300;400;600;700;900&family=Orbitron:wght@400;700;900&display=swap');
@@ -810,112 +810,387 @@ function HistorySection() {
   );
 }
 
-function ResultsSection() {
-  const raceResults = [
-    { pos: 1, driver: "George Russell", team: "Mercedes", teamColor: "#27F4D2", points: 25, gap: "Winner", note: "Pole to flag. One-stop strategy worked perfectly." },
-    { pos: 2, driver: "Kimi Antonelli", team: "Mercedes", teamColor: "#27F4D2", points: 18, gap: "+8.4s", note: "Stunning debut podium at 18 years old." },
-    { pos: 3, driver: "Charles Leclerc", team: "Ferrari", teamColor: "#E8002D", points: 15, gap: "+18.2s", note: "Led early laps after brilliant start but Ferrari's strategy cost them." },
-    { pos: 4, driver: "Lewis Hamilton", team: "Ferrari", teamColor: "#E8002D", points: 12, gap: "+35.7s", note: "Solid debut in red but Mercedes had the pace edge." },
-    { pos: 5, driver: "Lando Norris", team: "McLaren", teamColor: "#FF8000", points: 10, gap: "+71.1s", note: "35+ seconds behind Hamilton — McLaren struggled with the new regs." },
-    { pos: 6, driver: "Max Verstappen", team: "Red Bull", teamColor: "#3671C6", points: 8, gap: "+78.5s", note: "Sensational drive from P20 (crashed in Q1) to 6th. Vintage Verstappen." },
-    { pos: 7, driver: "Oliver Bearman", team: "Haas", teamColor: "#B6BABD", points: 6, gap: "+90.2s", note: "Impressive points on debut as a full-time driver." },
-    { pos: 8, driver: "Arvid Lindblad", team: "Racing Bulls", teamColor: "#6692FF", points: 4, gap: "+95.8s", note: "Stellar F1 debut for the 18-year-old rookie." },
-    { pos: 9, driver: "Gabriel Bortoleto", team: "Audi", teamColor: "#BB0A21", points: 2, gap: "+102.3s", note: "Points on debut for Audi — a historic moment for the brand." },
-    { pos: 10, driver: "Pierre Gasly", team: "Alpine", teamColor: "#0093CC", points: 1, gap: "+108.9s", note: "Lone point for Alpine in a difficult weekend." },
-  ];
+// ─── Team colour map ────────────────────────────────────────────────────────
+const TEAM_COLORS = {
+  mercedes: "#27F4D2", ferrari: "#E8002D", "red bull racing": "#3671C6",
+  mclaren: "#FF8000", "aston martin": "#229971", alpine: "#0093CC",
+  williams: "#64C4FF", haas: "#B6BABD", "rb": "#6692FF",
+  "racing bulls": "#6692FF", kick: "#52E252", sauber: "#52E252",
+  "cadillac": "#CC0000", "audi": "#BB0A21",
+};
+function teamColor(name = "") {
+  const k = name.toLowerCase();
+  for (const [key, val] of Object.entries(TEAM_COLORS)) { if (k.includes(key)) return val; }
+  return "#888";
+}
 
-  const dnf = [
-    { driver: "Oscar Piastri", team: "McLaren", reason: "DNF — Crashed McLaren on sighting lap before race start. Did not start." },
-    { driver: "Nico Hülkenberg", team: "Audi", reason: "DNS — Technical issue. Did not start." },
-    { driver: "Valtteri Bottas", team: "Cadillac", reason: "DNF — Retired during race. Cadillac's difficult debut." },
-    { driver: "Isack Hadjar", team: "Red Bull", reason: "DNF — Retired, triggering the VSC that changed the race strategy." },
-    { driver: "Fernando Alonso", team: "Aston Martin", reason: "DNF — Retired. Honda power unit issues on debut." },
-    { driver: "Lance Stroll", team: "Aston Martin", reason: "NC — Not classified despite rejoining race." },
-  ];
+const POINTS_MAP = [25,18,15,12,10,8,6,4,2,1];
+
+// Country flags for circuits
+const CIRCUIT_FLAGS = {
+  "albert park": "🇦🇺", "shanghai": "🇨🇳", "bahrain": "🇧🇭", "jeddah": "🇸🇦",
+  "miami": "🇺🇸", "imola": "🇮🇹", "monaco": "🇲🇨", "barcelona": "🇪🇸",
+  "montreal": "🇨🇦", "spielberg": "🇦🇹", "silverstone": "🇬🇧", "budapest": "🇭🇺",
+  "spa": "🇧🇪", "zandvoort": "🇳🇱", "monza": "🇮🇹", "baku": "🇦🇿",
+  "singapore": "🇸🇬", "suzuka": "🇯🇵", "austin": "🇺🇸", "mexico": "🇲🇽",
+  "são paulo": "🇧🇷", "las vegas": "🇺🇸", "lusail": "🇶🇦", "yas marina": "🇦🇪",
+};
+function circuitFlag(name = "") {
+  const k = name.toLowerCase();
+  for (const [key, val] of Object.entries(CIRCUIT_FLAGS)) { if (k.includes(key)) return val; }
+  return "🏁";
+}
+
+function formatGap(ms) {
+  if (!ms || ms === 0) return "Winner";
+  const s = Math.abs(ms / 1000);
+  if (s < 60) return `+${s.toFixed(3)}s`;
+  const m = Math.floor(s / 60);
+  return `+${m}:${(s % 60).toFixed(3).padStart(6,"0")}`;
+}
+
+function ResultsSection() {
+  const [sessions, setSessions] = useState([]);        // all race sessions this year
+  const [selectedIdx, setSelectedIdx] = useState(0);  // which race is selected
+  const [results, setResults] = useState([]);          // race results for selected session
+  const [standings, setStandings] = useState([]);      // accumulated standings
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [lastUpdated, setLastUpdated] = useState(null);
+
+  const YEAR = new Date().getFullYear();
+
+  // Step 1: fetch all race sessions for current year
+  async function fetchSessions() {
+    const res = await fetch(
+      `https://api.openf1.org/v1/sessions?session_type=Race&year=${YEAR}`
+    );
+    if (!res.ok) throw new Error("Failed to fetch sessions");
+    const data = await res.json();
+    // sort by date ascending
+    return data.sort((a, b) => new Date(a.date_start) - new Date(b.date_start));
+  }
+
+  // Step 2: fetch race positions for a session
+  async function fetchRaceResults(sessionKey) {
+    const [posRes, driversRes, lapsRes] = await Promise.all([
+      fetch(`https://api.openf1.org/v1/position?session_key=${sessionKey}`),
+      fetch(`https://api.openf1.org/v1/drivers?session_key=${sessionKey}`),
+      fetch(`https://api.openf1.org/v1/laps?session_key=${sessionKey}&is_pit_out_lap=false`),
+    ]);
+    const [positions, drivers, laps] = await Promise.all([
+      posRes.json(), driversRes.json(), lapsRes.json()
+    ]);
+
+    // Get last known position per driver
+    const latestPos = {};
+    for (const p of positions) {
+      if (!latestPos[p.driver_number] || p.date > latestPos[p.driver_number].date) {
+        latestPos[p.driver_number] = p;
+      }
+    }
+
+    // Map driver number → driver info
+    const driverMap = {};
+    for (const d of drivers) driverMap[d.driver_number] = d;
+
+    // Get final lap for each driver to compute gap
+    const finalLap = {};
+    for (const l of laps) {
+      if (!finalLap[l.driver_number] || l.lap_number > finalLap[l.driver_number].lap_number) {
+        finalLap[l.driver_number] = l;
+      }
+    }
+
+    // Winner's max lap
+    const winnerNum = Object.entries(latestPos).find(([,p]) => p.position === 1)?.[0];
+    const winnerLaps = winnerNum ? (finalLap[winnerNum]?.lap_number || 0) : 0;
+
+    const rows = Object.values(latestPos)
+      .sort((a, b) => a.position - b.position)
+      .map(p => {
+        const d = driverMap[p.driver_number] || {};
+        const driverLaps = finalLap[p.driver_number]?.lap_number || 0;
+        const dnf = winnerLaps > 0 && driverLaps < winnerLaps - 1;
+        return {
+          pos: p.position,
+          driverNumber: p.driver_number,
+          name: d.full_name || `Driver #${p.driver_number}`,
+          shortName: d.name_acronym || "",
+          team: d.team_name || "Unknown",
+          teamColour: d.team_colour ? `#${d.team_colour}` : teamColor(d.team_name),
+          points: p.position <= 10 && !dnf ? POINTS_MAP[p.position - 1] : 0,
+          dnf,
+          laps: driverLaps,
+          winnerLaps,
+        };
+      });
+
+    return rows;
+  }
+
+  // Build cumulative championship standings from all completed races
+  async function buildStandings(allSessions) {
+    const pts = {}; // driverName → {pts, team, teamColour}
+    for (const s of allSessions) {
+      try {
+        const rows = await fetchRaceResults(s.session_key);
+        for (const r of rows) {
+          if (!pts[r.name]) pts[r.name] = { pts: 0, team: r.team, teamColour: r.teamColour };
+          pts[r.name].pts += r.points;
+        }
+      } catch { /* skip failed sessions */ }
+    }
+    return Object.entries(pts)
+      .map(([name, v]) => ({ name, ...v }))
+      .sort((a, b) => b.pts - a.pts)
+      .map((d, i) => ({ ...d, pos: i + 1 }));
+  }
+
+  async function loadAll() {
+    setLoading(true);
+    setError(null);
+    try {
+      const allSessions = await fetchSessions();
+      if (!allSessions.length) { setSessions([]); setLoading(false); return; }
+      setSessions(allSessions);
+
+      // Default to latest completed race
+      const now = new Date();
+      const completed = allSessions.filter(s => new Date(s.date_end) < now);
+      const defaultIdx = completed.length > 0 ? completed.length - 1 : 0;
+      setSelectedIdx(defaultIdx);
+
+      // Load results for default race + full standings in parallel
+      const [raceRows, allStandings] = await Promise.all([
+        fetchRaceResults(allSessions[defaultIdx].session_key),
+        buildStandings(completed),
+      ]);
+      setResults(raceRows);
+      setStandings(allStandings);
+      setLastUpdated(new Date());
+    } catch (e) {
+      setError(e.message || "Failed to load data");
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  async function switchRace(idx) {
+    setSelectedIdx(idx);
+    setResults([]);
+    try {
+      const rows = await fetchRaceResults(sessions[idx].session_key);
+      setResults(rows);
+    } catch { setResults([]); }
+  }
+
+  // Load on mount
+  useEffect(() => { loadAll(); }, []);
+
+  const selectedSession = sessions[selectedIdx];
+  const finishers = results.filter(r => !r.dnf);
+  const dnfs = results.filter(r => r.dnf);
+
+  const thStyle = { background: "#e10600", color: "#fff", padding: "9px 12px", textAlign: "left", fontFamily: "Orbitron", fontSize: 10, letterSpacing: 2, textTransform: "uppercase" };
+  const thStyleDark = { background: "#12121c", color: "#e10600", padding: "8px 12px", fontFamily: "Orbitron", fontSize: 10, letterSpacing: 2, textTransform: "uppercase", textAlign: "left" };
 
   return (
     <div>
-      <div className="section-title">2026 <span>Results</span></div>
+      <div style={{ display: "flex", alignItems: "flex-start", gap: 12, marginBottom: 8, flexWrap: "wrap" }}>
+        <div className="section-title" style={{ marginBottom: 0 }}>{YEAR} <span>Results</span></div>
+        <button onClick={loadAll} style={{ marginLeft: "auto", padding: "6px 14px", background: "transparent", border: "1px solid #333", color: "#666", fontFamily: "Orbitron", fontSize: 9, letterSpacing: 2, cursor: "pointer", borderRadius: 2, textTransform: "uppercase", transition: "all 0.2s" }}
+          onMouseEnter={e => { e.target.style.borderColor="#e10600"; e.target.style.color="#fff"; }}
+          onMouseLeave={e => { e.target.style.borderColor="#333"; e.target.style.color="#666"; }}>
+          ↻ Refresh
+        </button>
+      </div>
       <div className="section-line" />
 
-      <div className="card" style={{ marginBottom: 20, borderLeft: "3px solid #e10600" }}>
-        <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 8, flexWrap: "wrap" }}>
-          <div style={{ fontFamily: "Orbitron", fontSize: 11, color: "#e10600", letterSpacing: 2, textTransform: "uppercase" }}>Round 1</div>
-          <div style={{ fontFamily: "Orbitron", fontSize: 14, fontWeight: 700, color: "#fff" }}>🇦🇺 Australian Grand Prix</div>
-          <div style={{ marginLeft: "auto", fontSize: 11, color: "#555" }}>Melbourne · 8 Mar 2026</div>
+      {/* Data source badge */}
+      <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 16, flexWrap: "wrap" }}>
+        <div style={{ display: "inline-flex", alignItems: "center", gap: 6, padding: "4px 10px", background: "rgba(0,220,120,0.08)", border: "1px solid rgba(0,220,120,0.25)", borderRadius: 2 }}>
+          <div style={{ width: 6, height: 6, borderRadius: "50%", background: loading ? "#666" : "#00dc78", boxShadow: loading ? "none" : "0 0 6px #00dc78" }} />
+          <span style={{ fontSize: 10, color: "#00dc78", fontFamily: "Orbitron", letterSpacing: 1 }}>LIVE · OpenF1 API</span>
         </div>
-        <p style={{ fontSize: 12, color: "#aaa", lineHeight: 1.7 }}>
-          The first race of the new F1 era. Mercedes dominated from the front — Russell took pole by nearly 8 tenths, then won the race using a brave one-stop strategy. Ferrari led early laps but their decision not to pit under two Virtual Safety Cars proved costly. Verstappen drove from last to 6th after crashing in qualifying. Piastri didn't even start — crashing his McLaren on the sighting lap.
-        </p>
+        {lastUpdated && (
+          <span style={{ fontSize: 10, color: "#444" }}>Updated {lastUpdated.toLocaleTimeString()}</span>
+        )}
       </div>
 
-      <div style={{ overflowX: "auto", marginBottom: 24 }}>
-        <table style={{ width: "100%", borderCollapse: "collapse", minWidth: 500 }}>
-          <thead>
-            <tr>
-              <th style={{ background: "#e10600", color: "#fff", padding: "9px 12px", textAlign: "left", fontFamily: "Orbitron", fontSize: 10, letterSpacing: 2, textTransform: "uppercase" }}>Pos</th>
-              <th style={{ background: "#e10600", color: "#fff", padding: "9px 12px", textAlign: "left", fontFamily: "Orbitron", fontSize: 10, letterSpacing: 2, textTransform: "uppercase" }}>Driver</th>
-              <th style={{ background: "#e10600", color: "#fff", padding: "9px 12px", textAlign: "left", fontFamily: "Orbitron", fontSize: 10, letterSpacing: 2, textTransform: "uppercase" }}>Team</th>
-              <th style={{ background: "#e10600", color: "#fff", padding: "9px 12px", textAlign: "left", fontFamily: "Orbitron", fontSize: 10, letterSpacing: 2, textTransform: "uppercase" }}>Pts</th>
-              <th style={{ background: "#e10600", color: "#fff", padding: "9px 12px", textAlign: "left", fontFamily: "Orbitron", fontSize: 10, letterSpacing: 2, textTransform: "uppercase" }}>Gap</th>
-            </tr>
-          </thead>
-          <tbody>
-            {raceResults.map(row => (
-              <tr key={row.pos} style={{ borderBottom: "1px solid #1e1e2e" }}>
-                <td style={{ padding: "10px 12px" }}>
-                  <span className={`pos-badge${row.pos === 1 ? " p1" : row.pos === 2 ? " p2" : row.pos === 3 ? " p3" : ""}`}>{row.pos}</span>
-                </td>
-                <td style={{ padding: "10px 12px" }}>
-                  <div style={{ fontWeight: 700, color: "#fff", fontSize: 13 }}>{row.driver}</div>
-                  <div style={{ fontSize: 11, color: "#555", marginTop: 2 }}>{row.note}</div>
-                </td>
-                <td style={{ padding: "10px 12px" }}>
-                  <span style={{ background: row.teamColor + "22", color: row.teamColor, border: `1px solid ${row.teamColor}44`, padding: "3px 8px", borderRadius: 2, fontSize: 10, fontWeight: 700, whiteSpace: "nowrap" }}>{row.team}</span>
-                </td>
-                <td style={{ padding: "10px 12px", fontFamily: "Orbitron", fontWeight: 700, color: row.pos <= 3 ? "#e10600" : "#aaa", fontSize: 13 }}>{row.points}</td>
-                <td style={{ padding: "10px 12px", fontSize: 12, color: "#555" }}>{row.gap}</td>
-              </tr>
+      {loading && (
+        <div style={{ textAlign: "center", padding: "60px 20px" }}>
+          <div style={{ fontFamily: "Orbitron", fontSize: 11, color: "#e10600", letterSpacing: 3, marginBottom: 16 }}>LOADING RACE DATA...</div>
+          <div style={{ display: "flex", justifyContent: "center", gap: 6 }}>
+            {[0,1,2].map(i => (
+              <div key={i} style={{ width: 8, height: 8, borderRadius: "50%", background: "#e10600", animation: `pulse 1.2s ${i*0.2}s infinite`, opacity: 0.8 }} />
             ))}
-          </tbody>
-        </table>
-      </div>
-
-      <div className="section-title" style={{ fontSize: "clamp(13px,3vw,18px)", marginBottom: 8 }}>Did Not <span>Finish / Start</span></div>
-      <div className="section-line" />
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(min(100%, 280px), 1fr))", gap: 10, marginBottom: 32 }}>
-        {dnf.map(d => (
-          <div key={d.driver} style={{ background: "#0d0d15", border: "1px solid #1e1e2e", borderLeft: "3px solid #333", padding: "12px 14px", borderRadius: 2 }}>
-            <div style={{ fontWeight: 700, color: "#fff", fontSize: 13, marginBottom: 4 }}>{d.driver}</div>
-            <div style={{ fontSize: 10, color: "#666", textTransform: "uppercase", letterSpacing: 1, marginBottom: 4 }}>{d.team}</div>
-            <div style={{ fontSize: 12, color: "#777" }}>{d.reason}</div>
           </div>
-        ))}
-      </div>
+          <style>{`@keyframes pulse { 0%,100%{transform:scale(1);opacity:0.4} 50%{transform:scale(1.4);opacity:1} }`}</style>
+        </div>
+      )}
 
-      <div className="section-title" style={{ fontSize: "clamp(13px,3vw,18px)", marginBottom: 8 }}>Drivers' <span>Standings</span></div>
-      <div className="section-line" />
-      <div style={{ overflowX: "auto" }}>
-        <table style={{ width: "100%", borderCollapse: "collapse", minWidth: 360 }}>
-          <thead>
-            <tr>
-              <th style={{ background: "#12121c", color: "#e10600", padding: "8px 12px", fontFamily: "Orbitron", fontSize: 10, letterSpacing: 2, textTransform: "uppercase", textAlign: "left" }}>Pos</th>
-              <th style={{ background: "#12121c", color: "#e10600", padding: "8px 12px", fontFamily: "Orbitron", fontSize: 10, letterSpacing: 2, textTransform: "uppercase", textAlign: "left" }}>Driver</th>
-              <th style={{ background: "#12121c", color: "#e10600", padding: "8px 12px", fontFamily: "Orbitron", fontSize: 10, letterSpacing: 2, textTransform: "uppercase", textAlign: "left" }}>Pts</th>
-            </tr>
-          </thead>
-          <tbody>
-            {raceResults.map(row => (
-              <tr key={row.pos} style={{ borderBottom: "1px solid #1a1a2a" }}>
-                <td style={{ padding: "8px 12px" }}><span className={`pos-badge${row.pos === 1 ? " p1" : row.pos === 2 ? " p2" : row.pos === 3 ? " p3" : ""}`}>{row.pos}</span></td>
-                <td style={{ padding: "8px 12px", fontSize: 13, color: row.pos <= 3 ? "#fff" : "#bbb", fontWeight: row.pos <= 3 ? 700 : 400 }}>{row.driver}</td>
-                <td style={{ padding: "8px 12px", fontFamily: "Orbitron", fontWeight: 700, fontSize: 13, color: row.pos <= 3 ? "#e10600" : "#aaa" }}>{row.points}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-      <div style={{ marginTop: 16, fontSize: 11, color: "#444", textAlign: "center" }}>After Round 1 of 24 · Next: 🇨🇳 Chinese GP — 15 Mar 2026</div>
+      {error && !loading && (
+        <div style={{ background: "#0d0d15", border: "1px solid #2a0000", borderLeft: "3px solid #e10600", padding: 20, borderRadius: 2, marginBottom: 20 }}>
+          <div style={{ fontFamily: "Orbitron", fontSize: 11, color: "#e10600", letterSpacing: 2, marginBottom: 8 }}>DATA UNAVAILABLE</div>
+          <p style={{ fontSize: 12, color: "#777", lineHeight: 1.7 }}>{error}. The OpenF1 API may be temporarily down, or the {YEAR} season data may not yet be available.</p>
+          <button onClick={loadAll} style={{ marginTop: 12, padding: "7px 16px", background: "#e10600", border: "none", color: "#fff", fontFamily: "Orbitron", fontSize: 9, letterSpacing: 2, cursor: "pointer", borderRadius: 2 }}>RETRY</button>
+        </div>
+      )}
+
+      {!loading && !error && sessions.length === 0 && (
+        <div className="card" style={{ textAlign: "center", padding: 40 }}>
+          <div style={{ fontFamily: "Orbitron", fontSize: 11, color: "#555", letterSpacing: 2 }}>NO RACES YET IN {YEAR}</div>
+        </div>
+      )}
+
+      {!loading && sessions.length > 0 && (
+        <>
+          {/* Race selector */}
+          <div style={{ marginBottom: 20 }}>
+            <div style={{ fontSize: 10, color: "#555", fontFamily: "Orbitron", letterSpacing: 2, textTransform: "uppercase", marginBottom: 10 }}>Select Race</div>
+            <div style={{ display: "flex", flexWrap: "wrap", gap: 6 }}>
+              {sessions.map((s, i) => {
+                const isPast = new Date(s.date_end) < new Date();
+                return (
+                  <button key={s.session_key}
+                    onClick={() => switchRace(i)}
+                    style={{
+                      padding: "5px 10px", borderRadius: 2, cursor: "pointer", fontFamily: "Orbitron",
+                      fontSize: 9, letterSpacing: 1, textTransform: "uppercase", transition: "all 0.2s",
+                      background: selectedIdx === i ? "#e10600" : "transparent",
+                      border: `1px solid ${selectedIdx === i ? "#e10600" : isPast ? "#2a2a3a" : "#1a1a2a"}`,
+                      color: selectedIdx === i ? "#fff" : isPast ? "#888" : "#333",
+                    }}>
+                    R{i + 1} {circuitFlag(s.circuit_short_name)} {s.circuit_short_name}
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+
+          {/* Selected race header */}
+          {selectedSession && (
+            <div className="card" style={{ marginBottom: 20, borderLeft: "3px solid #e10600" }}>
+              <div style={{ display: "flex", alignItems: "center", gap: 10, flexWrap: "wrap" }}>
+                <div style={{ fontFamily: "Orbitron", fontSize: 11, color: "#e10600", letterSpacing: 2, textTransform: "uppercase" }}>
+                  Round {selectedIdx + 1}
+                </div>
+                <div style={{ fontFamily: "Orbitron", fontSize: 14, fontWeight: 700, color: "#fff" }}>
+                  {circuitFlag(selectedSession.circuit_short_name)} {selectedSession.meeting_name || selectedSession.circuit_short_name}
+                </div>
+                <div style={{ marginLeft: "auto", fontSize: 11, color: "#555" }}>
+                  {selectedSession.country_name} · {new Date(selectedSession.date_start).toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" })}
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Results table */}
+          {results.length > 0 ? (
+            <>
+              <div style={{ overflowX: "auto", marginBottom: 24 }}>
+                <table style={{ width: "100%", borderCollapse: "collapse", minWidth: 480 }}>
+                  <thead>
+                    <tr>
+                      <th style={thStyle}>Pos</th>
+                      <th style={thStyle}>Driver</th>
+                      <th style={thStyle}>Team</th>
+                      <th style={thStyle}>Pts</th>
+                      <th style={thStyle}>Laps</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {finishers.map(row => (
+                      <tr key={row.driverNumber} style={{ borderBottom: "1px solid #1e1e2e" }}>
+                        <td style={{ padding: "10px 12px" }}>
+                          <span className={`pos-badge${row.pos === 1 ? " p1" : row.pos === 2 ? " p2" : row.pos === 3 ? " p3" : ""}`}>{row.pos}</span>
+                        </td>
+                        <td style={{ padding: "10px 12px" }}>
+                          <div style={{ fontWeight: 700, color: "#fff", fontSize: 13 }}>{row.name}</div>
+                          <div style={{ fontSize: 10, color: "#555", marginTop: 1, fontFamily: "Orbitron" }}>{row.shortName}</div>
+                        </td>
+                        <td style={{ padding: "10px 12px" }}>
+                          <span style={{ background: row.teamColour + "22", color: row.teamColour, border: `1px solid ${row.teamColour}44`, padding: "3px 8px", borderRadius: 2, fontSize: 10, fontWeight: 700, whiteSpace: "nowrap" }}>
+                            {row.team}
+                          </span>
+                        </td>
+                        <td style={{ padding: "10px 12px", fontFamily: "Orbitron", fontWeight: 700, color: row.pos <= 3 ? "#e10600" : "#aaa", fontSize: 13 }}>
+                          {row.points || "—"}
+                        </td>
+                        <td style={{ padding: "10px 12px", fontSize: 12, color: "#555" }}>{row.laps}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+
+              {dnfs.length > 0 && (
+                <>
+                  <div className="section-title" style={{ fontSize: "clamp(13px,3vw,18px)", marginBottom: 8 }}>Did Not <span>Finish</span></div>
+                  <div className="section-line" />
+                  <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(min(100%,260px),1fr))", gap: 10, marginBottom: 32 }}>
+                    {dnfs.map(d => (
+                      <div key={d.driverNumber} style={{ background: "#0d0d15", border: "1px solid #1e1e2e", borderLeft: "3px solid #333", padding: "12px 14px", borderRadius: 2 }}>
+                        <div style={{ fontWeight: 700, color: "#fff", fontSize: 13, marginBottom: 4 }}>{d.name}</div>
+                        <div style={{ fontSize: 10, color: "#666", textTransform: "uppercase", letterSpacing: 1, marginBottom: 4 }}>{d.team}</div>
+                        <div style={{ fontSize: 11, color: "#777" }}>DNF · {d.laps} of {d.winnerLaps} laps</div>
+                      </div>
+                    ))}
+                  </div>
+                </>
+              )}
+            </>
+          ) : (
+            !loading && (
+              <div className="card" style={{ textAlign: "center", padding: 32, marginBottom: 24 }}>
+                <div style={{ fontFamily: "Orbitron", fontSize: 10, color: "#555", letterSpacing: 2 }}>
+                  {new Date(selectedSession?.date_start) > new Date() ? "RACE NOT YET RUN" : "LOADING RESULTS..."}
+                </div>
+              </div>
+            )
+          )}
+
+          {/* Championship standings */}
+          {standings.length > 0 && (
+            <>
+              <div className="section-title" style={{ fontSize: "clamp(13px,3vw,18px)", marginBottom: 8 }}>Drivers' <span>Championship</span></div>
+              <div className="section-line" />
+              <div style={{ overflowX: "auto", marginBottom: 8 }}>
+                <table style={{ width: "100%", borderCollapse: "collapse", minWidth: 360 }}>
+                  <thead>
+                    <tr>
+                      <th style={thStyleDark}>Pos</th>
+                      <th style={thStyleDark}>Driver</th>
+                      <th style={thStyleDark}>Team</th>
+                      <th style={thStyleDark}>Pts</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {standings.slice(0, 20).map(row => (
+                      <tr key={row.name} style={{ borderBottom: "1px solid #1a1a2a" }}>
+                        <td style={{ padding: "8px 12px" }}>
+                          <span className={`pos-badge${row.pos === 1 ? " p1" : row.pos === 2 ? " p2" : row.pos === 3 ? " p3" : ""}`}>{row.pos}</span>
+                        </td>
+                        <td style={{ padding: "8px 12px", fontSize: 13, color: row.pos <= 3 ? "#fff" : "#bbb", fontWeight: row.pos <= 3 ? 700 : 400 }}>{row.name}</td>
+                        <td style={{ padding: "8px 12px" }}>
+                          <span style={{ background: row.teamColour + "22", color: row.teamColour, border: `1px solid ${row.teamColour}44`, padding: "2px 7px", borderRadius: 2, fontSize: 10, fontWeight: 700 }}>
+                            {row.team}
+                          </span>
+                        </td>
+                        <td style={{ padding: "8px 12px", fontFamily: "Orbitron", fontWeight: 700, fontSize: 13, color: row.pos <= 3 ? "#e10600" : "#aaa" }}>{row.pts}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+              <div style={{ fontSize: 10, color: "#333", textAlign: "center", marginBottom: 4 }}>
+                After {sessions.filter(s => new Date(s.date_end) < new Date()).length} of {sessions.length} rounds · Data via OpenF1
+              </div>
+            </>
+          )}
+        </>
+      )}
     </div>
   );
 }
@@ -926,7 +1201,7 @@ const SECTIONS = [
   { id: "drivers", label: "🏎️ Drivers" },
   { id: "teams", label: "🔧 Teams" },
   { id: "history", label: "📅 Changes" },
-  { id: "results", label: "🏆 2026 Results" },
+  { id: "results", label: "🏆 Results" },
 ];
 
 export default function F1Guide() {
