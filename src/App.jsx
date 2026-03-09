@@ -461,7 +461,7 @@ const TEAMS_2026 = [
   { id: "mercedes", name: "Mercedes-AMG Petronas", base: "Brackley, UK", color: "#27F4D2", engine: "Mercedes (new regs)", tp: "Toto Wolff", founded: 2010, championships: "8 Constructors (2014–2021)", drivers: ["George Russell", "Kimi Antonelli"], desc: "Mercedes dominated the last major regulation change in 2014. Wolff is hoping history repeats in 2026. Russell and the rapidly-developing Antonelli carry their hopes into a new era.", engineNote: "Mercedes 2026 PU — Completely redesigned. ~50% electric power requirement. Mercedes expected to be very strong." },
   { id: "ferrari", name: "Scuderia Ferrari", base: "Maranello, Italy", color: "#E8002D", engine: "Ferrari (new regs)", tp: "Frédéric Vasseur", founded: 1950, championships: "16 Constructors (last: 2008)", drivers: ["Charles Leclerc", "Lewis Hamilton"], desc: "Hamilton and Leclerc continue into the new era. Ferrari's Maranello factory has invested massively in the 2026 power unit. The dream: Hamilton finally wins his 8th title in red.", engineNote: "Ferrari 2026 PU — Redesigned from ground up. Also supplied to Haas. Sauber switches to Audi." },
   { id: "mclaren", name: "McLaren F1 Team", base: "Woking, UK", color: "#FF8000", engine: "Mercedes (new regs)", tp: "Andrea Stella", founded: 1966, championships: "8 Constructors (last: 1998)", drivers: ["Lando Norris", "Oscar Piastri"], desc: "McLaren enter 2026 as title favourites. Their chassis expertise plus Mercedes' expected strong 2026 unit makes them dangerous. Norris and Piastri continue — the best young pairing in F1.", engineNote: "Mercedes-supplied 2026 unit." },
-  { id: "astonmartin", name: "Aston Martin Aramco", base: "Silverstone, UK", color: "#229971", engine: "Mercedes (new regs)", tp: "Andy Cowell", founded: 2021, championships: "0", drivers: ["Fernando Alonso", "Lance Stroll"], desc: "Andy Cowell — who built the dominant 2014 Mercedes hybrid unit — now runs Aston Martin on Mercedes power. If anyone can exploit a new Mercedes engine, it's him. Alonso's last shot at glory.", engineNote: "Mercedes-supplied 2026. Cowell's knowledge of this engine architecture is unparalleled." },
+  { id: "astonmartin", name: "Aston Martin Aramco", base: "Silverstone, UK", color: "#229971", engine: "Honda (works)", tp: "Andy Cowell", founded: 2021, championships: "0", drivers: ["Fernando Alonso", "Lance Stroll"], desc: "A huge twist — Aston Martin signed a works deal with Honda for 2026 after Mercedes ended their supply agreement. Andy Cowell (ex-Mercedes HPP) now runs a Honda-powered team. Alonso's last shot at glory with a works engine.", engineNote: "Honda works PU — Honda ended their Red Bull partnership and signed with Aston Martin as their exclusive works team from 2026. A major coup." },
   { id: "alpine", name: "Alpine F1 Team", base: "Enstone, UK", color: "#0093CC", engine: "Mercedes (new regs)", tp: "Oliver Oakes", founded: 2021, championships: "0", drivers: ["Pierre Gasly", "Jack Doohan"], desc: "Alpine ditches their own Renault engine and becomes a Mercedes customer — effectively admitting the Renault unit wasn't good enough. A huge strategic shift for the French manufacturer.", engineNote: "Switches to Mercedes power in 2026 — the biggest change in the team's history." },
   { id: "williams", name: "Williams Racing", base: "Grove, UK", color: "#64C4FF", engine: "Mercedes (new regs)", tp: "James Vowles", founded: 1977, championships: "9 Constructors (last: 1997)", drivers: ["Alexander Albon", "Carlos Sainz"], desc: "The regulation reset gives Williams a clean slate. If Mercedes hit the ground running in 2026, Williams could genuinely challenge the top teams. Vowles' rebuild enters its most exciting chapter yet.", engineNote: "Mercedes-supplied — continuing relationship into new regulations." },
   { id: "haas", name: "MoneyGram Haas F1 Team", base: "Kannapolis, USA", color: "#B6BABD", engine: "Ferrari (new regs)", tp: "Ayao Komatsu", founded: 2016, championships: "0", drivers: ["Esteban Ocon", "Oliver Bearman"], desc: "Continue as Ferrari customers into 2026. Bearman is Ferrari-backed — keeping the pipeline intact. New regulations give everyone a chance to surprise.", engineNote: "Ferrari-supplied 2026 unit." },
@@ -810,12 +810,123 @@ function HistorySection() {
   );
 }
 
+function ResultsSection() {
+  const raceResults = [
+    { pos: 1, driver: "George Russell", team: "Mercedes", teamColor: "#27F4D2", points: 25, gap: "Winner", note: "Pole to flag. One-stop strategy worked perfectly." },
+    { pos: 2, driver: "Kimi Antonelli", team: "Mercedes", teamColor: "#27F4D2", points: 18, gap: "+8.4s", note: "Stunning debut podium at 18 years old." },
+    { pos: 3, driver: "Charles Leclerc", team: "Ferrari", teamColor: "#E8002D", points: 15, gap: "+18.2s", note: "Led early laps after brilliant start but Ferrari's strategy cost them." },
+    { pos: 4, driver: "Lewis Hamilton", team: "Ferrari", teamColor: "#E8002D", points: 12, gap: "+35.7s", note: "Solid debut in red but Mercedes had the pace edge." },
+    { pos: 5, driver: "Lando Norris", team: "McLaren", teamColor: "#FF8000", points: 10, gap: "+71.1s", note: "35+ seconds behind Hamilton — McLaren struggled with the new regs." },
+    { pos: 6, driver: "Max Verstappen", team: "Red Bull", teamColor: "#3671C6", points: 8, gap: "+78.5s", note: "Sensational drive from P20 (crashed in Q1) to 6th. Vintage Verstappen." },
+    { pos: 7, driver: "Oliver Bearman", team: "Haas", teamColor: "#B6BABD", points: 6, gap: "+90.2s", note: "Impressive points on debut as a full-time driver." },
+    { pos: 8, driver: "Arvid Lindblad", team: "Racing Bulls", teamColor: "#6692FF", points: 4, gap: "+95.8s", note: "Stellar F1 debut for the 18-year-old rookie." },
+    { pos: 9, driver: "Gabriel Bortoleto", team: "Audi", teamColor: "#BB0A21", points: 2, gap: "+102.3s", note: "Points on debut for Audi — a historic moment for the brand." },
+    { pos: 10, driver: "Pierre Gasly", team: "Alpine", teamColor: "#0093CC", points: 1, gap: "+108.9s", note: "Lone point for Alpine in a difficult weekend." },
+  ];
+
+  const dnf = [
+    { driver: "Oscar Piastri", team: "McLaren", reason: "DNF — Crashed McLaren on sighting lap before race start. Did not start." },
+    { driver: "Nico Hülkenberg", team: "Audi", reason: "DNS — Technical issue. Did not start." },
+    { driver: "Valtteri Bottas", team: "Cadillac", reason: "DNF — Retired during race. Cadillac's difficult debut." },
+    { driver: "Isack Hadjar", team: "Red Bull", reason: "DNF — Retired, triggering the VSC that changed the race strategy." },
+    { driver: "Fernando Alonso", team: "Aston Martin", reason: "DNF — Retired. Honda power unit issues on debut." },
+    { driver: "Lance Stroll", team: "Aston Martin", reason: "NC — Not classified despite rejoining race." },
+  ];
+
+  return (
+    <div>
+      <div className="section-title">2026 <span>Results</span></div>
+      <div className="section-line" />
+
+      <div className="card" style={{ marginBottom: 20, borderLeft: "3px solid #e10600" }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 8, flexWrap: "wrap" }}>
+          <div style={{ fontFamily: "Orbitron", fontSize: 11, color: "#e10600", letterSpacing: 2, textTransform: "uppercase" }}>Round 1</div>
+          <div style={{ fontFamily: "Orbitron", fontSize: 14, fontWeight: 700, color: "#fff" }}>🇦🇺 Australian Grand Prix</div>
+          <div style={{ marginLeft: "auto", fontSize: 11, color: "#555" }}>Melbourne · 8 Mar 2026</div>
+        </div>
+        <p style={{ fontSize: 12, color: "#aaa", lineHeight: 1.7 }}>
+          The first race of the new F1 era. Mercedes dominated from the front — Russell took pole by nearly 8 tenths, then won the race using a brave one-stop strategy. Ferrari led early laps but their decision not to pit under two Virtual Safety Cars proved costly. Verstappen drove from last to 6th after crashing in qualifying. Piastri didn't even start — crashing his McLaren on the sighting lap.
+        </p>
+      </div>
+
+      <div style={{ overflowX: "auto", marginBottom: 24 }}>
+        <table style={{ width: "100%", borderCollapse: "collapse", minWidth: 500 }}>
+          <thead>
+            <tr>
+              <th style={{ background: "#e10600", color: "#fff", padding: "9px 12px", textAlign: "left", fontFamily: "Orbitron", fontSize: 10, letterSpacing: 2, textTransform: "uppercase" }}>Pos</th>
+              <th style={{ background: "#e10600", color: "#fff", padding: "9px 12px", textAlign: "left", fontFamily: "Orbitron", fontSize: 10, letterSpacing: 2, textTransform: "uppercase" }}>Driver</th>
+              <th style={{ background: "#e10600", color: "#fff", padding: "9px 12px", textAlign: "left", fontFamily: "Orbitron", fontSize: 10, letterSpacing: 2, textTransform: "uppercase" }}>Team</th>
+              <th style={{ background: "#e10600", color: "#fff", padding: "9px 12px", textAlign: "left", fontFamily: "Orbitron", fontSize: 10, letterSpacing: 2, textTransform: "uppercase" }}>Pts</th>
+              <th style={{ background: "#e10600", color: "#fff", padding: "9px 12px", textAlign: "left", fontFamily: "Orbitron", fontSize: 10, letterSpacing: 2, textTransform: "uppercase" }}>Gap</th>
+            </tr>
+          </thead>
+          <tbody>
+            {raceResults.map(row => (
+              <tr key={row.pos} style={{ borderBottom: "1px solid #1e1e2e" }}>
+                <td style={{ padding: "10px 12px" }}>
+                  <span className={`pos-badge${row.pos === 1 ? " p1" : row.pos === 2 ? " p2" : row.pos === 3 ? " p3" : ""}`}>{row.pos}</span>
+                </td>
+                <td style={{ padding: "10px 12px" }}>
+                  <div style={{ fontWeight: 700, color: "#fff", fontSize: 13 }}>{row.driver}</div>
+                  <div style={{ fontSize: 11, color: "#555", marginTop: 2 }}>{row.note}</div>
+                </td>
+                <td style={{ padding: "10px 12px" }}>
+                  <span style={{ background: row.teamColor + "22", color: row.teamColor, border: `1px solid ${row.teamColor}44`, padding: "3px 8px", borderRadius: 2, fontSize: 10, fontWeight: 700, whiteSpace: "nowrap" }}>{row.team}</span>
+                </td>
+                <td style={{ padding: "10px 12px", fontFamily: "Orbitron", fontWeight: 700, color: row.pos <= 3 ? "#e10600" : "#aaa", fontSize: 13 }}>{row.points}</td>
+                <td style={{ padding: "10px 12px", fontSize: 12, color: "#555" }}>{row.gap}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+
+      <div className="section-title" style={{ fontSize: "clamp(13px,3vw,18px)", marginBottom: 8 }}>Did Not <span>Finish / Start</span></div>
+      <div className="section-line" />
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(min(100%, 280px), 1fr))", gap: 10, marginBottom: 32 }}>
+        {dnf.map(d => (
+          <div key={d.driver} style={{ background: "#0d0d15", border: "1px solid #1e1e2e", borderLeft: "3px solid #333", padding: "12px 14px", borderRadius: 2 }}>
+            <div style={{ fontWeight: 700, color: "#fff", fontSize: 13, marginBottom: 4 }}>{d.driver}</div>
+            <div style={{ fontSize: 10, color: "#666", textTransform: "uppercase", letterSpacing: 1, marginBottom: 4 }}>{d.team}</div>
+            <div style={{ fontSize: 12, color: "#777" }}>{d.reason}</div>
+          </div>
+        ))}
+      </div>
+
+      <div className="section-title" style={{ fontSize: "clamp(13px,3vw,18px)", marginBottom: 8 }}>Drivers' <span>Standings</span></div>
+      <div className="section-line" />
+      <div style={{ overflowX: "auto" }}>
+        <table style={{ width: "100%", borderCollapse: "collapse", minWidth: 360 }}>
+          <thead>
+            <tr>
+              <th style={{ background: "#12121c", color: "#e10600", padding: "8px 12px", fontFamily: "Orbitron", fontSize: 10, letterSpacing: 2, textTransform: "uppercase", textAlign: "left" }}>Pos</th>
+              <th style={{ background: "#12121c", color: "#e10600", padding: "8px 12px", fontFamily: "Orbitron", fontSize: 10, letterSpacing: 2, textTransform: "uppercase", textAlign: "left" }}>Driver</th>
+              <th style={{ background: "#12121c", color: "#e10600", padding: "8px 12px", fontFamily: "Orbitron", fontSize: 10, letterSpacing: 2, textTransform: "uppercase", textAlign: "left" }}>Pts</th>
+            </tr>
+          </thead>
+          <tbody>
+            {raceResults.map(row => (
+              <tr key={row.pos} style={{ borderBottom: "1px solid #1a1a2a" }}>
+                <td style={{ padding: "8px 12px" }}><span className={`pos-badge${row.pos === 1 ? " p1" : row.pos === 2 ? " p2" : row.pos === 3 ? " p3" : ""}`}>{row.pos}</span></td>
+                <td style={{ padding: "8px 12px", fontSize: 13, color: row.pos <= 3 ? "#fff" : "#bbb", fontWeight: row.pos <= 3 ? 700 : 400 }}>{row.driver}</td>
+                <td style={{ padding: "8px 12px", fontFamily: "Orbitron", fontWeight: 700, fontSize: 13, color: row.pos <= 3 ? "#e10600" : "#aaa" }}>{row.points}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+      <div style={{ marginTop: 16, fontSize: 11, color: "#444", textAlign: "center" }}>After Round 1 of 24 · Next: 🇨🇳 Chinese GP — 15 Mar 2026</div>
+    </div>
+  );
+}
+
 const SECTIONS = [
   { id: "how", label: "🏁 How It Works" },
   { id: "points", label: "📊 Points" },
   { id: "drivers", label: "🏎️ Drivers" },
   { id: "teams", label: "🔧 Teams" },
   { id: "history", label: "📅 Changes" },
+  { id: "results", label: "🏆 2026 Results" },
 ];
 
 export default function F1Guide() {
@@ -845,6 +956,7 @@ export default function F1Guide() {
             {active === "drivers" && <DriversSection />}
             {active === "teams" && <TeamsSection />}
             {active === "history" && <HistorySection />}
+            {active === "results" && <ResultsSection />}
           </main>
         </div>
       </div>
