@@ -198,7 +198,7 @@ const styles = `
   .nav {
     display: flex;
     justify-content: center;
-    padding: 10px 8px;
+    padding: 0 8px;
     background: #0d0d15;
     border-bottom: 1px solid #1e1e2e;
     position: sticky;
@@ -208,11 +208,98 @@ const styles = `
   }
   .nav-inner {
     display: flex;
-    flex-wrap: wrap;
-    gap: 4px;
+    gap: 0;
     justify-content: center;
     max-width: 1200px;
     width: 100%;
+    align-items: stretch;
+  }
+  .nav-group {
+    position: relative;
+  }
+  .nav-group-label {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 14px 18px;
+    font-family: 'Exo 2', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    color: #aaa;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: color 0.2s;
+    white-space: nowrap;
+    user-select: none;
+    border-bottom: 2px solid transparent;
+  }
+  .nav-group:hover .nav-group-label {
+    color: #fff;
+    border-bottom-color: #e10600;
+  }
+  .nav-group.has-active .nav-group-label {
+    color: #fff;
+    border-bottom-color: #e10600;
+  }
+  .nav-chevron {
+    font-size: 8px;
+    color: #555;
+    transition: transform 0.2s;
+  }
+  .nav-group:hover .nav-chevron { transform: rotate(180deg); color: #e10600; }
+  .nav-dropdown {
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #0d0d15;
+    border: 1px solid #1e1e2e;
+    border-top: 2px solid #e10600;
+    border-radius: 0 0 6px 6px;
+    padding: 8px;
+    min-width: 220px;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.15s, transform 0.15s;
+    transform: translateX(-50%) translateY(-4px);
+    box-shadow: 0 16px 40px rgba(0,0,0,0.6);
+    z-index: 200;
+  }
+  .nav-group:hover .nav-dropdown {
+    opacity: 1;
+    pointer-events: all;
+    transform: translateX(-50%) translateY(0);
+  }
+  .nav-dropdown-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 10px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background 0.15s;
+    border: none;
+    background: none;
+    width: 100%;
+    text-align: left;
+  }
+  .nav-dropdown-item:hover { background: #15151f; }
+  .nav-dropdown-item.active { background: rgba(225,6,0,0.1); }
+  .nav-dropdown-icon { font-size: 18px; flex-shrink: 0; margin-top: 1px; }
+  .nav-dropdown-text {}
+  .nav-dropdown-title {
+    font-family: 'Exo 2', sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    color: #fff;
+    margin-bottom: 2px;
+  }
+  .nav-dropdown-item.active .nav-dropdown-title { color: #e10600; }
+  .nav-dropdown-desc {
+    font-size: 11px;
+    color: #555;
+    line-height: 1.4;
   }
   .nav-btn {
     padding: clamp(5px, 1.5vw, 8px) clamp(8px, 2vw, 14px);
@@ -1977,19 +2064,36 @@ function CircuitsSection() {
   );
 }
 
-const SECTIONS = [
-  { id: "how", label: "🏁 How It Works" },
-  { id: "points", label: "📊 Points" },
-  { id: "drivers", label: "🏎️ Drivers" },
-  { id: "teams", label: "🔧 Teams" },
-  { id: "history", label: "📅 Changes" },
-  { id: "circuits", label: "🗺️ Circuits" },
-  { id: "results", label: "🏆 Results" },
-  { id: "glossary", label: "📖 Glossary" },
-  { id: "rules", label: "📋 Rules" },
-  { id: "compare", label: "⚡ Car Compare" },
-  { id: "records", label: "🎖️ Records" },
+const NAV_GROUPS = [
+  {
+    label: "Learn the Basics",
+    sections: [
+      { id: "how",      icon: "🏁", label: "How It Works",  desc: "Race weekends, qualifying, tyres & strategy" },
+      { id: "points",   icon: "📊", label: "Points System", desc: "How points are scored and championships decided" },
+      { id: "rules",    icon: "📋", label: "Rules Explained",desc: "Plain-English breakdowns of F1's confusing rules" },
+      { id: "glossary", icon: "📖", label: "Glossary",       desc: "Every F1 term defined — undercut, VSC, DRS & more" },
+    ]
+  },
+  {
+    label: "2026 Season",
+    sections: [
+      { id: "drivers",  icon: "🏎️", label: "Drivers",       desc: "All 22 drivers with ratings, stats & profiles" },
+      { id: "teams",    icon: "🔧", label: "Teams",          desc: "All 11 constructors across 2025 & 2026" },
+      { id: "history",  icon: "📅", label: "Driver Changes", desc: "Every major move 2018–2026 and the reason why" },
+      { id: "compare",  icon: "⚡", label: "Car Compare",    desc: "2025 vs 2026 regulations side by side" },
+    ]
+  },
+  {
+    label: "Race & Stats",
+    sections: [
+      { id: "circuits", icon: "🗺️", label: "Circuit Guide",  desc: "All 24 circuits — lap records, facts & details" },
+      { id: "results",  icon: "🏆", label: "Live Results",   desc: "Live race results & championship standings" },
+      { id: "records",  icon: "🎖️", label: "All-Time Records",desc: "Most wins, poles, titles & fastest laps in history" },
+    ]
+  },
 ];
+
+const SECTIONS = NAV_GROUPS.flatMap(g => g.sections);
 
 export default function F1Guide() {
   const [active, setActive] = useState("how");
@@ -2006,11 +2110,32 @@ export default function F1Guide() {
           </div>
           <nav className="nav">
             <div className="nav-inner">
-              {SECTIONS.map(s => (
-                <button key={s.id} className={`nav-btn${active === s.id ? " active" : ""}`} onClick={() => setActive(s.id)}>
-                  {s.label}
-                </button>
-              ))}
+              {NAV_GROUPS.map(group => {
+                const groupHasActive = group.sections.some(s => s.id === active);
+                return (
+                  <div key={group.label} className={`nav-group${groupHasActive ? " has-active" : ""}`}>
+                    <div className="nav-group-label">
+                      {group.label}
+                      <span className="nav-chevron">▼</span>
+                    </div>
+                    <div className="nav-dropdown">
+                      {group.sections.map(s => (
+                        <button
+                          key={s.id}
+                          className={`nav-dropdown-item${active === s.id ? " active" : ""}`}
+                          onClick={() => setActive(s.id)}
+                        >
+                          <span className="nav-dropdown-icon">{s.icon}</span>
+                          <span className="nav-dropdown-text">
+                            <div className="nav-dropdown-title">{s.label}</div>
+                            <div className="nav-dropdown-desc">{s.desc}</div>
+                          </span>
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                );
+              })}
             </div>
           </nav>
           <main className="main">
