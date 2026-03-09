@@ -208,7 +208,6 @@ const styles = `
   }
   .nav-inner {
     display: flex;
-    gap: 0;
     justify-content: center;
     max-width: 1200px;
     width: 100%;
@@ -216,14 +215,16 @@ const styles = `
   }
   .nav-group {
     position: relative;
+    flex: 1;
   }
   .nav-group-label {
     display: flex;
     align-items: center;
+    justify-content: center;
     gap: 6px;
-    padding: 14px 18px;
+    padding: 14px 10px;
     font-family: 'Exo 2', sans-serif;
-    font-size: 13px;
+    font-size: clamp(10px, 2.5vw, 13px);
     font-weight: 600;
     color: #aaa;
     letter-spacing: 1px;
@@ -233,11 +234,11 @@ const styles = `
     white-space: nowrap;
     user-select: none;
     border-bottom: 2px solid transparent;
+    width: 100%;
   }
-  .nav-group:hover .nav-group-label {
-    color: #fff;
-    border-bottom-color: #e10600;
-  }
+  .nav-group-label:hover { color: #fff; }
+  .nav-group.open .nav-group-label,
+  .nav-group:hover .nav-group-label,
   .nav-group.has-active .nav-group-label {
     color: #fff;
     border-bottom-color: #e10600;
@@ -246,31 +247,41 @@ const styles = `
     font-size: 8px;
     color: #555;
     transition: transform 0.2s;
+    flex-shrink: 0;
   }
+  .nav-group.open .nav-chevron,
   .nav-group:hover .nav-chevron { transform: rotate(180deg); color: #e10600; }
   .nav-dropdown {
     position: absolute;
     top: 100%;
     left: 50%;
-    transform: translateX(-50%);
+    transform: translateX(-50%) translateY(-4px);
     background: #0d0d15;
     border: 1px solid #1e1e2e;
     border-top: 2px solid #e10600;
     border-radius: 0 0 6px 6px;
     padding: 8px;
-    min-width: 220px;
+    min-width: 240px;
     opacity: 0;
     pointer-events: none;
     transition: opacity 0.15s, transform 0.15s;
-    transform: translateX(-50%) translateY(-4px);
-    box-shadow: 0 16px 40px rgba(0,0,0,0.6);
+    box-shadow: 0 16px 40px rgba(0,0,0,0.8);
     z-index: 200;
   }
+  .nav-group.open .nav-dropdown,
   .nav-group:hover .nav-dropdown {
     opacity: 1;
     pointer-events: all;
     transform: translateX(-50%) translateY(0);
   }
+  /* keep within screen edges on mobile */
+  .nav-group:first-child .nav-dropdown { left: 0; transform: translateX(0) translateY(-4px); }
+  .nav-group:first-child.open .nav-dropdown,
+  .nav-group:first-child:hover .nav-dropdown { transform: translateX(0) translateY(0); }
+  .nav-group:last-child .nav-dropdown { left: auto; right: 0; transform: translateX(0) translateY(-4px); }
+  .nav-group:last-child.open .nav-dropdown,
+  .nav-group:last-child:hover .nav-dropdown { transform: translateX(0) translateY(0); }
+
   .nav-dropdown-item {
     display: flex;
     align-items: flex-start;
@@ -287,7 +298,6 @@ const styles = `
   .nav-dropdown-item:hover { background: #15151f; }
   .nav-dropdown-item.active { background: rgba(225,6,0,0.1); }
   .nav-dropdown-icon { font-size: 18px; flex-shrink: 0; margin-top: 1px; }
-  .nav-dropdown-text {}
   .nav-dropdown-title {
     font-family: 'Exo 2', sans-serif;
     font-size: 13px;
@@ -296,11 +306,7 @@ const styles = `
     margin-bottom: 2px;
   }
   .nav-dropdown-item.active .nav-dropdown-title { color: #e10600; }
-  .nav-dropdown-desc {
-    font-size: 11px;
-    color: #555;
-    line-height: 1.4;
-  }
+  .nav-dropdown-desc { font-size: 11px; color: #555; line-height: 1.4; }
   .nav-btn {
     padding: clamp(5px, 1.5vw, 8px) clamp(8px, 2vw, 14px);
     background: transparent;
@@ -2097,6 +2103,26 @@ const SECTIONS = NAV_GROUPS.flatMap(g => g.sections);
 
 export default function F1Guide() {
   const [active, setActive] = useState("how");
+  const [openGroup, setOpenGroup] = useState(null);
+
+  // close dropdown when clicking outside
+  useEffect(() => {
+    function handleClick(e) {
+      if (!e.target.closest(".nav-group")) setOpenGroup(null);
+    }
+    document.addEventListener("click", handleClick);
+    return () => document.removeEventListener("click", handleClick);
+  }, []);
+
+  function toggleGroup(label) {
+    setOpenGroup(g => g === label ? null : label);
+  }
+
+  function selectSection(id) {
+    setActive(id);
+    setOpenGroup(null);
+  }
+
   return (
     <>
       <style>{styles}</style>
@@ -2111,10 +2137,11 @@ export default function F1Guide() {
           <nav className="nav">
             <div className="nav-inner">
               {NAV_GROUPS.map(group => {
-                const groupHasActive = group.sections.some(s => s.id === active);
+                const isOpen = openGroup === group.label;
+                const hasActive = group.sections.some(s => s.id === active);
                 return (
-                  <div key={group.label} className={`nav-group${groupHasActive ? " has-active" : ""}`}>
-                    <div className="nav-group-label">
+                  <div key={group.label} className={`nav-group${isOpen ? " open" : ""}${hasActive ? " has-active" : ""}`}>
+                    <div className="nav-group-label" onClick={() => toggleGroup(group.label)}>
                       {group.label}
                       <span className="nav-chevron">▼</span>
                     </div>
@@ -2123,7 +2150,7 @@ export default function F1Guide() {
                         <button
                           key={s.id}
                           className={`nav-dropdown-item${active === s.id ? " active" : ""}`}
-                          onClick={() => setActive(s.id)}
+                          onClick={() => selectSection(s.id)}
                         >
                           <span className="nav-dropdown-icon">{s.icon}</span>
                           <span className="nav-dropdown-text">
