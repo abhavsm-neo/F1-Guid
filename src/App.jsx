@@ -863,7 +863,7 @@ function ResultsSection() {
   // Step 1: fetch all race sessions for current year
   async function fetchSessions() {
     const res = await fetch(
-      `https://api.openf1.org/v1/sessions?session_type=Race&year=${YEAR}`
+      `/api/openf1/sessions?session_type=Race&year=${YEAR}`
     );
     if (!res.ok) throw new Error("Failed to fetch sessions");
     const data = await res.json();
@@ -874,9 +874,9 @@ function ResultsSection() {
   // Step 2: fetch race positions for a session
   async function fetchRaceResults(sessionKey) {
     const [posRes, driversRes, lapsRes] = await Promise.all([
-      fetch(`https://api.openf1.org/v1/position?session_key=${sessionKey}`),
-      fetch(`https://api.openf1.org/v1/drivers?session_key=${sessionKey}`),
-      fetch(`https://api.openf1.org/v1/laps?session_key=${sessionKey}&is_pit_out_lap=false`),
+      fetch(`/api/openf1/position?session_key=${sessionKey}`),
+      fetch(`/api/openf1/drivers?session_key=${sessionKey}`),
+      fetch(`/api/openf1/laps?session_key=${sessionKey}&is_pit_out_lap=false`),
     ]);
     const [positions, drivers, laps] = await Promise.all([
       posRes.json(), driversRes.json(), lapsRes.json()
