@@ -1,8 +1,18 @@
 {
+  "buildCommand": "npm run build",
+  "outputDirectory": "dist",
   "rewrites": [
     {
       "source": "/api/openf1/:path*",
       "destination": "https://api.openf1.org/v1/:path*"
+    },
+    {
+      "source": "/api/news",
+      "destination": "/api/news"
+    },
+    {
+      "source": "/(.*)",
+      "destination": "/index.html"
     }
   ]
 }
