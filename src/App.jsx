@@ -1076,9 +1076,142 @@ const styles = `
   }
   .team-detail { font-size: 12px; color: var(--text3); line-height: 1.7; }
 
+  /* ── Onboarding Modal ── */
+  .onboarding-overlay {
+    position: fixed; inset: 0; z-index: 1000;
+    background: rgba(0,0,0,0.85);
+    display: flex; align-items: center; justify-content: center;
+    padding: 20px; backdrop-filter: blur(6px);
+    animation: sectionIn 0.4s both;
+  }
+  .onboarding-modal {
+    background: var(--bg2); border: 1px solid rgba(225,6,0,0.3);
+    border-radius: 16px; padding: 36px 32px; max-width: 520px; width: 100%;
+    box-shadow: 0 40px 100px rgba(0,0,0,0.8), 0 0 60px rgba(225,6,0,0.1);
+    position: relative;
+  }
+  .onboarding-option {
+    width: 100%; padding: 16px 18px; margin-bottom: 10px;
+    background: var(--card-bg); border: 1px solid var(--glass-border);
+    border-radius: 10px; cursor: pointer; text-align: left;
+    transition: all 0.25s; backdrop-filter: blur(8px);
+    display: flex; align-items: center; gap: 14px;
+  }
+  .onboarding-option:hover { border-color: rgba(225,6,0,0.4); transform: translateX(4px); box-shadow: var(--shadow-hover); }
+
+  /* ── Bookmarks ── */
+  .bookmark-btn {
+    background: none; border: none; cursor: pointer;
+    font-size: 16px; transition: transform 0.25s cubic-bezier(0.34,1.56,0.64,1);
+    padding: 2px; line-height: 1;
+  }
+  .bookmark-btn:hover { transform: scale(1.3); }
+  .bookmarks-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px,1fr)); gap: 10px; }
+  .bookmark-card {
+    background: var(--card-bg); border: 1px solid var(--glass-border);
+    border-radius: 10px; padding: 14px; cursor: pointer;
+    transition: all 0.25s; backdrop-filter: blur(8px);
+    display: flex; align-items: center; gap: 10px;
+  }
+  .bookmark-card:hover { border-color: rgba(225,6,0,0.4); transform: translateY(-2px); }
+
+  /* ── Driver Compare / Radar ── */
+  .compare-select-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 24px; }
+  .compare-driver-select {
+    background: var(--card-bg); border: 1px solid var(--glass-border);
+    border-radius: 8px; color: var(--text); font-family: 'Exo 2', sans-serif;
+    font-size: 13px; padding: 10px 12px; width: 100%; outline: none;
+    cursor: pointer; transition: border-color 0.2s;
+  }
+  .compare-driver-select:focus { border-color: rgba(225,6,0,0.4); }
+  .radar-wrap { display: flex; justify-content: center; margin: 20px 0; }
+  .compare-stat-row { display: grid; grid-template-columns: 1fr auto 1fr; gap: 8px; align-items: center; margin-bottom: 10px; }
+  .compare-bar-left { height: 8px; border-radius: 4px; margin-left: auto; transition: width 0.6s cubic-bezier(0.22,1,0.36,1); }
+  .compare-bar-right { height: 8px; border-radius: 4px; margin-right: auto; transition: width 0.6s cubic-bezier(0.22,1,0.36,1); }
+  .compare-stat-label { font-family: 'Orbitron', sans-serif; font-size: 9px; color: var(--text3); letter-spacing: 1px; text-align: center; }
+
+  /* ── Championship Tracker ── */
+  .tracker-year-tabs { display: flex; gap: 8px; margin-bottom: 20px; flex-wrap: wrap; }
+  .tracker-legend { display: flex; flex-wrap: wrap; gap: 12px; margin-bottom: 16px; }
+  .tracker-legend-item { display: flex; align-items: center; gap: 6px; font-size: 12px; color: var(--text2); }
+  .tracker-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+  .tracker-chart { background: var(--card-bg); border: 1px solid var(--glass-border); border-radius: 12px; padding: 20px; backdrop-filter: blur(12px); overflow-x: auto; }
+  .drama-badge {
+    display: inline-block; padding: 3px 10px; border-radius: 20px;
+    background: rgba(225,6,0,0.12); border: 1px solid rgba(225,6,0,0.3);
+    font-size: 9px; color: #e10600; font-family: 'Orbitron', sans-serif;
+    letter-spacing: 1px; text-transform: uppercase; margin-left: 8px;
+    box-shadow: 0 0 8px rgba(225,6,0,0.15);
+  }
+
+  /* ── Team Quiz ── */
+  .team-quiz-result {
+    text-align: center; padding: 32px 20px;
+    background: var(--card-bg); border-radius: 16px;
+    border: 1px solid var(--glass-border);
+    backdrop-filter: blur(14px); box-shadow: var(--shadow);
+  }
+  .team-result-name {
+    font-family: 'Orbitron', sans-serif; font-size: 24px; font-weight: 900;
+    letter-spacing: 2px; text-transform: uppercase; margin: 12px 0 8px;
+  }
+
+  /* ── Tyre Strategy ── */
+  .tyre-legend { display: flex; gap: 12px; margin-bottom: 16px; flex-wrap: wrap; }
+  .tyre-dot { width: 12px; height: 12px; border-radius: 50%; }
+  .strategy-row { margin-bottom: 20px; }
+  .strategy-label { font-size: 11px; color: var(--text3); margin-bottom: 6px; font-family: 'Orbitron', sans-serif; letter-spacing: 1px; }
+  .strategy-track { height: 32px; background: var(--bg3); border-radius: 6px; overflow: hidden; display: flex; position: relative; border: 1px solid var(--glass-border); }
+  .strategy-seg {
+    height: 100%; display: flex; align-items: center; justify-content: center;
+    font-size: 9px; font-family: 'Orbitron', sans-serif; color: #000;
+    font-weight: 700; letter-spacing: 1px; position: relative;
+    transition: filter 0.2s; cursor: default;
+    border-right: 2px solid rgba(0,0,0,0.3);
+  }
+  .strategy-seg:last-child { border-right: none; }
+  .strategy-seg:hover { filter: brightness(1.15); }
+  .pit-marker { position: absolute; top: 0; bottom: 0; width: 2px; background: rgba(255,255,255,0.6); z-index: 1; }
+
+  /* ── H2H Section ── */
+  .h2h-card {
+    background: var(--card-bg); border: 1px solid var(--glass-border);
+    border-radius: 12px; padding: 20px; margin-bottom: 14px;
+    backdrop-filter: blur(12px); box-shadow: var(--shadow); transition: all 0.25s;
+  }
+  .h2h-card:hover { box-shadow: var(--shadow-hover); transform: translateY(-2px); }
+  .h2h-bar-wrap { height: 8px; background: var(--bg3); border-radius: 4px; overflow: hidden; margin: 8px 0; display: flex; }
+  .h2h-bar-left { height: 100%; border-radius: 4px 0 0 4px; transition: width 0.8s cubic-bezier(0.22,1,0.36,1); }
+  .h2h-bar-right { height: 100%; border-radius: 0 4px 4px 0; transition: width 0.8s cubic-bezier(0.22,1,0.36,1); }
+
+  /* ── Share Card ── */
+  .share-btn {
+    display: flex; align-items: center; gap: 8px;
+    padding: 10px 20px; background: linear-gradient(135deg, #e10600, #ff4020);
+    border: none; color: #fff; font-family: 'Orbitron', sans-serif;
+    font-size: 11px; letter-spacing: 2px; cursor: pointer;
+    border-radius: 8px; transition: all 0.25s; margin-top: 14px;
+    box-shadow: 0 4px 20px rgba(225,6,0,0.3);
+  }
+  .share-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(225,6,0,0.4); }
+
+  /* ── Skeleton loader ── */
+  @keyframes shimmer {
+    from { background-position: -200% 0; }
+    to { background-position: 200% 0; }
+  }
+  .skeleton {
+    background: linear-gradient(90deg, var(--bg3) 25%, var(--bg2) 50%, var(--bg3) 75%);
+    background-size: 200% 100%;
+    animation: shimmer 1.4s infinite;
+    border-radius: 6px;
+  }
+
   @media (max-width: 600px) {
     .points-wrap { grid-template-columns: 1fr; }
     .filter-pill { font-size: 9px; padding: 4px 9px; }
+    .compare-select-row { grid-template-columns: 1fr; }
+    .tracker-year-tabs { gap: 6px; }
   }
 `;
 
@@ -2443,6 +2576,7 @@ function RacePredictorSection() {
 
   const nextRace = RACE_CALENDAR_2026.find(r => new Date(r.date) > new Date()) || RACE_CALENDAR_2026[RACE_CALENDAR_2026.length - 1];
   const selectedIds = picks.filter(Boolean).map(d => d.name);
+  const downloadShareCard = useShareCard(picks, nextRace);
 
   function pick(driver) {
     if (selectedIds.includes(driver.name)) return;
@@ -2456,7 +2590,6 @@ function RacePredictorSection() {
   function removeSlot(i) {
     const newPicks = [...picks];
     newPicks[i] = null;
-    // compact — shift remaining picks up
     const compacted = newPicks.filter(Boolean);
     while (compacted.length < 10) compacted.push(null);
     setPicks(compacted);
@@ -2470,18 +2603,21 @@ function RacePredictorSection() {
     <div>
       <div className="section-title">Race <span>Predictor</span></div>
       <div className="section-line" />
-      <div style={{ display: "inline-flex", alignItems: "center", gap: 8, padding: "6px 12px", background: "rgba(225,6,0,0.08)", border: "1px solid rgba(225,6,0,0.2)", borderRadius: 2, marginBottom: 20 }}>
+      <div style={{ display: "inline-flex", alignItems: "center", gap: 8, padding: "6px 14px", background: "rgba(225,6,0,0.08)", border: "1px solid rgba(225,6,0,0.2)", borderRadius: 20, marginBottom: 20 }}>
         <span style={{ fontSize: 14 }}>{nextRace.flag}</span>
         <span style={{ fontFamily: "Orbitron", fontSize: 11, color: "#e10600", letterSpacing: 1 }}>NEXT RACE: {nextRace.name} · Round {nextRace.round}</span>
       </div>
-      <p style={{ fontSize: 13, color: "var(--text3)", lineHeight: 1.7, marginBottom: 20 }}>Pick your predicted top 10 finishers in order. Tap a driver to add them to your prediction — tap a slot to remove.</p>
+      <p style={{ fontSize: 13, color: "var(--text3)", lineHeight: 1.7, marginBottom: 20 }}>Pick your predicted top 10 finishers in order. Tap a driver to add them — tap a slot to remove. Then share your grid as a shareable image!</p>
 
       {submitted ? (
         <div>
           <div className="card" style={{ textAlign: "center", padding: "32px 20px", marginBottom: 20, borderColor: "#00dc78" }}>
             <div style={{ fontSize: 32, marginBottom: 8 }}>🏁</div>
             <div style={{ fontFamily: "Orbitron", fontSize: 14, color: "#00dc78", letterSpacing: 2, marginBottom: 8 }}>PREDICTION LOCKED IN!</div>
-            <p style={{ fontSize: 12, color: "var(--text3)" }}>Come back after the race to see how you did.</p>
+            <p style={{ fontSize: 12, color: "var(--text3)", marginBottom: 16 }}>Come back after the race to see how you did.</p>
+            <button className="share-btn" onClick={downloadShareCard} style={{ margin: "0 auto" }}>
+              📸 DOWNLOAD SHARE CARD
+            </button>
           </div>
           <div style={{ marginBottom: 20 }}>
             {picks.map((d, i) => (
@@ -2493,11 +2629,10 @@ function RacePredictorSection() {
               </div>
             ))}
           </div>
-          <button onClick={reset} style={{ padding: "8px 20px", background: "transparent", border: "1px solid var(--border2)", color: "var(--text2)", fontFamily: "Orbitron", fontSize: 10, letterSpacing: 2, cursor: "pointer", borderRadius: 2 }}>RESET</button>
+          <button onClick={reset} style={{ padding: "8px 20px", background: "transparent", border: "1px solid var(--border2)", color: "var(--text2)", fontFamily: "Orbitron", fontSize: 10, letterSpacing: 2, cursor: "pointer", borderRadius: 6 }}>RESET</button>
         </div>
       ) : (
         <div className="predictor-grid">
-          {/* Left: pick slots */}
           <div>
             <div style={{ fontFamily: "Orbitron", fontSize: 9, color: "#e10600", letterSpacing: 2, marginBottom: 12 }}>YOUR TOP 10</div>
             {picks.map((d, i) => (
@@ -2515,13 +2650,11 @@ function RacePredictorSection() {
               </div>
             ))}
             {complete && (
-              <button onClick={() => setSubmitted(true)} style={{ marginTop: 12, width: "100%", padding: "10px", background: "#e10600", border: "none", color: "var(--text)", fontFamily: "Orbitron", fontSize: 11, letterSpacing: 2, cursor: "pointer", borderRadius: 2 }}>
+              <button onClick={() => setSubmitted(true)} style={{ marginTop: 12, width: "100%", padding: "12px", background: "linear-gradient(135deg, #e10600, #ff4020)", border: "none", color: "#fff", fontFamily: "Orbitron", fontSize: 11, letterSpacing: 2, cursor: "pointer", borderRadius: 8, boxShadow: "0 4px 20px rgba(225,6,0,0.3)" }}>
                 LOCK IN PREDICTION 🏁
               </button>
             )}
           </div>
-
-          {/* Right: driver list */}
           <div>
             <div style={{ fontFamily: "Orbitron", fontSize: 9, color: "#e10600", letterSpacing: 2, marginBottom: 12 }}>SELECT DRIVERS</div>
             <div style={{ display: "flex", flexDirection: "column", gap: 4, maxHeight: 440, overflowY: "auto" }}>
@@ -2914,34 +3047,942 @@ function CircuitsSection() {
   );
 }
 
+// ─── CHAMPIONSHIP BATTLE DATA ────────────────────────────────────────────────
+const CHAMPIONSHIP_SEASONS = {
+  2021: {
+    title: "The Greatest Season Ever?",
+    drama: "Decided on final lap, final race",
+    note: "Verstappen & Hamilton were tied going into Abu Dhabi. A controversial late safety car restart handed Verstappen the title on the last lap.",
+    drivers: [
+      { name: "Verstappen", short: "VER", color: "#3671C6", team: "Red Bull" },
+      { name: "Hamilton", short: "HAM", color: "#27F4D2", team: "Mercedes" },
+      { name: "Bottas", short: "BOT", color: "#00A6B4", team: "Mercedes" },
+      { name: "Pérez", short: "PER", color: "#2060C0", team: "Red Bull" },
+    ],
+    rounds: [
+      { label: "R1", points: [18, 25, 15, 0] },
+      { label: "R5", points: [105, 94, 67, 40] },
+      { label: "R10", points: [156, 177, 108, 90] },
+      { label: "R15", points: [226, 221, 133, 120] },
+      { label: "R18", points: [293, 287, 155, 149] },
+      { label: "R21", points: [369, 369, 192, 183] },
+      { label: "Final", points: [395, 387, 226, 190] },
+    ],
+  },
+  2022: {
+    title: "Ground Effect Revolution",
+    drama: "Leclerc led, then Red Bull took over",
+    note: "Ferrari started brilliantly but reliability failures gifted Verstappen the title. He won 15 of 22 races and broke the single-season wins record.",
+    drivers: [
+      { name: "Verstappen", short: "VER", color: "#3671C6", team: "Red Bull" },
+      { name: "Leclerc", short: "LEC", color: "#E8002D", team: "Ferrari" },
+      { name: "Pérez", short: "PER", color: "#2060C0", team: "Red Bull" },
+      { name: "Russell", short: "RUS", color: "#27F4D2", team: "Mercedes" },
+    ],
+    rounds: [
+      { label: "R1", points: [0, 26, 0, 4] },
+      { label: "R5", points: [59, 104, 54, 28] },
+      { label: "R10", points: [175, 138, 129, 84] },
+      { label: "R14", points: [258, 178, 173, 111] },
+      { label: "R18", points: [341, 235, 222, 158] },
+      { label: "Final", points: [454, 308, 305, 275] },
+    ],
+  },
+  2023: {
+    title: "Verstappen Steamroller",
+    drama: "Record 19 wins in a single season",
+    note: "Red Bull won 21 of 22 races. Verstappen was in a class of his own — he even took pole and won at tracks Red Bull historically struggled at.",
+    drivers: [
+      { name: "Verstappen", short: "VER", color: "#3671C6", team: "Red Bull" },
+      { name: "Pérez", short: "PER", color: "#2060C0", team: "Red Bull" },
+      { name: "Alonso", short: "ALO", color: "#229971", team: "Aston Martin" },
+      { name: "Hamilton", short: "HAM", color: "#27F4D2", team: "Mercedes" },
+    ],
+    rounds: [
+      { label: "R1", points: [25, 16, 15, 18] },
+      { label: "R5", points: [119, 84, 75, 44] },
+      { label: "R10", points: [229, 150, 131, 111] },
+      { label: "R15", points: [331, 189, 174, 158] },
+      { label: "R20", points: [514, 240, 206, 194] },
+      { label: "Final", points: [575, 285, 234, 234] },
+    ],
+  },
+  2024: {
+    title: "McLaren vs Red Bull",
+    drama: "Norris pushed Verstappen to the limit",
+    note: "Verstappen took his 4th title despite McLaren running the fastest car in the second half of the season. Norris cut a 119-point deficit to just 47 at one stage.",
+    drivers: [
+      { name: "Verstappen", short: "VER", color: "#3671C6", team: "Red Bull" },
+      { name: "Norris", short: "NOR", color: "#FF8000", team: "McLaren" },
+      { name: "Leclerc", short: "LEC", color: "#E8002D", team: "Ferrari" },
+      { name: "Piastri", short: "PIA", color: "#FF6600", team: "McLaren" },
+    ],
+    rounds: [
+      { label: "R1", points: [25, 2, 15, 8] },
+      { label: "R5", points: [136, 62, 56, 39] },
+      { label: "R10", points: [194, 131, 113, 81] },
+      { label: "R15", points: [303, 241, 217, 179] },
+      { label: "R20", points: [362, 331, 272, 222] },
+      { label: "Final", points: [437, 374, 356, 292] },
+    ],
+  },
+};
+
+// ─── H2H TEAMMATE DATA ────────────────────────────────────────────────────────
+const H2H_DATA_2024 = [
+  { team: "Red Bull", color: "#3671C6", d1: "Verstappen", d2: "Pérez", qualiD1: 19, qualiD2: 5, raceD1: 20, raceD2: 4, note: "Verstappen dominated every metric." },
+  { team: "Ferrari", color: "#E8002D", d1: "Leclerc", d2: "Sainz", qualiD1: 16, qualiD2: 8, raceD1: 13, raceD2: 11, note: "Sainz was closer in races than qualifying." },
+  { team: "McLaren", color: "#FF8000", d1: "Norris", d2: "Piastri", qualiD1: 13, qualiD2: 11, raceD1: 12, raceD2: 12, note: "Remarkably even — the best team pairing of 2024." },
+  { team: "Mercedes", color: "#27F4D2", d1: "Hamilton", d2: "Russell", qualiD1: 9, qualiD2: 15, raceD1: 9, raceD2: 15, note: "Russell outperformed Hamilton in his final Mercedes season." },
+  { team: "Aston Martin", color: "#229971", d1: "Alonso", d2: "Stroll", qualiD1: 19, qualiD2: 5, raceD1: 17, raceD2: 7, note: "Alonso comprehensively outpaced his teammate." },
+  { team: "Alpine", color: "#0093CC", d1: "Gasly", d2: "Ocon", qualiD1: 12, qualiD2: 12, raceD1: 11, raceD2: 13, note: "Closest qualifying battle of any team in 2024." },
+  { team: "Williams", color: "#64C4FF", d1: "Albon", d2: "Sargeant/Colapinto", qualiD1: 20, qualiD2: 4, raceD1: 19, raceD2: 5, note: "Albon dominated — another case for 'team's best driver'." },
+  { team: "Haas", color: "#B6BABD", d1: "Hülkenberg", d2: "Magnussen", qualiD1: 17, qualiD2: 7, raceD1: 15, raceD2: 9, note: "Hülkenberg's best season in years." },
+];
+
+// ─── TYRE STRATEGY DATA ───────────────────────────────────────────────────────
+const TYRE_STRATEGIES = [
+  {
+    race: "2023 Bahrain GP", laps: 57,
+    desc: "Classic two-stopper on a circuit that's hard on tyres. Medium-Hard-Hard was the dominant strategy.",
+    compounds: { S: { color: "#e10600", label: "SOFT" }, M: { color: "#FFD700", label: "MEDIUM" }, H: { color: "#f0f0f0", label: "HARD" }, I: { color: "#4CAF50", label: "INTER" } },
+    strategies: [
+      { driver: "Verstappen (P1)", stints: [{ c:"M", laps:14 }, { c:"H", laps:22 }, { c:"H", laps:21 }] },
+      { driver: "Pérez (P2)", stints: [{ c:"M", laps:16 }, { c:"H", laps:19 }, { c:"H", laps:22 }] },
+      { driver: "Alonso (P3)", stints: [{ c:"M", laps:13 }, { c:"H", laps:24 }, { c:"H", laps:20 }] },
+      { driver: "Sainz (P4)", stints: [{ c:"M", laps:13 }, { c:"H", laps:20 }, { c:"H", laps:24 }] },
+    ],
+  },
+  {
+    race: "2021 Abu Dhabi GP", laps: 58,
+    desc: "The race that decided the championship on the final lap. Verstappen switched to Softs late — Hamilton stayed out. The late safety car changed everything.",
+    compounds: { S: { color: "#e10600", label: "SOFT" }, M: { color: "#FFD700", label: "MEDIUM" }, H: { color: "#f0f0f0", label: "HARD" } },
+    strategies: [
+      { driver: "Verstappen (P1)", stints: [{ c:"M", laps:14 }, { c:"H", laps:26 }, { c:"S", laps:18 }] },
+      { driver: "Hamilton (P2)", stints: [{ c:"M", laps:14 }, { c:"H", laps:44 }] },
+      { driver: "Leclerc (P3)", stints: [{ c:"H", laps:25 }, { c:"M", laps:33 }] },
+      { driver: "Sainz (P5)", stints: [{ c:"M", laps:14 }, { c:"H", laps:27 }, { c:"S", laps:17 }] },
+    ],
+  },
+  {
+    race: "2022 Monaco GP", laps: 78,
+    desc: "Monaco almost always produces a one-stop race — overtaking is nearly impossible so track position is everything. Tyre choice at the start defines your race.",
+    compounds: { S: { color: "#e10600", label: "SOFT" }, M: { color: "#FFD700", label: "MEDIUM" }, H: { color: "#f0f0f0", label: "HARD" }, I: { color: "#4CAF50", label: "INTER" }, W: { color: "#3399ff", label: "WET" } },
+    strategies: [
+      { driver: "Pérez (P1)", stints: [{ c:"I", laps:8 }, { c:"M", laps:40 }, { c:"H", laps:30 }] },
+      { driver: "Alonso (P2)", stints: [{ c:"I", laps:8 }, { c:"M", laps:42 }, { c:"H", laps:28 }] },
+      { driver: "Leclerc (DNS)", stints: [{ c:"I", laps:1 }] },
+      { driver: "Sainz (P3)", stints: [{ c:"I", laps:8 }, { c:"M", laps:39 }, { c:"H", laps:31 }] },
+    ],
+  },
+  {
+    race: "2024 British GP", laps: 52,
+    desc: "Silverstone's weather unpredictability made this a strategic masterclass. Teams juggled between inters and slicks as the track dried.",
+    compounds: { S: { color: "#e10600", label: "SOFT" }, M: { color: "#FFD700", label: "MEDIUM" }, H: { color: "#f0f0f0", label: "HARD" }, I: { color: "#4CAF50", label: "INTER" } },
+    strategies: [
+      { driver: "Hamilton (P1)", stints: [{ c:"I", laps:5 }, { c:"M", laps:15 }, { c:"H", laps:12 }, { c:"S", laps:20 }] },
+      { driver: "Verstappen (P5)", stints: [{ c:"I", laps:6 }, { c:"H", laps:18 }, { c:"M", laps:28 }] },
+      { driver: "Norris (P2)", stints: [{ c:"I", laps:5 }, { c:"M", laps:17 }, { c:"S", laps:30 }] },
+      { driver: "Piastri (P3)", stints: [{ c:"I", laps:5 }, { c:"M", laps:16 }, { c:"H", laps:31 }] },
+    ],
+  },
+];
+
+// ─── TEAM PERSONALITY QUIZ DATA ──────────────────────────────────────────────
+const TEAM_QUIZ_QUESTIONS = [
+  {
+    q: "It's Saturday night before a big event. You're:",
+    options: [
+      { text: "Asleep by 10pm. Preparation is everything.", scores: { redbull: 2, mercedes: 3, ferrari: 0, mclaren: 1 } },
+      { text: "Out at a rooftop bar. Life's too short.", scores: { ferrari: 3, alpine: 2, haas: 1, williams: 1 } },
+      { text: "Watching rival footage and taking notes.", scores: { mercedes: 2, mclaren: 3, rb: 2, aston: 1 } },
+      { text: "Still working. Sleep is for the off-season.", scores: { redbull: 3, ferrari: 1, audi: 2, cadillac: 1 } },
+    ],
+  },
+  {
+    q: "When things go wrong, your instinct is to:",
+    options: [
+      { text: "Stay calm. Panic costs you more time than the problem.", scores: { mercedes: 3, mclaren: 2, aston: 2, williams: 1 } },
+      { text: "Find someone to blame immediately.", scores: { ferrari: 3, redbull: 1, haas: 1, alpine: 1 } },
+      { text: "Double down — you'll outwork the problem.", scores: { redbull: 3, rb: 2, cadillac: 2, audi: 1 } },
+      { text: "Go back to first principles and innovate.", scores: { mclaren: 3, mercedes: 2, audi: 3, williams: 2 } },
+    ],
+  },
+  {
+    q: "Your leadership style is:",
+    options: [
+      { text: "Brilliant but demanding — excellence or nothing.", scores: { redbull: 3, ferrari: 2, mercedes: 1, mclaren: 1 } },
+      { text: "Collaborative. Everyone's voice matters.", scores: { williams: 3, mclaren: 2, aston: 2, rb: 1 } },
+      { text: "Charismatic. You lead through personality.", scores: { ferrari: 3, alpine: 2, cadillac: 2, haas: 1 } },
+      { text: "Data-driven. Feelings are a distraction.", scores: { mercedes: 3, redbull: 2, rb: 2, audi: 2 } },
+    ],
+  },
+  {
+    q: "In competition, you most want to:",
+    options: [
+      { text: "Win every single thing. Second is the first loser.", scores: { redbull: 3, ferrari: 2, mercedes: 2, mclaren: 1 } },
+      { text: "Surprise everyone with an unexpected result.", scores: { williams: 3, haas: 3, rb: 2, cadillac: 2 } },
+      { text: "Build something sustainable for the long term.", scores: { mercedes: 3, mclaren: 3, aston: 2, audi: 2 } },
+      { text: "Put on a show — the spectacle matters.", scores: { ferrari: 3, alpine: 2, cadillac: 1, williams: 1 } },
+    ],
+  },
+  {
+    q: "Your relationship with tradition is:",
+    options: [
+      { text: "Tradition is everything. History defines you.", scores: { ferrari: 3, williams: 2, mercedes: 1, mclaren: 1 } },
+      { text: "Respect it, but you're building your own legacy.", scores: { redbull: 2, mclaren: 3, aston: 2, rb: 2 } },
+      { text: "Burn it down. New eras need new thinking.", scores: { audi: 3, cadillac: 3, alpine: 2, haas: 1 } },
+      { text: "What tradition? You're only focused on next weekend.", scores: { haas: 3, rb: 2, redbull: 1, cadillac: 1 } },
+    ],
+  },
+  {
+    q: "How do you handle the media?",
+    options: [
+      { text: "Every word is measured and strategic.", scores: { mercedes: 3, mclaren: 2, audi: 2, aston: 1 } },
+      { text: "Passionately. You wear your heart on your sleeve.", scores: { ferrari: 3, alpine: 2, haas: 1, williams: 1 } },
+      { text: "Directly. You say exactly what you think.", scores: { redbull: 3, rb: 2, haas: 2, cadillac: 2 } },
+      { text: "You're building a brand, not just answering questions.", scores: { cadillac: 3, williams: 2, alpine: 2, aston: 2 } },
+    ],
+  },
+  {
+    q: "Your preferred car is:",
+    options: [
+      { text: "A German precision machine. Engineered to perfection.", scores: { mercedes: 3, audi: 3, aston: 1, rb: 1 } },
+      { text: "A beautiful Italian masterpiece — even if unreliable.", scores: { ferrari: 3, alpine: 1, mclaren: 1, haas: 1 } },
+      { text: "An understated British supercar. No fuss, just fast.", scores: { mclaren: 3, williams: 3, aston: 2, redbull: 1 } },
+      { text: "An American muscle car. Loud, proud, here to prove something.", scores: { cadillac: 3, haas: 2, redbull: 1, rb: 1 } },
+    ],
+  },
+  {
+    q: "On your day off, you're:",
+    options: [
+      { text: "At the simulator. You don't really take days off.", scores: { redbull: 3, mercedes: 2, ferrari: 1, rb: 2 } },
+      { text: "Hiking, cycling, or doing something active outdoors.", scores: { mclaren: 2, williams: 2, alpine: 3, aston: 2 } },
+      { text: "At a glamorous event — seen and noticed.", scores: { ferrari: 3, cadillac: 2, alpine: 1, haas: 1 } },
+      { text: "Quietly at home. Fame isn't really your thing.", scores: { audi: 3, rb: 2, williams: 2, haas: 2 } },
+    ],
+  },
+];
+
+const TEAM_QUIZ_RESULTS = {
+  redbull: { name: "Oracle Red Bull Racing", emoji: "🔵", color: "#3671C6", desc: "You're a winner. Period. You expect excellence from yourself and everyone around you, you work obsessively hard, and second place makes you physically uncomfortable. You've probably already thought about tomorrow's schedule. Verstappen would approve." },
+  mercedes: { name: "Mercedes-AMG Petronas", emoji: "🩵", color: "#27F4D2", desc: "Strategic, disciplined, and always thinking three moves ahead. You built something dominant through engineering genius and systematic thinking. You handle pressure like a professional and never let emotions override logic. Hamilton's kind of person." },
+  ferrari: { name: "Scuderia Ferrari", emoji: "🔴", color: "#E8002D", desc: "Passionate, dramatic, and deeply tied to history. You feel everything intensely, you want to put on a show, and you'd rather lose brilliantly than win boringly. The Tifosi would love you — even if you occasionally forget to put the tyres on." },
+  mclaren: { name: "McLaren F1 Team", emoji: "🧡", color: "#FF8000", desc: "Methodical, innovative, and quietly building something special. You learn from every mistake, you surround yourself with great people, and your patience eventually pays off. The comeback story. Norris and Piastri's team all the way." },
+  astonmartin: { name: "Aston Martin Aramco", emoji: "💚", color: "#229971", desc: "Ambitious and refined. You have huge dreams, the resources to back them up, and a flair for doing things in style. You're playing the long game — and you've got Fernando Alonso on side, which means you're definitely not giving up." },
+  alpine: { name: "Alpine F1 Team", emoji: "💙", color: "#0093CC", desc: "Creative, passionate, and a little chaotic — but lovably so. You approach problems differently, you're not afraid to change direction, and you believe deeply in the underdog story. Also: you definitely have strong opinions about cheese." },
+  williams: { name: "Williams Racing", emoji: "🩵", color: "#64C4FF", desc: "A genuine soul with a great story to tell. You've been through tough times but you never lost your identity, and you're building back with real purpose. You don't need to shout about it — your results will do the talking." },
+  haas: { name: "MoneyGram Haas F1 Team", emoji: "⚪", color: "#B6BABD", desc: "Pragmatic, direct, and quietly competitive. You don't have the biggest budget or the fanciest factory, but you maximise what you've got. You speak your mind, you don't do politics, and you occasionally produce a massive upset result." },
+  rb: { name: "Racing Bulls", emoji: "💙", color: "#6692FF", desc: "You're the next generation energy. Young, hungry, and not intimidated by anyone. You love developing talent, you move fast, and you don't mind being overlooked — because you're about to prove everyone wrong." },
+  audi: { name: "Audi F1 Team", emoji: "🔴", color: "#BB0A21", desc: "You're here to build something historic from the ground up. You've got the resources, the engineering mindset, and the patience for a long project. The first year might be bumpy, but you're thinking decade-long. German engineering, F1 scale." },
+  cadillac: { name: "Cadillac F1 Team", emoji: "🇺🇸", color: "#CC0000", desc: "The American dream. You're bold, you back yourself against the establishment, and you're not afraid to be the newcomer in a room full of history. Everyone said it couldn't be done. You're proving them wrong, one lap at a time." },
+};
+
+// ─── DRIVER COMPARE SECTION ──────────────────────────────────────────────────
+function RadarChart({ d1, d2, color1, color2 }) {
+  const axes = [
+    { label: "Speed", key: "skill" },
+    { label: "Racecraft", key: "racecraft" },
+    { label: "Consistency", key: "consistency" },
+    { label: "Media", key: "media" },
+  ];
+  const cx = 130, cy = 130, r = 95;
+  const n = axes.length;
+  const toXY = (val, i) => {
+    const angle = (Math.PI * 2 * i) / n - Math.PI / 2;
+    const ratio = val / 100;
+    return { x: cx + r * ratio * Math.cos(angle), y: cy + r * ratio * Math.sin(angle) };
+  };
+  const labelXY = (i) => {
+    const angle = (Math.PI * 2 * i) / n - Math.PI / 2;
+    return { x: cx + (r + 22) * Math.cos(angle), y: cy + (r + 22) * Math.sin(angle) };
+  };
+  const polygon = (driver) => axes.map((a, i) => {
+    const pt = toXY(driver[a.key], i);
+    return `${pt.x},${pt.y}`;
+  }).join(" ");
+
+  return (
+    <svg width="260" height="260" style={{ overflow: "visible" }}>
+      {/* Grid rings */}
+      {[0.25, 0.5, 0.75, 1].map(frac => (
+        <polygon key={frac}
+          points={axes.map((_, i) => { const p = toXY(100 * frac, i); return `${p.x},${p.y}`; }).join(" ")}
+          fill="none" stroke="var(--border)" strokeWidth="1" />
+      ))}
+      {/* Axes */}
+      {axes.map((_, i) => {
+        const p = toXY(100, i);
+        return <line key={i} x1={cx} y1={cy} x2={p.x} y2={p.y} stroke="var(--border)" strokeWidth="1" />;
+      })}
+      {/* D2 polygon */}
+      {d2 && <polygon points={polygon(d2)} fill={color2 + "30"} stroke={color2} strokeWidth="2" strokeLinejoin="round" />}
+      {/* D1 polygon */}
+      {d1 && <polygon points={polygon(d1)} fill={color1 + "30"} stroke={color1} strokeWidth="2.5" strokeLinejoin="round" />}
+      {/* Axis labels */}
+      {axes.map((a, i) => {
+        const lp = labelXY(i);
+        return (
+          <text key={i} x={lp.x} y={lp.y} textAnchor="middle" dominantBaseline="middle"
+            style={{ fontSize: 10, fontFamily: "Orbitron, sans-serif", fill: "var(--text3)", letterSpacing: 1 }}>
+            {a.label.toUpperCase()}
+          </text>
+        );
+      })}
+    </svg>
+  );
+}
+
+function DriverCompareSection() {
+  const allDrivers = [...(window.__DRIVERS_2025__ || [])];
+  const [id1, setId1] = useState("max");
+  const [id2, setId2] = useState("norris");
+  // pull from global DRIVERS_2025 via window, fallback to hardcoded IDs
+  const DRIVERS = window.__DRIVERS_2025__ || [];
+  const d1 = DRIVERS.find(d => d.id === id1) || DRIVERS[0];
+  const d2 = DRIVERS.find(d => d.id === id2) || DRIVERS[1];
+
+  const axes = [
+    { label: "Raw Speed", key: "skill" },
+    { label: "Racecraft", key: "racecraft" },
+    { label: "Consistency", key: "consistency" },
+    { label: "Media Appeal", key: "media" },
+  ];
+
+  return (
+    <div>
+      <div className="section-title">Driver <span>Compare</span></div>
+      <div className="section-line" />
+      <p style={{ fontSize: 13, color: "var(--text3)", lineHeight: 1.7, marginBottom: 20 }}>
+        Pick any two drivers to compare their ratings head-to-head on the radar chart.
+      </p>
+
+      <div className="compare-select-row">
+        {[{ id: id1, setId: setId1, which: 1 }, { id: id2, setId: setId2, which: 2 }].map(({ id, setId, which }) => {
+          const d = DRIVERS.find(dr => dr.id === id) || DRIVERS[0];
+          return (
+            <div key={which}>
+              <div style={{ fontSize: 9, color: "#e10600", fontFamily: "Orbitron", letterSpacing: 2, marginBottom: 6 }}>DRIVER {which}</div>
+              <select className="compare-driver-select" value={id} onChange={e => setId(e.target.value)}>
+                {DRIVERS.map(dr => <option key={dr.id} value={dr.id}>{dr.name} — {dr.team}</option>)}
+              </select>
+              {d && (
+                <div style={{ marginTop: 10, background: "var(--card-bg)", border: `1px solid ${d.teamColor}44`, borderRadius: 8, padding: "12px 14px", backdropFilter: "blur(8px)" }}>
+                  <div style={{ fontFamily: "Orbitron", fontSize: 12, color: d.teamColor, fontWeight: 900 }}>#{d.number} {d.name}</div>
+                  <div style={{ fontSize: 11, color: "var(--text3)", marginTop: 2 }}>{d.country} · {d.team}</div>
+                  <div style={{ display: "flex", gap: 12, marginTop: 8 }}>
+                    {[["⭐", d.championships, "Titles"], [d.wins, null, "Wins"], [d.poles, null, "Poles"]].map(([v, v2, l]) => (
+                      <div key={l} style={{ textAlign: "center" }}>
+                        <div style={{ fontFamily: "Orbitron", fontSize: 14, fontWeight: 900, color: d.teamColor }}>{v2 !== null ? `${v}${v2}` : v}</div>
+                        <div style={{ fontSize: 9, color: "var(--text4)", letterSpacing: 1 }}>{l}</div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+          );
+        })}
+      </div>
+
+      {d1 && d2 && (
+        <>
+          {/* Radar */}
+          <div className="card" style={{ marginBottom: 20 }}>
+            <div style={{ display: "flex", justifyContent: "center", gap: 20, marginBottom: 14 }}>
+              <span style={{ fontSize: 12, color: d1.teamColor, fontWeight: 700 }}>● {d1.name}</span>
+              <span style={{ fontSize: 12, color: d2.teamColor, fontWeight: 700 }}>● {d2.name}</span>
+            </div>
+            <div className="radar-wrap">
+              <RadarChart d1={d1} d2={d2} color1={d1.teamColor} color2={d2.teamColor} />
+            </div>
+          </div>
+
+          {/* Bar comparison */}
+          <div className="card">
+            <div style={{ fontFamily: "Orbitron", fontSize: 10, color: "#e10600", letterSpacing: 2, marginBottom: 14 }}>STAT BREAKDOWN</div>
+            {axes.map(({ label, key }) => {
+              const total = d1[key] + d2[key];
+              const pct1 = (d1[key] / total * 100).toFixed(0);
+              const pct2 = (d2[key] / total * 100).toFixed(0);
+              return (
+                <div key={key} style={{ marginBottom: 14 }}>
+                  <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 4 }}>
+                    <span style={{ fontSize: 12, fontWeight: 700, color: d1.teamColor }}>{d1[key]}</span>
+                    <span style={{ fontSize: 10, color: "var(--text3)", fontFamily: "Orbitron", letterSpacing: 1 }}>{label.toUpperCase()}</span>
+                    <span style={{ fontSize: 12, fontWeight: 700, color: d2.teamColor }}>{d2[key]}</span>
+                  </div>
+                  <div style={{ height: 8, background: "var(--bg3)", borderRadius: 4, overflow: "hidden", display: "flex" }}>
+                    <div style={{ width: `${pct1}%`, background: d1.teamColor, boxShadow: `0 0 6px ${d1.teamColor}80`, transition: "width 0.7s" }} />
+                    <div style={{ width: `${pct2}%`, background: d2.teamColor, boxShadow: `0 0 6px ${d2.teamColor}80`, transition: "width 0.7s" }} />
+                  </div>
+                </div>
+              );
+            })}
+            {/* Overall winner */}
+            {(() => {
+              const t1 = d1.skill + d1.racecraft + d1.consistency + d1.media;
+              const t2 = d2.skill + d2.racecraft + d2.consistency + d2.media;
+              const winner = t1 > t2 ? d1 : t2 > t1 ? d2 : null;
+              return (
+                <div style={{ marginTop: 14, padding: "12px 16px", background: winner ? `${winner.teamColor}12` : "var(--bg3)", border: `1px solid ${winner ? winner.teamColor + "44" : "var(--border)"}`, borderRadius: 8, textAlign: "center" }}>
+                  {winner ? (
+                    <>
+                      <div style={{ fontSize: 10, color: "var(--text3)", fontFamily: "Orbitron", letterSpacing: 2, marginBottom: 4 }}>OVERALL EDGE</div>
+                      <div style={{ fontSize: 14, fontWeight: 900, color: winner.teamColor, fontFamily: "Orbitron" }}>{winner.name} +{Math.abs(t1 - t2)} pts</div>
+                    </>
+                  ) : (
+                    <div style={{ fontSize: 12, color: "var(--text3)" }}>Perfect tie — these two are identical on paper.</div>
+                  )}
+                </div>
+              );
+            })()}
+          </div>
+        </>
+      )}
+    </div>
+  );
+}
+
+// ─── CHAMPIONSHIP TRACKER ────────────────────────────────────────────────────
+function ChampionshipTrackerSection() {
+  const [year, setYear] = useState(2024);
+  const season = CHAMPIONSHIP_SEASONS[year];
+
+  const maxPts = Math.max(...season.rounds.flatMap(r => r.points));
+  const svgW = 560, svgH = 280, padL = 46, padR = 20, padT = 20, padB = 30;
+  const chartW = svgW - padL - padR;
+  const chartH = svgH - padT - padB;
+  const rounds = season.rounds;
+  const nRounds = rounds.length;
+
+  const ptToX = i => padL + (i / (nRounds - 1)) * chartW;
+  const ptToY = v => padT + chartH - (v / (maxPts * 1.05)) * chartH;
+
+  return (
+    <div>
+      <div className="section-title">Championship <span>Battle</span></div>
+      <div className="section-line" />
+      <p style={{ fontSize: 13, color: "var(--text3)", lineHeight: 1.7, marginBottom: 16 }}>
+        See how the World Drivers' Championship unfolded round by round. Select a season to relive the battle.
+      </p>
+
+      <div className="tracker-year-tabs">
+        {[2021, 2022, 2023, 2024].map(y => (
+          <button key={y} className={`year-btn${year === y ? " active" : ""}`} onClick={() => setYear(y)}>{y}</button>
+        ))}
+      </div>
+
+      <div className="card" style={{ marginBottom: 16 }}>
+        <div style={{ display: "flex", alignItems: "center", flexWrap: "wrap", gap: 8, marginBottom: 12 }}>
+          <span style={{ fontFamily: "Orbitron", fontSize: 13, fontWeight: 900, color: "var(--text)" }}>{year}: {season.title}</span>
+          <span className="drama-badge">{season.drama}</span>
+        </div>
+        <p style={{ fontSize: 12, color: "var(--text3)", lineHeight: 1.7 }}>{season.note}</p>
+      </div>
+
+      <div className="tracker-legend">
+        {season.drivers.map(d => (
+          <div key={d.short} className="tracker-legend-item">
+            <div className="tracker-dot" style={{ background: d.color, boxShadow: `0 0 6px ${d.color}` }} />
+            <span>{d.name}</span>
+            <span style={{ fontSize: 10, color: "var(--text4)" }}>({d.team})</span>
+          </div>
+        ))}
+      </div>
+
+      <div className="tracker-chart">
+        <svg viewBox={`0 0 ${svgW} ${svgH}`} style={{ width: "100%", maxWidth: svgW }}>
+          {/* Horizontal grid lines */}
+          {[0, 0.25, 0.5, 0.75, 1].map(frac => {
+            const y = ptToY(maxPts * 1.05 * frac);
+            const val = Math.round(maxPts * 1.05 * frac);
+            return (
+              <g key={frac}>
+                <line x1={padL} y1={y} x2={svgW - padR} y2={y} stroke="var(--border)" strokeWidth="1" strokeDasharray="4,4" />
+                <text x={padL - 6} y={y} textAnchor="end" dominantBaseline="middle" style={{ fontSize: 9, fill: "var(--text4)", fontFamily: "Orbitron" }}>{val}</text>
+              </g>
+            );
+          })}
+          {/* Round labels */}
+          {rounds.map((r, i) => (
+            <text key={i} x={ptToX(i)} y={svgH - 8} textAnchor="middle" style={{ fontSize: 9, fill: "var(--text4)", fontFamily: "Orbitron" }}>{r.label}</text>
+          ))}
+          {/* Lines per driver */}
+          {season.drivers.map((d, di) => {
+            const pts = rounds.map(r => ({ x: ptToX(rounds.indexOf(r)), y: ptToY(r.points[di]) }));
+            const pathD = pts.map((p, i) => `${i === 0 ? "M" : "L"}${p.x},${p.y}`).join(" ");
+            return (
+              <g key={d.short}>
+                <path d={pathD} fill="none" stroke={d.color} strokeWidth="2.5" strokeLinejoin="round" strokeLinecap="round"
+                  style={{ filter: `drop-shadow(0 0 4px ${d.color})` }} />
+                {pts.map((p, i) => (
+                  <circle key={i} cx={p.x} cy={p.y} r="4" fill={d.color} stroke="var(--bg2)" strokeWidth="2" />
+                ))}
+                {/* Final point label */}
+                <text x={pts[pts.length - 1].x + 6} y={pts[pts.length - 1].y + 1} dominantBaseline="middle"
+                  style={{ fontSize: 10, fontWeight: 700, fill: d.color, fontFamily: "Orbitron" }}>{d.short}</text>
+              </g>
+            );
+          })}
+        </svg>
+      </div>
+
+      {/* Season summary cards */}
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(120px, 1fr))", gap: 10, marginTop: 16 }}>
+        {season.drivers.map((d, di) => (
+          <div key={d.short} className="card" style={{ textAlign: "center", borderTop: `2px solid ${d.color}`, padding: "12px 8px" }}>
+            <div style={{ fontFamily: "Orbitron", fontSize: 10, color: d.color, fontWeight: 700, marginBottom: 4 }}>{d.name}</div>
+            <div style={{ fontFamily: "Orbitron", fontSize: 20, fontWeight: 900, color: "var(--text)" }}>{season.rounds[season.rounds.length - 1].points[di]}</div>
+            <div style={{ fontSize: 9, color: "var(--text4)", letterSpacing: 1 }}>POINTS</div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+// ─── TEAM QUIZ SECTION ───────────────────────────────────────────────────────
+function TeamQuizSection() {
+  const [step, setStep] = useState(0);
+  const [scores, setScores] = useState({});
+  const [result, setResult] = useState(null);
+
+  function answer(scoreMap) {
+    const newScores = { ...scores };
+    Object.entries(scoreMap).forEach(([team, pts]) => {
+      newScores[team] = (newScores[team] || 0) + pts;
+    });
+    setScores(newScores);
+    if (step + 1 >= TEAM_QUIZ_QUESTIONS.length) {
+      const winner = Object.entries(newScores).sort((a, b) => b[1] - a[1])[0][0];
+      setResult(winner);
+    } else {
+      setStep(s => s + 1);
+    }
+  }
+
+  function reset() { setStep(0); setScores({}); setResult(null); }
+
+  const q = TEAM_QUIZ_QUESTIONS[step];
+
+  return (
+    <div>
+      <div className="section-title">Which <span>Team</span> Are You?</div>
+      <div className="section-line" />
+      {result ? (
+        <div>
+          <div className="team-quiz-result" style={{ borderColor: TEAM_QUIZ_RESULTS[result]?.color + "44" }}>
+            <div style={{ fontSize: 48, marginBottom: 8 }}>🏎️</div>
+            <div style={{ fontSize: 10, color: "var(--text3)", fontFamily: "Orbitron", letterSpacing: 3, marginBottom: 8 }}>YOU ARE...</div>
+            <div className="team-result-name" style={{ color: TEAM_QUIZ_RESULTS[result]?.color, textShadow: `0 0 20px ${TEAM_QUIZ_RESULTS[result]?.color}60` }}>
+              {TEAM_QUIZ_RESULTS[result]?.name || result}
+            </div>
+            <p style={{ fontSize: 13, color: "var(--text2)", lineHeight: 1.8, maxWidth: 480, margin: "12px auto 20px" }}>
+              {TEAM_QUIZ_RESULTS[result]?.desc}
+            </p>
+            <button className="expand-btn" onClick={reset} style={{ padding: "10px 24px", fontSize: 11, letterSpacing: 2, fontFamily: "Orbitron" }}>
+              🔄 RETAKE QUIZ
+            </button>
+          </div>
+        </div>
+      ) : (
+        <div style={{ maxWidth: 600 }}>
+          <div style={{ marginBottom: 16 }}>
+            <div className="quiz-progress"><div className="quiz-progress-fill" style={{ width: `${(step / TEAM_QUIZ_QUESTIONS.length) * 100}%` }} /></div>
+            <div style={{ display: "flex", justifyContent: "space-between", fontSize: 10, color: "var(--text4)", fontFamily: "Orbitron", letterSpacing: 1 }}>
+              <span>QUESTION {step + 1} / {TEAM_QUIZ_QUESTIONS.length}</span>
+              <span>{Math.round((step / TEAM_QUIZ_QUESTIONS.length) * 100)}% COMPLETE</span>
+            </div>
+          </div>
+          <div className="card" style={{ marginBottom: 20 }}>
+            <p style={{ fontSize: 16, fontWeight: 700, color: "var(--text)", lineHeight: 1.5 }}>{q.q}</p>
+          </div>
+          {q.options.map((opt, i) => (
+            <button key={i} className="quiz-option" onClick={() => answer(opt.scores)}>
+              <span style={{ fontFamily: "Orbitron", fontSize: 10, color: "#e10600", minWidth: 20 }}>{String.fromCharCode(65 + i)}</span>
+              {opt.text}
+            </button>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
+// ─── TYRE STRATEGY SECTION ───────────────────────────────────────────────────
+function TyreStrategySection() {
+  const [raceIdx, setRaceIdx] = useState(0);
+  const [hovered, setHovered] = useState(null);
+  const race = TYRE_STRATEGIES[raceIdx];
+
+  return (
+    <div>
+      <div className="section-title">Tyre <span>Strategy</span></div>
+      <div className="section-line" />
+      <p style={{ fontSize: 13, color: "var(--text3)", lineHeight: 1.7, marginBottom: 20 }}>
+        Tyre strategy is one of the most complex parts of F1. Teams choose when to pit and which compounds to use to gain time over rivals. Each horizontal bar shows a driver's stint — the length represents laps on that tyre.
+      </p>
+
+      <div style={{ display: "flex", gap: 8, marginBottom: 20, flexWrap: "wrap" }}>
+        {TYRE_STRATEGIES.map((r, i) => (
+          <button key={i} className={`year-btn${raceIdx === i ? " active" : ""}`} onClick={() => setRaceIdx(i)} style={{ fontSize: 10 }}>
+            {r.race}
+          </button>
+        ))}
+      </div>
+
+      <div className="card" style={{ marginBottom: 20 }}>
+        <div style={{ fontFamily: "Orbitron", fontSize: 13, fontWeight: 900, color: "var(--text)", marginBottom: 6 }}>{race.race}</div>
+        <p style={{ fontSize: 12, color: "var(--text3)", lineHeight: 1.7 }}>{race.desc}</p>
+      </div>
+
+      {/* Tyre legend */}
+      <div className="tyre-legend">
+        {Object.entries(race.compounds).map(([key, val]) => (
+          <div key={key} style={{ display: "flex", alignItems: "center", gap: 6, fontSize: 11, color: "var(--text2)" }}>
+            <div className="tyre-dot" style={{ background: val.color, border: key === "H" ? "1px solid #aaa" : "none" }} />
+            {val.label}
+          </div>
+        ))}
+      </div>
+
+      {/* Lap numbers header */}
+      <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 8 }}>
+        <div style={{ width: 140, fontSize: 9, color: "var(--text4)", fontFamily: "Orbitron", letterSpacing: 1, textAlign: "right" }}>DRIVER</div>
+        <div style={{ flex: 1, position: "relative", height: 14 }}>
+          {[0, 0.25, 0.5, 0.75, 1].map(f => (
+            <div key={f} style={{ position: "absolute", left: `${f * 100}%`, fontSize: 9, color: "var(--text4)", fontFamily: "Orbitron", transform: "translateX(-50%)" }}>
+              {Math.round(f * race.laps)}
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {race.strategies.map((strat, si) => (
+        <div key={si} className="strategy-row">
+          <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+            <div style={{ width: 140, fontSize: 11, color: "var(--text2)", textAlign: "right", flexShrink: 0, paddingRight: 8 }}>{strat.driver}</div>
+            <div className="strategy-track" style={{ flex: 1 }}>
+              {strat.stints.map((stint, stintIdx) => {
+                const comp = race.compounds[stint.c];
+                const pct = (stint.laps / race.laps) * 100;
+                const isHovered = hovered === `${si}-${stintIdx}`;
+                return (
+                  <div key={stintIdx} className="strategy-seg"
+                    style={{ width: `${pct}%`, background: comp.color, minWidth: 24, color: comp.color === "#f0f0f0" ? "#333" : "#000", boxShadow: isHovered ? `0 0 12px ${comp.color}` : "none" }}
+                    onMouseEnter={() => setHovered(`${si}-${stintIdx}`)}
+                    onMouseLeave={() => setHovered(null)}
+                    title={`${comp.label} — ${stint.laps} laps`}>
+                    {stint.laps >= 8 ? stint.c : ""}
+                    {isHovered && (
+                      <div style={{ position: "absolute", bottom: "110%", left: "50%", transform: "translateX(-50%)", background: "var(--bg2)", border: `1px solid ${comp.color}`, borderRadius: 4, padding: "4px 8px", zIndex: 10, whiteSpace: "nowrap", fontSize: 10, color: "var(--text)" }}>
+                        {comp.label} · {stint.laps} laps
+                      </div>
+                    )}
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        </div>
+      ))}
+
+      <div className="card" style={{ marginTop: 20 }}>
+        <div style={{ fontFamily: "Orbitron", fontSize: 10, color: "#e10600", letterSpacing: 2, marginBottom: 10 }}>KEY CONCEPTS</div>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(200px, 1fr))", gap: 12 }}>
+          {[
+            ["Undercut", "Pitting before your rival to gain track position with fresh tyres"],
+            ["Overcut", "Staying out longer on old tyres while rivals pit, then pitting yourself"],
+            ["Tyre Cliff", "When a tyre suddenly loses grip rapidly after extended use"],
+            ["Free Stop", "Pitting under a safety car without losing track position vs rivals"],
+          ].map(([term, def]) => (
+            <div key={term} style={{ borderLeft: "2px solid #e10600", paddingLeft: 10 }}>
+              <div style={{ fontFamily: "Orbitron", fontSize: 10, color: "#e10600", marginBottom: 3 }}>{term}</div>
+              <div style={{ fontSize: 11, color: "var(--text3)", lineHeight: 1.6 }}>{def}</div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ─── H2H TEAMMATE SECTION ────────────────────────────────────────────────────
+function HeadToHeadSection() {
+  const [metric, setMetric] = useState("quali");
+
+  return (
+    <div>
+      <div className="section-title">Teammate <span>H2H</span></div>
+      <div className="section-line" />
+      <p style={{ fontSize: 13, color: "var(--text3)", lineHeight: 1.7, marginBottom: 20 }}>
+        Your teammate is your most controlled benchmark in F1 — same car, same conditions. These are the 2024 qualifying and race head-to-head records across all teams.
+      </p>
+
+      <div style={{ display: "flex", gap: 8, marginBottom: 20 }}>
+        {[["quali", "Qualifying"], ["race", "Race Results"]].map(([k, l]) => (
+          <button key={k} className={`year-btn${metric === k ? " active" : ""}`} onClick={() => setMetric(k)}>{l}</button>
+        ))}
+      </div>
+
+      {H2H_DATA_2024.map((row, i) => {
+        const d1Count = metric === "quali" ? row.qualiD1 : row.raceD1;
+        const d2Count = metric === "quali" ? row.qualiD2 : row.raceD2;
+        const total = d1Count + d2Count;
+        const p1 = (d1Count / total * 100).toFixed(0);
+        const p2 = (d2Count / total * 100).toFixed(0);
+        const winner = d1Count > d2Count ? row.d1 : d2Count > d1Count ? row.d2 : null;
+
+        return (
+          <div key={i} className="h2h-card" style={{ borderTop: `2px solid ${row.color}` }}>
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 8, flexWrap: "wrap", gap: 8 }}>
+              <div style={{ fontFamily: "Orbitron", fontSize: 10, color: row.color, letterSpacing: 1, textShadow: `0 0 8px ${row.color}60` }}>{row.team}</div>
+              {winner && (
+                <div style={{ fontSize: 10, color: "var(--text3)" }}>
+                  <span style={{ color: row.color, fontWeight: 700 }}>{winner}</span> leads {metric === "quali" ? "qualifying" : "races"} {Math.max(d1Count, d2Count)}–{Math.min(d1Count, d2Count)}
+                </div>
+              )}
+            </div>
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 4, marginBottom: 6 }}>
+              {[{ name: row.d1, count: d1Count, pct: p1 }, { name: row.d2, count: d2Count, pct: p2 }].map((driver, di) => (
+                <div key={di} style={{ fontSize: 13, fontWeight: 700, color: di === 0 ? row.color : "var(--text2)", textAlign: di === 0 ? "left" : "right" }}>
+                  {driver.name} <span style={{ fontFamily: "Orbitron", fontSize: 16, color: "var(--text)" }}>{driver.count}</span>
+                </div>
+              ))}
+            </div>
+            <div className="h2h-bar-wrap">
+              <div className="h2h-bar-left" style={{ width: `${p1}%`, background: row.color, boxShadow: `0 0 6px ${row.color}80` }} />
+              <div className="h2h-bar-right" style={{ width: `${p2}%`, background: "var(--border2)" }} />
+            </div>
+            <div style={{ fontSize: 11, color: "var(--text4)", marginTop: 6, fontStyle: "italic" }}>{row.note}</div>
+          </div>
+        );
+      })}
+    </div>
+  );
+}
+
+// ─── ONBOARDING MODAL ────────────────────────────────────────────────────────
+function OnboardingModal({ onClose, onSelect }) {
+  return (
+    <div className="onboarding-overlay" onClick={onClose}>
+      <div className="onboarding-modal" onClick={e => e.stopPropagation()}>
+        <button onClick={onClose} style={{ position: "absolute", top: 14, right: 16, background: "none", border: "none", color: "var(--text3)", fontSize: 20, cursor: "pointer" }}>✕</button>
+        <div style={{ textAlign: "center", marginBottom: 24 }}>
+          <div style={{ fontFamily: "Orbitron", fontSize: 22, fontWeight: 900, color: "var(--text)", letterSpacing: 2 }}>WELCOME TO <span style={{ color: "#e10600" }}>F1</span></div>
+          <p style={{ fontSize: 13, color: "var(--text3)", marginTop: 8, lineHeight: 1.6 }}>Where would you like to start? We'll take you straight there.</p>
+        </div>
+        {[
+          { icon: "🏁", title: "I'm completely new", sub: "Start with the basics — what F1 is and how a race weekend works", section: "how" },
+          { icon: "📺", title: "I watch sometimes", sub: "Know the basics, want to understand the strategy and politics", section: "glossary" },
+          { icon: "🏆", title: "I know the game", sub: "I want the deep data — driver stats, team breakdowns, live results", section: "drivers" },
+        ].map(opt => (
+          <button key={opt.section} className="onboarding-option" onClick={() => { onSelect(opt.section); onClose(); }}>
+            <span style={{ fontSize: 28 }}>{opt.icon}</span>
+            <div>
+              <div style={{ fontFamily: "Orbitron", fontSize: 12, fontWeight: 700, color: "var(--text)", marginBottom: 3 }}>{opt.title}</div>
+              <div style={{ fontSize: 11, color: "var(--text3)", lineHeight: 1.5 }}>{opt.sub}</div>
+            </div>
+          </button>
+        ))}
+        <button onClick={onClose} style={{ width: "100%", marginTop: 6, padding: "10px", background: "transparent", border: "1px solid var(--border2)", color: "var(--text4)", fontFamily: "Orbitron", fontSize: 9, letterSpacing: 2, cursor: "pointer", borderRadius: 6 }}>
+          BROWSE ON MY OWN
+        </button>
+      </div>
+    </div>
+  );
+}
+
+// ─── BOOKMARKS SECTION ───────────────────────────────────────────────────────
+function BookmarksSection({ bookmarks, onNavigate, onRemove }) {
+  const allSections = [
+    { id: "how", icon: "🏁", label: "How It Works" }, { id: "points", icon: "📊", label: "Points System" },
+    { id: "drivers", icon: "🏎️", label: "Drivers" }, { id: "teams", icon: "🔧", label: "Teams" },
+    { id: "history", icon: "📅", label: "Driver Changes" }, { id: "circuits", icon: "🗺️", label: "Circuits" },
+    { id: "results", icon: "🏆", label: "Live Results" }, { id: "glossary", icon: "📖", label: "Glossary" },
+    { id: "rules", icon: "📋", label: "Rules" }, { id: "compare", icon: "⚡", label: "Car Compare" },
+    { id: "records", icon: "🎖️", label: "Records" }, { id: "quiz", icon: "🧠", label: "F1 Quiz" },
+    { id: "predictor", icon: "🔮", label: "Race Predictor" }, { id: "news", icon: "📰", label: "F1 News" },
+    { id: "drivercompare", icon: "🆚", label: "Driver Compare" }, { id: "championship", icon: "📈", label: "Championship Tracker" },
+    { id: "teamquiz", icon: "🎯", label: "Team Quiz" }, { id: "tyrestrategy", icon: "🏎", label: "Tyre Strategy" },
+    { id: "h2h", icon: "⚔️", label: "H2H Stats" },
+  ];
+
+  return (
+    <div>
+      <div className="section-title">My <span>Bookmarks</span></div>
+      <div className="section-line" />
+      {bookmarks.length === 0 ? (
+        <div className="card" style={{ textAlign: "center", padding: "48px 20px" }}>
+          <div style={{ fontSize: 40, marginBottom: 12 }}>🔖</div>
+          <div style={{ fontFamily: "Orbitron", fontSize: 12, color: "var(--text3)", letterSpacing: 2 }}>NO BOOKMARKS YET</div>
+          <p style={{ fontSize: 12, color: "var(--text4)", marginTop: 8 }}>Click the 🔖 button on any section header to save it here.</p>
+        </div>
+      ) : (
+        <div className="bookmarks-grid">
+          {bookmarks.map(id => {
+            const s = allSections.find(s => s.id === id);
+            if (!s) return null;
+            return (
+              <div key={id} className="bookmark-card" onClick={() => onNavigate(id)}>
+                <span style={{ fontSize: 20 }}>{s.icon}</span>
+                <div style={{ flex: 1 }}>
+                  <div style={{ fontSize: 12, fontWeight: 700, color: "var(--text)" }}>{s.label}</div>
+                </div>
+                <button className="bookmark-btn" onClick={e => { e.stopPropagation(); onRemove(id); }}
+                  style={{ color: "#e10600", fontSize: 14 }}>✕</button>
+              </div>
+            );
+          })}
+        </div>
+      )}
+      <div style={{ marginTop: 28 }}>
+        <div style={{ fontFamily: "Orbitron", fontSize: 10, color: "#e10600", letterSpacing: 2, marginBottom: 14 }}>ALL SECTIONS</div>
+        <div className="bookmarks-grid">
+          {allSections.map(s => {
+            const isBookmarked = bookmarks.includes(s.id);
+            return (
+              <div key={s.id} className="bookmark-card" onClick={() => onNavigate(s.id)}>
+                <span style={{ fontSize: 20 }}>{s.icon}</span>
+                <div style={{ flex: 1 }}>
+                  <div style={{ fontSize: 11, fontWeight: 700, color: "var(--text)" }}>{s.label}</div>
+                </div>
+                <button className="bookmark-btn" onClick={e => { e.stopPropagation(); isBookmarked ? onRemove(s.id) : null; }}
+                  style={{ color: isBookmarked ? "#FFD700" : "var(--text4)" }}>
+                  {isBookmarked ? "★" : "☆"}
+                </button>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ─── SHARE CARD (canvas-based predictor export) ───────────────────────────────
+function useShareCard(picks, race) {
+  function downloadShareCard() {
+    const canvas = document.createElement("canvas");
+    canvas.width = 600; canvas.height = 640;
+    const ctx = canvas.getContext("2d");
+
+    // Background
+    ctx.fillStyle = "#0a0a12";
+    ctx.fillRect(0, 0, 600, 640);
+
+    // Red top bar
+    ctx.fillStyle = "#e10600";
+    ctx.fillRect(0, 0, 600, 5);
+
+    // Grid lines
+    ctx.strokeStyle = "rgba(225,6,0,0.05)";
+    ctx.lineWidth = 1;
+    for (let x = 0; x < 600; x += 40) { ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, 640); ctx.stroke(); }
+    for (let y = 0; y < 640; y += 40) { ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(600, y); ctx.stroke(); }
+
+    // Header
+    ctx.fillStyle = "#e10600";
+    ctx.font = "bold 13px monospace";
+    ctx.fillText("MY RACE PREDICTION", 24, 42);
+    ctx.fillStyle = "#f0f0fa";
+    ctx.font = "bold 22px monospace";
+    ctx.fillText(`${race?.flag || "🏁"} ${race?.name || "F1 Race"}`, 24, 72);
+    ctx.fillStyle = "#606080";
+    ctx.font = "11px monospace";
+    ctx.fillText(`Round ${race?.round || "—"} · Built with f1guide.vercel.app`, 24, 92);
+
+    // Divider
+    ctx.strokeStyle = "rgba(225,6,0,0.3)";
+    ctx.lineWidth = 1;
+    ctx.beginPath(); ctx.moveTo(24, 104); ctx.lineTo(576, 104); ctx.stroke();
+
+    // Picks
+    picks.forEach((d, i) => {
+      const y = 120 + i * 50;
+      const posColors = ["#e10600", "#c0c0c0", "#cd7f32"];
+      const posColor = posColors[i] || "#404060";
+
+      // Row background
+      ctx.fillStyle = "rgba(255,255,255,0.02)";
+      ctx.beginPath();
+      ctx.roundRect ? ctx.roundRect(20, y - 14, 560, 40, 6) : ctx.rect(20, y - 14, 560, 40);
+      ctx.fill();
+
+      // Position
+      ctx.fillStyle = posColor;
+      ctx.font = "bold 11px monospace";
+      ctx.fillText(`P${i + 1}`, 30, y + 8);
+
+      // Team color strip
+      ctx.fillStyle = d.color || "#e10600";
+      ctx.fillRect(60, y - 14, 3, 40);
+
+      // Driver number
+      ctx.fillStyle = d.color || "#e10600";
+      ctx.font = "bold 16px monospace";
+      ctx.fillText(d.short || "---", 72, y + 8);
+
+      // Driver name
+      ctx.fillStyle = "#f0f0fa";
+      ctx.font = "bold 13px monospace";
+      ctx.fillText(d.name, 120, y + 8);
+
+      // Team
+      ctx.fillStyle = "#606080";
+      ctx.font = "10px monospace";
+      ctx.fillText(d.team || "", 400, y + 8);
+    });
+
+    // Footer
+    ctx.fillStyle = "rgba(225,6,0,0.4)";
+    ctx.fillRect(0, 615, 600, 1);
+    ctx.fillStyle = "#404060";
+    ctx.font = "10px monospace";
+    ctx.fillText("f1guide.vercel.app · The Complete F1 Beginner's Guide", 24, 632);
+
+    const link = document.createElement("a");
+    link.download = `F1_Prediction_${race?.name?.replace(/\s/g, "_") || "Race"}.png`;
+    link.href = canvas.toDataURL("image/png");
+    link.click();
+  }
+  return downloadShareCard;
+}
+
 const NAV_GROUPS = [
   {
     label: "Learn the Basics",
     sections: [
-      { id: "how",       icon: "🏁", label: "How It Works",   desc: "Race weekends, qualifying, tyres & strategy" },
-      { id: "points",    icon: "📊", label: "Points System",  desc: "How points are scored and championships decided" },
-      { id: "rules",     icon: "📋", label: "Rules Explained",desc: "Plain-English breakdowns of F1's confusing rules" },
-      { id: "glossary",  icon: "📖", label: "Glossary",       desc: "Every F1 term defined — undercut, VSC, DRS & more" },
-      { id: "quiz",      icon: "🧠", label: "F1 Quiz",        desc: "Test your knowledge with 15 questions" },
+      { id: "how",          icon: "🏁", label: "How It Works",     desc: "Race weekends, qualifying, tyres & strategy" },
+      { id: "points",       icon: "📊", label: "Points System",    desc: "How points are scored and championships decided" },
+      { id: "rules",        icon: "📋", label: "Rules Explained",  desc: "Plain-English breakdowns of F1's confusing rules" },
+      { id: "glossary",     icon: "📖", label: "Glossary",         desc: "Every F1 term defined — undercut, VSC, DRS & more" },
+      { id: "tyrestrategy", icon: "🏎", label: "Tyre Strategy",    desc: "Interactive pit stop strategies from iconic races" },
+      { id: "quiz",         icon: "🧠", label: "F1 Quiz",          desc: "Test your knowledge with 15 questions" },
+      { id: "teamquiz",     icon: "🎯", label: "Which Team Are You?", desc: "8 personality questions to find your F1 team" },
     ]
   },
   {
     label: "2026 Season",
     sections: [
-      { id: "drivers",   icon: "🏎️", label: "Drivers",        desc: "All 22 drivers with ratings, stats & profiles" },
-      { id: "teams",     icon: "🔧", label: "Teams",           desc: "All 11 constructors across 2025 & 2026" },
-      { id: "history",   icon: "📅", label: "Driver Changes",  desc: "Every major move 2018–2026 and the reason why" },
-      { id: "compare",   icon: "⚡", label: "Car Compare",     desc: "2025 vs 2026 regulations side by side" },
-      { id: "predictor", icon: "🔮", label: "Race Predictor",  desc: "Predict the top 10 for the next race" },
+      { id: "drivers",      icon: "🏎️", label: "Drivers",          desc: "All 22 drivers with ratings, stats & profiles" },
+      { id: "teams",        icon: "🔧", label: "Teams",             desc: "All 11 constructors across 2025 & 2026" },
+      { id: "history",      icon: "📅", label: "Driver Changes",    desc: "Every major move 2018–2026 and the reason why" },
+      { id: "compare",      icon: "⚡", label: "Car Compare",       desc: "2025 vs 2026 regulations side by side" },
+      { id: "drivercompare",icon: "🆚", label: "Driver Compare",    desc: "Pick two drivers — radar chart & stat breakdown" },
+      { id: "predictor",    icon: "🔮", label: "Race Predictor",    desc: "Predict the top 10 & share your grid as an image" },
     ]
   },
   {
     label: "Race & Stats",
     sections: [
-      { id: "circuits",  icon: "🗺️", label: "Circuit Guide",  desc: "All 24 circuits with session times & calendar" },
-      { id: "results",   icon: "🏆", label: "Live Results",   desc: "Race results, driver & constructor standings" },
-      { id: "records",   icon: "🎖️", label: "All-Time Records",desc: "Most wins, poles, titles & fastest laps in history" },
-      { id: "news",      icon: "📰", label: "F1 News",         desc: "Latest headlines from Motorsport.com" },
+      { id: "circuits",     icon: "🗺️", label: "Circuit Guide",    desc: "All 24 circuits with session times & calendar" },
+      { id: "results",      icon: "🏆", label: "Live Results",      desc: "Race results, driver & constructor standings" },
+      { id: "championship", icon: "📈", label: "Championship Tracker", desc: "Round-by-round WDC battle for 2021–2024" },
+      { id: "h2h",          icon: "⚔️", label: "Teammate H2H",      desc: "2024 qualifying & race head-to-head records" },
+      { id: "records",      icon: "🎖️", label: "All-Time Records",  desc: "Most wins, poles, titles & fastest laps in history" },
+      { id: "news",         icon: "📰", label: "F1 News",           desc: "Latest headlines from Motorsport.com" },
     ]
   },
 ];
@@ -2952,6 +3993,20 @@ export default function F1Guide() {
   const [active, setActive] = useState("how");
   const [openGroup, setOpenGroup] = useState(null);
   const [darkMode, setDarkMode] = useState(true);
+  const [showOnboarding, setShowOnboarding] = useState(() => !localStorage.getItem("f1guide_visited"));
+  const [bookmarks, setBookmarks] = useState(() => {
+    try { return JSON.parse(localStorage.getItem("f1guide_bookmarks") || "[]"); } catch { return []; }
+  });
+
+  // Expose DRIVERS_2025 globally for DriverCompareSection
+  useEffect(() => { window.__DRIVERS_2025__ = DRIVERS_2025; }, []);
+
+  // Persist bookmarks
+  useEffect(() => { localStorage.setItem("f1guide_bookmarks", JSON.stringify(bookmarks)); }, [bookmarks]);
+
+  function toggleBookmark(id) {
+    setBookmarks(bms => bms.includes(id) ? bms.filter(b => b !== id) : [...bms, id]);
+  }
 
   useEffect(() => {
     function handleClick(e) {
@@ -2962,7 +4017,17 @@ export default function F1Guide() {
   }, []);
 
   function toggleGroup(label) { setOpenGroup(g => g === label ? null : label); }
-  function selectSection(id) { setActive(id); setOpenGroup(null); window.scrollTo(0, 0); }
+  function selectSection(id) {
+    setActive(id);
+    setOpenGroup(null);
+    window.scrollTo(0, 0);
+    localStorage.setItem("f1guide_visited", "1");
+  }
+
+  function handleOnboardingClose() {
+    setShowOnboarding(false);
+    localStorage.setItem("f1guide_visited", "1");
+  }
 
   return (
     <>
@@ -2972,6 +4037,9 @@ export default function F1Guide() {
         <div className="orb orb-1" />
         <div className="orb orb-2" />
         <div className="orb orb-3" />
+
+        {showOnboarding && <OnboardingModal onClose={handleOnboardingClose} onSelect={id => { selectSection(id); handleOnboardingClose(); }} />}
+
         <div className="content">
           <div className="hero">
             <div className="hero-title">FORMULA <span>1</span></div>
@@ -3003,6 +4071,10 @@ export default function F1Guide() {
                   </div>
                 );
               })}
+              {/* Bookmarks button */}
+              <button className="theme-toggle" onClick={() => selectSection("bookmarks")} title="My Bookmarks" style={{ fontSize: 16 }}>
+                🔖
+              </button>
               <button className="theme-toggle" onClick={() => setDarkMode(d => !d)} title="Toggle light/dark mode">
                 {darkMode ? "☀️" : "🌙"}
               </button>
@@ -3016,20 +4088,36 @@ export default function F1Guide() {
 
           <main className="main">
             <div key={active} className="section-enter">
-              {active === "how"       && <HowItWorks />}
-              {active === "points"    && <PointsSystem />}
-              {active === "drivers"   && <DriversSection />}
-              {active === "teams"     && <TeamsSection />}
-              {active === "history"   && <HistorySection />}
-              {active === "circuits"  && <CircuitsSection />}
-              {active === "results"   && <ResultsSection />}
-              {active === "glossary"  && <GlossarySection />}
-              {active === "rules"     && <RulesSection />}
-              {active === "compare"   && <CarCompareSection />}
-              {active === "records"   && <RecordsSection />}
-              {active === "quiz"      && <QuizSection />}
-              {active === "predictor" && <RacePredictorSection />}
-              {active === "news"      && <NewsSection />}
+              {/* Bookmark button in section header */}
+              {active !== "bookmarks" && (
+                <div style={{ display: "flex", justifyContent: "flex-end", marginBottom: -8 }}>
+                  <button className="bookmark-btn" onClick={() => toggleBookmark(active)}
+                    title={bookmarks.includes(active) ? "Remove bookmark" : "Bookmark this section"}
+                    style={{ fontSize: 18, color: bookmarks.includes(active) ? "#FFD700" : "var(--text4)" }}>
+                    {bookmarks.includes(active) ? "★" : "☆"}
+                  </button>
+                </div>
+              )}
+              {active === "how"          && <HowItWorks />}
+              {active === "points"       && <PointsSystem />}
+              {active === "drivers"      && <DriversSection />}
+              {active === "teams"        && <TeamsSection />}
+              {active === "history"      && <HistorySection />}
+              {active === "circuits"     && <CircuitsSection />}
+              {active === "results"      && <ResultsSection />}
+              {active === "glossary"     && <GlossarySection />}
+              {active === "rules"        && <RulesSection />}
+              {active === "compare"      && <CarCompareSection />}
+              {active === "records"      && <RecordsSection />}
+              {active === "quiz"         && <QuizSection />}
+              {active === "predictor"    && <RacePredictorSection />}
+              {active === "news"         && <NewsSection />}
+              {active === "drivercompare"&& <DriverCompareSection />}
+              {active === "championship" && <ChampionshipTrackerSection />}
+              {active === "teamquiz"     && <TeamQuizSection />}
+              {active === "tyrestrategy" && <TyreStrategySection />}
+              {active === "h2h"          && <HeadToHeadSection />}
+              {active === "bookmarks"    && <BookmarksSection bookmarks={bookmarks} onNavigate={selectSection} onRemove={id => toggleBookmark(id)} />}
             </div>
           </main>
         </div>
