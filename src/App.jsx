@@ -64,7 +64,7 @@ const styles = `
   .content { position: relative; z-index: 1; width: 100%; }
 
   .hero {
-    background: linear-gradient(135deg, #0a0a0f 0%, #1a0505 50%, #0a0a0f 100%);
+    background: linear-gradient(135deg, var(--bg) 0%, #1a0505 50%, var(--bg) 100%);
     border-bottom: 2px solid #e10600;
     padding: clamp(24px, 5vw, 40px) 20px clamp(20px, 4vw, 30px);
     text-align: center;
@@ -88,7 +88,7 @@ const styles = `
     font-family: 'Orbitron', sans-serif;
     font-size: clamp(20px, 6vw, 56px);
     font-weight: 900;
-    color: #fff;
+    color: var(--text);
     letter-spacing: clamp(2px, 1vw, 4px);
     text-transform: uppercase;
     position: relative; z-index: 1;
@@ -96,7 +96,7 @@ const styles = `
   .hero-title span { color: #e10600; }
   .hero-sub {
     font-size: clamp(9px, 2.2vw, 14px);
-    color: #888;
+    color: var(--text3);
     letter-spacing: clamp(2px, 1vw, 6px);
     text-transform: uppercase;
     margin-top: 8px;
@@ -114,7 +114,7 @@ const styles = `
   }
   .countdown-label {
     font-size: clamp(8px, 1.8vw, 11px);
-    color: #555;
+    color: var(--text3);
     letter-spacing: clamp(2px, 1vw, 5px);
     text-transform: uppercase;
     font-family: 'Orbitron', sans-serif;
@@ -141,7 +141,7 @@ const styles = `
     font-family: 'Orbitron', sans-serif;
     font-size: clamp(20px, 5vw, 36px);
     font-weight: 900;
-    color: #fff;
+    color: var(--text);
     background: rgba(225,6,0,0.08);
     border: 1px solid rgba(225,6,0,0.2);
     border-radius: 4px;
@@ -152,7 +152,7 @@ const styles = `
   }
   .countdown-unit {
     font-size: clamp(7px, 1.5vw, 9px);
-    color: #444;
+    color: var(--text4);
     letter-spacing: 2px;
     text-transform: uppercase;
     font-family: 'Orbitron', sans-serif;
@@ -165,8 +165,8 @@ const styles = `
     gap: 14px;
   }
   .circuit-card {
-    background: #0d0d15;
-    border: 1px solid #1e1e2e;
+    background: var(--card-bg);
+    border: 1px solid var(--border);
     border-radius: 4px;
     overflow: hidden;
     transition: border-color 0.2s, transform 0.2s;
@@ -175,7 +175,7 @@ const styles = `
   .circuit-card:hover { border-color: #e10600; transform: translateY(-2px); }
   .circuit-card-header {
     padding: 14px 16px 10px;
-    border-bottom: 1px solid #1a1a2a;
+    border-bottom: 1px solid var(--border);
     display: flex;
     align-items: flex-start;
     gap: 10px;
@@ -185,12 +185,12 @@ const styles = `
     font-family: 'Orbitron', sans-serif;
     font-size: 11px;
     font-weight: 700;
-    color: #fff;
+    color: var(--text);
     letter-spacing: 1px;
     text-transform: uppercase;
     margin-bottom: 3px;
   }
-  .circuit-country { font-size: 11px; color: #555; }
+  .circuit-country { font-size: 11px; color: var(--text3); }
   .circuit-round {
     margin-left: auto;
     font-family: 'Orbitron', sans-serif;
@@ -207,9 +207,9 @@ const styles = `
     margin-bottom: 10px;
   }
   .circuit-stat-item { display: flex; flex-direction: column; gap: 2px; }
-  .circuit-stat-lbl { font-size: 9px; color: #444; text-transform: uppercase; letter-spacing: 1px; font-family: 'Orbitron', sans-serif; }
-  .circuit-stat-val { font-size: 12px; color: #ccc; font-weight: 600; }
-  .circuit-desc { font-size: 12px; color: #666; line-height: 1.7; margin-top: 8px; }
+  .circuit-stat-lbl { font-size: 9px; color: var(--text4); text-transform: uppercase; letter-spacing: 1px; font-family: 'Orbitron', sans-serif; }
+  .circuit-stat-val { font-size: 12px; color: var(--text2); font-weight: 600; }
+  .circuit-desc { font-size: 12px; color: var(--text3); line-height: 1.7; margin-top: 8px; }
   .circuit-tag {
     display: inline-block;
     margin: 3px 3px 0 0;
@@ -339,8 +339,8 @@ const styles = `
   .nav-btn {
     padding: clamp(5px, 1.5vw, 8px) clamp(8px, 2vw, 14px);
     background: transparent;
-    border: 1px solid #2a2a3a;
-    color: #888;
+    border: 1px solid var(--border2);
+    color: var(--text3);
     font-family: 'Exo 2', sans-serif;
     font-size: clamp(9px, 2vw, 12px);
     font-weight: 600;
@@ -351,8 +351,8 @@ const styles = `
     border-radius: 2px;
     white-space: nowrap;
   }
-  .nav-btn:hover { border-color: #e10600; color: #fff; }
-  .nav-btn.active { background: #e10600; border-color: #e10600; color: #fff; }
+  .nav-btn:hover { border-color: #e10600; color: var(--text); }
+  .nav-btn.active { background: #e10600; border-color: #e10600; color: var(--text); }
   .theme-toggle {
     display: flex;
     align-items: center;
@@ -404,7 +404,7 @@ const styles = `
     border-radius: 2px;
   }
   .year-btn:hover { border-color: #e10600; color: var(--text); }
-  .year-btn.active { background: #e10600; border-color: #e10600; color: #fff; }
+  .year-btn.active { background: #e10600; border-color: #e10600; color: var(--text); }
   .new-badge {
     display: inline-block;
     padding: 2px 6px;
@@ -522,7 +522,7 @@ const styles = `
   .graph-bar-name { font-size: 12px; color: var(--text2); min-width: 130px; text-align: right; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .graph-bar-track { flex: 1; height: 20px; background: var(--bg3); border-radius: 2px; overflow: hidden; position: relative; min-width: 0; }
   .graph-bar-fill { height: 100%; border-radius: 2px; transition: width 0.6s; display: flex; align-items: center; justify-content: flex-end; padding-right: 6px; }
-  .graph-bar-val { font-family: 'Orbitron', sans-serif; font-size: 9px; font-weight: 700; color: #fff; white-space: nowrap; }
+  .graph-bar-val { font-family: 'Orbitron', sans-serif; font-size: 9px; font-weight: 700; color: var(--text); white-space: nowrap; }
 
   .points-wrap {
     display: grid;
@@ -532,27 +532,27 @@ const styles = `
   }
   .points-table { width: 100%; border-collapse: collapse; font-size: 13px; }
   .points-table th {
-    background: #e10600; color: #fff;
+    background: #e10600; color: var(--text);
     padding: 9px 12px; text-align: left;
     font-family: 'Orbitron', sans-serif;
     font-size: 10px; letter-spacing: 2px; text-transform: uppercase;
   }
-  .points-table td { padding: 8px 12px; border-bottom: 1px solid #1e1e2e; color: #ccc; }
-  .points-table tr:nth-child(even) td { background: #0d0d15; }
-  .points-table tr:hover td { background: #15151f; }
+  .points-table td { padding: 8px 12px; border-bottom: 1px solid var(--border); color: var(--text2); }
+  .points-table tr:nth-child(even) td { background: var(--card-bg); }
+  .points-table tr:hover td { background: var(--bg3); }
   .pos-badge {
     display: inline-flex; align-items: center; justify-content: center;
     width: 26px; height: 26px;
-    background: #1a1a2a; border: 1px solid #2a2a3a;
-    border-radius: 50%; font-weight: 700; color: #fff; font-size: 11px;
+    background: var(--bg3); border: 1px solid var(--border2);
+    border-radius: 50%; font-weight: 700; color: var(--text); font-size: 11px;
   }
-  .pos-badge.p1 { background: #e10600; border-color: #e10600; }
+  .pos-badge.p1 { background: #e10600; border-color: #e10600; color: #fff; }
   .pos-badge.p2 { background: #c0c0c0; border-color: #c0c0c0; color: #000; }
-  .pos-badge.p3 { background: #cd7f32; border-color: #cd7f32; }
+  .pos-badge.p3 { background: #cd7f32; border-color: #cd7f32; color: #fff; }
 
   .driver-card {
-    background: #0d0d15;
-    border: 1px solid #1e1e2e;
+    background: var(--card-bg);
+    border: 1px solid var(--border);
     border-radius: 4px;
     overflow: hidden;
     transition: transform 0.2s, border-color 0.2s;
@@ -563,7 +563,7 @@ const styles = `
     display: flex;
     align-items: center;
     gap: 10px;
-    border-bottom: 1px solid #1e1e2e;
+    border-bottom: 1px solid var(--border);
   }
   .driver-number {
     font-family: 'Orbitron', sans-serif;
@@ -579,14 +579,14 @@ const styles = `
     font-family: 'Orbitron', sans-serif;
     font-size: clamp(10px, 2.2vw, 13px);
     font-weight: 700;
-    color: #fff;
+    color: var(--text);
     text-transform: uppercase;
     letter-spacing: 1px;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
   }
-  .driver-country { font-size: 11px; color: #666; margin-top: 2px; }
+  .driver-country { font-size: 11px; color: var(--text3); margin-top: 2px; }
   .driver-team-badge {
     flex-shrink: 0;
     padding: 3px 7px;
@@ -601,8 +601,8 @@ const styles = `
   .driver-stat-row { display: flex; gap: 6px; margin-bottom: 10px; }
   .driver-stat {
     text-align: center;
-    background: #12121c;
-    border: 1px solid #1e1e2e;
+    background: var(--bg3);
+    border: 1px solid var(--border);
     padding: 6px 8px;
     border-radius: 2px;
     flex: 1;
@@ -613,18 +613,18 @@ const styles = `
     font-weight: 700;
     color: #e10600;
   }
-  .driver-stat-lbl { font-size: 9px; color: #555; letter-spacing: 1px; text-transform: uppercase; margin-top: 2px; }
-  .driver-desc { font-size: 12px; color: #999; line-height: 1.65; margin-bottom: 8px; }
-  .driver-media { font-size: 12px; color: #666; font-style: italic; border-left: 2px solid #e10600; padding-left: 10px; margin-top: 8px; }
+  .driver-stat-lbl { font-size: 9px; color: var(--text3); letter-spacing: 1px; text-transform: uppercase; margin-top: 2px; }
+  .driver-desc { font-size: 12px; color: var(--text2); line-height: 1.65; margin-bottom: 8px; }
+  .driver-media { font-size: 12px; color: var(--text3); font-style: italic; border-left: 2px solid #e10600; padding-left: 10px; margin-top: 8px; }
 
   .rating-bar-wrap { margin: 5px 0; }
-  .rating-label { display: flex; justify-content: space-between; font-size: 10px; color: #666; margin-bottom: 3px; }
-  .rating-bar { height: 3px; background: #1e1e2e; border-radius: 2px; overflow: hidden; }
+  .rating-label { display: flex; justify-content: space-between; font-size: 10px; color: var(--text3); margin-bottom: 3px; }
+  .rating-bar { height: 3px; background: var(--border); border-radius: 2px; overflow: hidden; }
   .rating-fill { height: 100%; background: linear-gradient(90deg, #e10600, #ff6060); border-radius: 2px; }
 
   .team-card {
-    background: #0d0d15;
-    border: 1px solid #1e1e2e;
+    background: var(--card-bg);
+    border: 1px solid var(--border);
     border-radius: 4px;
     overflow: hidden;
     transition: transform 0.2s, border-color 0.2s;
@@ -632,7 +632,7 @@ const styles = `
   .team-card:hover { transform: translateY(-3px); }
   .team-header {
     padding: 14px 16px;
-    border-bottom: 1px solid #1e1e2e;
+    border-bottom: 1px solid var(--border);
     display: flex;
     align-items: center;
     gap: 12px;
@@ -642,59 +642,59 @@ const styles = `
     font-family: 'Orbitron', sans-serif;
     font-size: clamp(10px, 2.2vw, 14px);
     font-weight: 700;
-    color: #fff;
+    color: var(--text);
     text-transform: uppercase;
     letter-spacing: 1px;
   }
-  .team-base { font-size: 11px; color: #666; margin-top: 3px; }
+  .team-base { font-size: 11px; color: var(--text3); margin-top: 3px; }
   .team-body { padding: 12px 16px; }
   .team-detail { font-size: 12px; color: #999; line-height: 1.7; }
   .team-row { display: flex; gap: 5px; margin-bottom: 6px; flex-wrap: wrap; }
   .team-pill {
-    background: #12121c;
-    border: 1px solid #1e1e2e;
+    background: var(--bg3);
+    border: 1px solid var(--border);
     padding: 3px 9px;
     border-radius: 20px;
     font-size: 11px;
-    color: #aaa;
+    color: var(--text2);
   }
   .team-pill strong { color: #e10600; }
 
   .search-wrap { margin-bottom: 14px; position: relative; }
   .search-input {
     width: 100%;
-    background: #0d0d15;
-    border: 1px solid #2a2a3a;
+    background: var(--card-bg);
+    border: 1px solid var(--border2);
     border-radius: 2px;
     padding: 10px 14px 10px 36px;
-    color: #fff;
+    color: var(--text);
     font-family: 'Exo 2', sans-serif;
     font-size: 14px;
     outline: none;
     transition: border-color 0.2s;
   }
   .search-input:focus { border-color: #e10600; }
-  .search-icon { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: #555; font-size: 13px; }
+  .search-icon { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: var(--text3); font-size: 13px; }
 
   .filter-row { display: flex; flex-wrap: wrap; gap: 5px; margin-bottom: 16px; }
   .filter-pill {
     padding: 4px 10px;
     background: transparent;
-    border: 1px solid #2a2a3a;
+    border: 1px solid var(--border2);
     border-radius: 20px;
-    color: #666;
+    color: var(--text3);
     font-size: 10px;
     cursor: pointer;
     transition: all 0.2s;
     font-family: 'Exo 2', sans-serif;
   }
-  .filter-pill:hover { border-color: #e10600; color: #fff; }
+  .filter-pill:hover { border-color: #e10600; color: var(--text); }
   .filter-pill.active { background: #e10600; border-color: #e10600; color: #fff; }
 
   .expand-btn {
     background: transparent;
-    border: 1px solid #2a2a3a;
-    color: #666;
+    border: 1px solid var(--border2);
+    color: var(--text3);
     padding: 5px 10px;
     font-size: 10px;
     cursor: pointer;
@@ -708,9 +708,9 @@ const styles = `
   .expand-btn:hover { border-color: #e10600; color: #e10600; }
 
   .champ-table { width: 100%; border-collapse: collapse; }
-  .champ-table th { background: #12121c; color: #e10600; padding: 8px 10px; font-size: 9px; letter-spacing: 2px; text-transform: uppercase; text-align: left; font-family: 'Orbitron', sans-serif; }
-  .champ-table td { padding: 8px 10px; border-bottom: 1px solid #1a1a2a; font-size: 12px; color: #bbb; }
-  .champ-table tr:hover td { background: #0d0d15; }
+  .champ-table th { background: var(--bg3); color: #e10600; padding: 8px 10px; font-size: 9px; letter-spacing: 2px; text-transform: uppercase; text-align: left; font-family: 'Orbitron', sans-serif; }
+  .champ-table td { padding: 8px 10px; border-bottom: 1px solid var(--border); font-size: 12px; color: var(--text2); }
+  .champ-table tr:hover td { background: var(--card-bg); }
   .gold { color: #ffd700; font-weight: 700; }
   .silver { color: #c0c0c0; }
 
@@ -726,15 +726,15 @@ const styles = `
     position: absolute; left: -21px; top: 4px;
     width: 9px; height: 9px;
     background: #e10600; border-radius: 50%;
-    border: 2px solid #0a0a0f;
+    border: 2px solid var(--bg);
   }
   .timeline-year { font-family: 'Orbitron', sans-serif; font-size: 12px; color: #e10600; font-weight: 700; letter-spacing: 2px; margin-bottom: 5px; }
-  .timeline-content { font-size: 13px; color: #999; line-height: 1.7; }
+  .timeline-content { font-size: 13px; color: var(--text2); line-height: 1.7; }
   .timeline-change {
-    background: #0d0d15; border: 1px solid #1e1e2e;
+    background: var(--card-bg); border: 1px solid var(--border);
     border-left: 3px solid #e10600;
     padding: 10px 12px; margin-top: 8px;
-    border-radius: 2px; font-size: 12px; color: #aaa;
+    border-radius: 2px; font-size: 12px; color: var(--text2);
   }
   .change-tag {
     display: inline-block; padding: 2px 6px; border-radius: 2px;
@@ -752,15 +752,15 @@ const styles = `
     gap: 10px;
   }
   .glossary-card {
-    background: #0d0d15;
-    border: 1px solid #1e1e2e;
+    background: var(--card-bg);
+    border: 1px solid var(--border);
     border-left: 3px solid #e10600;
     border-radius: 3px;
     padding: 14px 16px;
     cursor: pointer;
     transition: border-color 0.2s, background 0.2s;
   }
-  .glossary-card:hover { background: #10101a; border-color: #e10600; }
+  .glossary-card:hover { background: var(--bg3); border-color: #e10600; }
   .glossary-term {
     font-family: 'Orbitron', sans-serif;
     font-size: 11px;
@@ -773,7 +773,7 @@ const styles = `
     align-items: center;
     justify-content: space-between;
   }
-  .glossary-def { font-size: 12px; color: #777; line-height: 1.7; }
+  .glossary-def { font-size: 12px; color: var(--text3); line-height: 1.7; }
   .glossary-cat {
     display: inline-block;
     padding: 1px 6px;
@@ -787,14 +787,14 @@ const styles = `
 
   /* ── Rules ── */
   .rule-card {
-    background: #0d0d15;
-    border: 1px solid #1e1e2e;
+    background: var(--card-bg);
+    border: 1px solid var(--border);
     border-radius: 4px;
     overflow: hidden;
     margin-bottom: 10px;
     transition: border-color 0.2s;
   }
-  .rule-card:hover { border-color: #333; }
+  .rule-card:hover { border-color: var(--text4); }
   .rule-header {
     display: flex;
     align-items: center;
@@ -808,22 +808,22 @@ const styles = `
     font-family: 'Orbitron', sans-serif;
     font-size: 11px;
     font-weight: 700;
-    color: #fff;
+    color: var(--text);
     letter-spacing: 1px;
     text-transform: uppercase;
     flex: 1;
   }
-  .rule-chevron { color: #555; font-size: 12px; transition: transform 0.2s; }
+  .rule-chevron { color: var(--text3); font-size: 12px; transition: transform 0.2s; }
   .rule-chevron.open { transform: rotate(180deg); color: #e10600; }
-  .rule-body { padding: 0 18px 16px; border-top: 1px solid #1a1a2a; }
-  .rule-plain { font-size: 13px; color: #aaa; line-height: 1.8; margin-top: 12px; }
+  .rule-body { padding: 0 18px 16px; border-top: 1px solid var(--border); }
+  .rule-plain { font-size: 13px; color: var(--text2); line-height: 1.8; margin-top: 12px; }
   .rule-example {
     margin-top: 10px;
     padding: 10px 14px;
     background: rgba(225,6,0,0.05);
     border-left: 3px solid #e10600;
     font-size: 12px;
-    color: #888;
+    color: var(--text3);
     line-height: 1.7;
     border-radius: 0 2px 2px 0;
   }
@@ -838,9 +838,9 @@ const styles = `
     text-transform: uppercase;
     text-align: left;
   }
-  .compare-table td { padding: 10px 14px; border-bottom: 1px solid #1a1a2a; font-size: 13px; color: #bbb; vertical-align: top; }
-  .compare-table tr:hover td { background: #0d0d15; }
-  .compare-aspect { font-weight: 700; color: #666; font-size: 10px; text-transform: uppercase; letter-spacing: 1px; font-family: 'Orbitron', sans-serif; }
+  .compare-table td { padding: 10px 14px; border-bottom: 1px solid var(--border); font-size: 13px; color: var(--text2); vertical-align: top; }
+  .compare-table tr:hover td { background: var(--card-bg); }
+  .compare-aspect { font-weight: 700; color: var(--text3); font-size: 10px; text-transform: uppercase; letter-spacing: 1px; font-family: 'Orbitron', sans-serif; }
   .compare-winner { color: #00dc78; font-weight: 700; }
   .compare-badge {
     display: inline-block; padding: 2px 7px; border-radius: 2px;
@@ -855,15 +855,15 @@ const styles = `
     gap: 14px;
   }
   .record-card {
-    background: #0d0d15;
-    border: 1px solid #1e1e2e;
+    background: var(--card-bg);
+    border: 1px solid var(--border);
     border-radius: 4px;
     overflow: hidden;
   }
   .record-header {
-    background: linear-gradient(135deg, #12121c, #0d0d15);
+    background: linear-gradient(135deg, var(--bg3), var(--card-bg));
     padding: 12px 16px;
-    border-bottom: 1px solid #1e1e2e;
+    border-bottom: 1px solid var(--border);
     display: flex;
     align-items: center;
     gap: 10px;
@@ -887,7 +887,7 @@ const styles = `
     min-width: 22px;
     text-align: center;
   }
-  .record-driver-name { font-size: 13px; color: #ccc; font-weight: 600; flex: 1; }
+  .record-driver-name { font-size: 13px; color: var(--text2); font-weight: 600; flex: 1; }
   .record-value { font-family: 'Orbitron', sans-serif; font-size: 13px; font-weight: 700; color: #e10600; }
 
   @media (max-width: 600px) {
@@ -928,7 +928,7 @@ const TEAMS_2026 = [
   { id: "ferrari", name: "Scuderia Ferrari", base: "Maranello, Italy", color: "#E8002D", engine: "Ferrari (new regs)", tp: "Frédéric Vasseur", founded: 1950, championships: "16 Constructors (last: 2008)", drivers: ["Charles Leclerc", "Lewis Hamilton"], desc: "Hamilton and Leclerc continue into the new era. Ferrari's Maranello factory has invested massively in the 2026 power unit. The dream: Hamilton finally wins his 8th title in red.", engineNote: "Ferrari 2026 PU — Redesigned from ground up. Also supplied to Haas. Sauber switches to Audi." },
   { id: "mclaren", name: "McLaren F1 Team", base: "Woking, UK", color: "#FF8000", engine: "Mercedes (new regs)", tp: "Andrea Stella", founded: 1966, championships: "8 Constructors (last: 1998)", drivers: ["Lando Norris", "Oscar Piastri"], desc: "McLaren enter 2026 as title favourites. Their chassis expertise plus Mercedes' expected strong 2026 unit makes them dangerous. Norris and Piastri continue — the best young pairing in F1.", engineNote: "Mercedes-supplied 2026 unit." },
   { id: "astonmartin", name: "Aston Martin Aramco", base: "Silverstone, UK", color: "#229971", engine: "Honda (works)", tp: "Andy Cowell", founded: 2021, championships: "0", drivers: ["Fernando Alonso", "Lance Stroll"], desc: "A huge twist — Aston Martin signed a works deal with Honda for 2026 after Mercedes ended their supply agreement. Andy Cowell (ex-Mercedes HPP) now runs a Honda-powered team. Alonso's last shot at glory with a works engine.", engineNote: "Honda works PU — Honda ended their Red Bull partnership and signed with Aston Martin as their exclusive works team from 2026. A major coup." },
-  { id: "alpine", name: "Alpine F1 Team", base: "Enstone, UK", color: "#0093CC", engine: "Mercedes (new regs)", tp: "Oliver Oakes", founded: 2021, championships: "0", drivers: ["Pierre Gasly", "Jack Doohan"], desc: "Alpine ditches their own Renault engine and becomes a Mercedes customer — effectively admitting the Renault unit wasn't good enough. A huge strategic shift for the French manufacturer.", engineNote: "Switches to Mercedes power in 2026 — the biggest change in the team's history." },
+  { id: "alpine", name: "Alpine F1 Team", base: "Enstone, UK", color: "#0093CC", engine: "Mercedes (new regs)", tp: "Oliver Oakes", founded: 2021, championships: "0", drivers: ["Pierre Gasly", "Franco Colapinto"], desc: "Alpine ditches their own Renault engine and becomes a Mercedes customer — effectively admitting the Renault unit wasn't good enough. Doohan was dropped mid-2025; Colapinto, who impressed at Williams in 2024, takes the seat. A huge strategic shift for the French manufacturer.", engineNote: "Switches to Mercedes power in 2026 — the biggest change in the team's history." },
   { id: "williams", name: "Williams Racing", base: "Grove, UK", color: "#64C4FF", engine: "Mercedes (new regs)", tp: "James Vowles", founded: 1977, championships: "9 Constructors (last: 1997)", drivers: ["Alexander Albon", "Carlos Sainz"], desc: "The regulation reset gives Williams a clean slate. If Mercedes hit the ground running in 2026, Williams could genuinely challenge the top teams. Vowles' rebuild enters its most exciting chapter yet.", engineNote: "Mercedes-supplied — continuing relationship into new regulations." },
   { id: "haas", name: "MoneyGram Haas F1 Team", base: "Kannapolis, USA", color: "#B6BABD", engine: "Ferrari (new regs)", tp: "Ayao Komatsu", founded: 2016, championships: "0", drivers: ["Esteban Ocon", "Oliver Bearman"], desc: "Continue as Ferrari customers into 2026. Bearman is Ferrari-backed — keeping the pipeline intact. New regulations give everyone a chance to surprise.", engineNote: "Ferrari-supplied 2026 unit." },
   { id: "rb", name: "Racing Bulls (VCARB)", base: "Faenza, Italy", color: "#6692FF", engine: "Ford RBPT (NEW)", tp: "Alan Permane", founded: 2006, championships: "0", drivers: ["Liam Lawson", "Arvid Lindblad"], desc: "Switches to the Ford RBPT unit alongside Red Bull. Lawson returns to Racing Bulls after his difficult stint at Red Bull, and leads the team alongside 18-year-old rookie Arvid Lindblad. Mekies' promotion to Red Bull brings Alan Permane in as new TP.", engineNote: "Ford RBPT — same new unit as Red Bull Racing." },
@@ -952,11 +952,11 @@ const DRIVERS_2025 = [
   { id: "gasly", number: 10, name: "Pierre Gasly", country: "🇫🇷 France", team: "Alpine", teamColor: "#0093CC", championships: 0, wins: "1", poles: "1", skill: 85, racecraft: 83, consistency: 84, media: 80, desc: "Senior head at Alpine through their engine transition. His Monza 2020 win remains one of the most emotional moments in recent F1 memory. A rollercoaster career that keeps delivering.", mediaNote: "Popular in France. His Monza 2020 celebration is legendary.", seasons: "2017–present" },
   { id: "ocon", number: 31, name: "Esteban Ocon", country: "🇫🇷 France", team: "Haas", teamColor: "#B6BABD", championships: 0, wins: "1", poles: "0", skill: 83, racecraft: 80, consistency: 83, media: 72, desc: "Left Alpine for Haas. Fresh environment might unlock him. Solid operator who perhaps never found the perfect team. His 2021 Hungarian win showed what he can do.", mediaNote: "Lower media profile. The Alonso feud era was very entertaining for fans.", seasons: "2016–present" },
   { id: "bearman", number: 87, name: "Oliver Bearman", country: "🇬🇧 United Kingdom", team: "Haas", teamColor: "#B6BABD", championships: 0, wins: "0", poles: "0", skill: 83, racecraft: 81, consistency: 80, media: 78, desc: "British teenager who stunned F1 with P7 on debut at Ferrari in 2024 as a last-minute stand-in. Ferrari-backed. Gets his full seat aged 19. One of the most hyped young talents in years.", mediaNote: "British media darling. Remarkably calm under pressure. Ferrari's future?", seasons: "2025–present" },
-  { id: "doohan", number: 7, name: "Jack Doohan", country: "🇦🇺 Australia", team: "Alpine", teamColor: "#0093CC", championships: 0, wins: "0", poles: "0", skill: 80, racecraft: 79, consistency: 79, media: 68, desc: "Son of motorcycle legend Mick Doohan. Alpine's 2025 rookie. Tough debut environment — a team changing engine suppliers and restructuring. Has the pedigree but it'll be a baptism of fire.", mediaNote: "Famous surname. Australia is watching. Quiet media presence so far.", seasons: "2025–present" },
+  { id: "doohan", number: 7, name: "Jack Doohan", country: "🇦🇺 Australia", team: "dropped (2026)", teamColor: "#555566", championships: 0, wins: "0", poles: "0", skill: 80, racecraft: 79, consistency: 79, media: 68, desc: "Son of motorcycle legend Mick Doohan. Dropped by Alpine mid-2025 after a difficult debut season — Colapinto took his seat. Has the pedigree but the opportunity came too soon in a team in deep transition.", mediaNote: "Famous surname. Australia is watching. Likely to return in future if a seat opens.", seasons: "2025" },
   { id: "hadjar", number: 6, name: "Isack Hadjar", country: "🇫🇷 France", team: "Red Bull Racing", teamColor: "#3671C6", championships: 0, wins: "0", poles: "0", skill: 82, racecraft: 81, consistency: 80, media: 67, desc: "Earned his Red Bull promotion after a strong debut season at Racing Bulls in 2025. The French-Algerian talent becomes Verstappen's new teammate — the most scrutinised seat in F1.", mediaNote: "Big in France and Algeria. Still establishing his F1 personality.", seasons: "2025–present" },
   { id: "lindblad", number: 8, name: "Arvid Lindblad", country: "🇬🇧 United Kingdom", team: "Racing Bulls", teamColor: "#6692FF", championships: 0, wins: "0", poles: "0", skill: 80, racecraft: 79, consistency: 78, media: 65, desc: "18-year-old British-Swedish Red Bull junior making his F1 debut after Hadjar's promotion to the senior team. Dominated the junior categories and is widely regarded as one of the most exciting young talents in the pipeline.", mediaNote: "Quietly confident. Growing profile in the UK and Sweden. One to watch.", seasons: "2026–present" },
-  { id: "bortoleto", number: 5, name: "Gabriel Bortoleto", country: "🇧🇷 Brazil", team: "Sauber / Audi", teamColor: "#52E252", championships: 0, wins: "0", poles: "0", skill: 82, racecraft: 81, consistency: 80, media: 74, desc: "Won F3 and F2 in consecutive seasons — a rare achievement. Brazil's first full-time F1 driver in years. Joins Sauber as they transform into Audi. McLaren junior released to make his debut.", mediaNote: "Brazil is excited. Carries the weight of a nation. Fresh, likeable personality.", seasons: "2025–present" },
-  { id: "hulkenberg", number: 27, name: "Nico Hülkenberg", country: "🇩🇪 Germany", team: "Sauber / Audi", teamColor: "#52E252", championships: 0, wins: "0", poles: "1", skill: 86, racecraft: 85, consistency: 87, media: 75, desc: "Out of F1 for 3 years, came back as a substitute, earned a full seat, now leads the team becoming Audi. The most important role of his career. One of the cleanest racers on the grid.", mediaNote: "Dry German wit. Respected everywhere. The Audi chapter is his biggest yet.", seasons: "2010–2019, 2023–present" },
+  { id: "bortoleto", number: 5, name: "Gabriel Bortoleto", country: "🇧🇷 Brazil", team: "Audi F1", teamColor: "#BB0A21", championships: 0, wins: "0", poles: "0", skill: 82, racecraft: 81, consistency: 80, media: 74, desc: "Won F3 and F2 in consecutive seasons — a rare achievement. Brazil's first full-time F1 driver in years. Joins Sauber as they transform into Audi. McLaren junior released to make his debut.", mediaNote: "Brazil is excited. Carries the weight of a nation. Fresh, likeable personality.", seasons: "2025–present" },
+  { id: "hulkenberg", number: 27, name: "Nico Hülkenberg", country: "🇩🇪 Germany", team: "Audi F1", teamColor: "#BB0A21", championships: 0, wins: "0", poles: "1", skill: 86, racecraft: 85, consistency: 87, media: 75, desc: "Out of F1 for 3 years, came back as a substitute, earned a full seat, now leads the team becoming Audi. The most important role of his career. One of the cleanest racers on the grid.", mediaNote: "Dry German wit. Respected everywhere. The Audi chapter is his biggest yet.", seasons: "2010–2019, 2023–present" },
   { id: "stroll", number: 18, name: "Lance Stroll", country: "🇨🇦 Canada", team: "Aston Martin", teamColor: "#229971", championships: 0, wins: "0", poles: "1", skill: 78, racecraft: 76, consistency: 78, media: 65, desc: "Son of team owner Lawrence Stroll, which guarantees his seat. More capable than his pay-driver tag suggests — 3 podiums and a pole. Often outpaced by teammates but capable in the wet.", mediaNote: "Criticism follows him because of his father's ownership. Occasionally brilliant, frequently below his teammate.", seasons: "2017–present" },
   { id: "bottas_cadillac", number: 77, name: "Valtteri Bottas", country: "🇫🇮 Finland", team: "Cadillac (2026)", teamColor: "#CC0000", championships: 0, wins: "10", poles: "20", skill: 85, racecraft: 83, consistency: 85, media: 78, desc: "Sat out 2025 as Mercedes reserve after leaving Sauber. Returns to the grid with brand new team Cadillac for 2026. Brings 500+ race starts and invaluable experience to help build a team from scratch. Delighted to be racing again.", mediaNote: "Famous for witty, blunt social media. 'To whom it may concern' energy. Beloved for authenticity.", seasons: "2013–2024, 2026–present" },
   { id: "perez_cadillac", number: 11, name: "Sergio Perez", country: "🇲🇽 Mexico", team: "Cadillac (2026)", teamColor: "#CC0000", championships: 0, wins: "13", poles: "3", skill: 84, racecraft: 85, consistency: 78, media: 80, desc: "Released by Red Bull after 2024, sat out 2025, now returns with Cadillac. The 'Minister of Defence' brings 280+ race starts to a new team that desperately needs his experience. Mexico will be watching closely.", mediaNote: "National hero in Mexico. The Interlagos Checo chants are legendary. Huge Latin American fanbase.", seasons: "2011–2024, 2026–present" },
@@ -1060,7 +1060,7 @@ function DriverCard({ driver }) {
             <RatingBar label="Consistency" value={driver.consistency} />
             <RatingBar label="Media Appeal" value={driver.media} />
             <div className="driver-media">🎙️ {driver.mediaNote}</div>
-            <div style={{ fontSize: 10, color: "#555", marginTop: 8 }}>Active: {driver.seasons}</div>
+            <div style={{ fontSize: 10, color: "var(--text3)", marginTop: 8 }}>Active: {driver.seasons}</div>
           </>
         )}
         <button className="expand-btn" onClick={() => setExpanded(!expanded)}>
@@ -1093,7 +1093,7 @@ function TeamCard({ team }) {
         </div>
         <div className="team-row" style={{ marginTop: 4 }}>
           {team.drivers.map(d => (
-            <span key={d} className="team-pill" style={{ background: team.color + "18", borderColor: team.color + "44", color: "#ddd" }}>🏎 {d}</span>
+            <span key={d} className="team-pill" style={{ background: team.color + "18", borderColor: team.color + "44", color: "var(--text2)" }}>🏎 {d}</span>
           ))}
         </div>
         <p className="team-detail" style={{ marginTop: 10 }}>{team.desc}</p>
@@ -1152,13 +1152,13 @@ function PointsSystem() {
                 <tr key={row.pos}>
                   <td><span className={`pos-badge${row.pos === 1 ? " p1" : row.pos === 2 ? " p2" : row.pos === 3 ? " p3" : ""}`}>{row.pos}</span></td>
                   <td style={{ fontFamily: "Orbitron", fontWeight: 700, color: row.pos <= 3 ? "#e10600" : "#ccc" }}>{row.points}</td>
-                  <td style={{ fontSize: 10, color: "#555" }}>{row.pos === 1 ? "+1 fastest lap" : "—"}</td>
+                  <td style={{ fontSize: 10, color: "var(--text3)" }}>{row.pos === 1 ? "+1 fastest lap" : "—"}</td>
                 </tr>
               ))}
             </tbody>
           </table>
           <div className="card" style={{ marginTop: 12 }}>
-            <p style={{ fontSize: 12, color: "#999", lineHeight: 1.7 }}>
+            <p style={{ fontSize: 12, color: "var(--text2)", lineHeight: 1.7 }}>
               <strong style={{ color: "#e10600" }}>Sprint races</strong> award half points — 8 down to 1 for the top 8 finishers. Sprint Qualifying sets the sprint grid separately from the main race.
             </p>
           </div>
@@ -1173,7 +1173,7 @@ function PointsSystem() {
                 <tr key={row.year}>
                   <td style={{ fontFamily: "Orbitron", fontWeight: 700, color: "#e10600", fontSize: 11 }}>{row.year}</td>
                   <td className={row.driver.includes("Verstappen") ? "gold" : "silver"}>{row.driver}</td>
-                  <td style={{ fontSize: 10, color: "#888" }}>{row.team2}</td>
+                  <td style={{ fontSize: 10, color: "var(--text2)" }}>{row.team2}</td>
                 </tr>
               ))}
             </tbody>
@@ -1211,7 +1211,7 @@ function DriversSection() {
         <input className="search-input" placeholder="Search drivers or teams..." value={search} onChange={e => setSearch(e.target.value)} />
       </div>
       <div className="filter-row">
-        {["All","Red Bull","Mercedes","Ferrari","McLaren","Aston","Alpine","Williams","Haas","Racing Bulls","Audi","Cadillac"].map(f => (
+        {["All","Red Bull","Mercedes","Ferrari","McLaren","Aston","Alpine","Williams","Haas","Racing Bulls","Audi F1","Cadillac"].map(f => (
           <button key={f} className={`filter-pill${filter === f ? " active" : ""}`} onClick={() => setFilter(f)}>{f}</button>
         ))}
       </div>
@@ -1244,7 +1244,7 @@ function TeamsSection() {
       </div>
       {year === "2026" && (
         <div className="card" style={{ marginBottom: 18, borderLeft: "3px solid #e10600" }}>
-          <p style={{ fontSize: 12, color: "#aaa", lineHeight: 1.7 }}>
+          <p style={{ fontSize: 12, color: "var(--text2)", lineHeight: 1.7 }}>
             <strong style={{ color: "#e10600" }}>2026 is a complete reset.</strong> New power unit rules require ~50% electric power. Red Bull switches from Honda to Ford. Alpine drops Renault for Mercedes. Sauber becomes the Audi works team — the first new manufacturer in F1 in over a decade.
           </p>
         </div>
@@ -1268,7 +1268,7 @@ function HistorySection() {
       <div style={{ display: "inline-flex", alignItems: "center", gap: 6, padding: "4px 10px", background: "rgba(0,220,120,0.08)", border: "1px solid rgba(0,220,120,0.25)", borderRadius: 2, marginBottom: 12 }}>
         <span style={{ fontSize: 10, color: "#00dc78", fontFamily: "Orbitron", letterSpacing: 1 }}>NEW FOR 2026 — F1 now has 22 seats with the arrival of Cadillac</span>
       </div>
-      <p style={{ marginBottom: 16, fontSize: 13, color: "#666", lineHeight: 1.7 }}>
+      <p style={{ marginBottom: 16, fontSize: 13, color: "var(--text3)", lineHeight: 1.7 }}>
         F1 has only 20 seats (22 from 2026). Drivers are dropped, promoted, and shuffled constantly. Here's every major move from 2018 to 2026 — and the real reason behind each one.
       </p>
       <div className="timeline">
@@ -1277,17 +1277,17 @@ function HistorySection() {
             <div className="timeline-dot" />
             <div className="timeline-year">{era.year}</div>
             <div className="timeline-content">
-              <strong style={{ color: "#fff", fontSize: 14 }}>{era.title}</strong>
+              <strong style={{ color: "var(--text)", fontSize: 14 }}>{era.title}</strong>
               <p style={{ marginTop: 6 }}>{era.context}</p>
               <div style={{ marginTop: 10 }}>
                 {era.changes.map((c, i) => (
                   <div className="timeline-change" key={i}>
-                    <div style={{ marginBottom: 5, fontWeight: 700, color: "#fff", fontSize: 12 }}>{c.team}</div>
+                    <div style={{ marginBottom: 5, fontWeight: 700, color: "var(--text)", fontSize: 12 }}>{c.team}</div>
                     <span className="change-tag tag-out">OUT: {c.out}</span>
                     <span className="change-tag tag-in">IN: {c.in}</span>
                     <br />
                     <span className="change-tag tag-reason">WHY</span>
-                    <span style={{ fontSize: 12, color: "#999" }}>{c.reason}</span>
+                    <span style={{ fontSize: 12, color: "var(--text2)" }}>{c.reason}</span>
                   </div>
                 ))}
               </div>
@@ -1481,14 +1481,14 @@ function ResultsSection() {
   const finishers = results.filter(r => !r.dnf);
   const dnfs = results.filter(r => r.dnf);
 
-  const thStyle = { background: "#e10600", color: "#fff", padding: "9px 12px", textAlign: "left", fontFamily: "Orbitron", fontSize: 10, letterSpacing: 2, textTransform: "uppercase" };
-  const thStyleDark = { background: "#12121c", color: "#e10600", padding: "8px 12px", fontFamily: "Orbitron", fontSize: 10, letterSpacing: 2, textTransform: "uppercase", textAlign: "left" };
+  const thStyle = { background: "#e10600", color: "var(--text)", padding: "9px 12px", textAlign: "left", fontFamily: "Orbitron", fontSize: 10, letterSpacing: 2, textTransform: "uppercase" };
+  const thStyleDark = { background: "var(--bg3)", color: "#e10600", padding: "8px 12px", fontFamily: "Orbitron", fontSize: 10, letterSpacing: 2, textTransform: "uppercase", textAlign: "left" };
 
   return (
     <div>
       <div style={{ display: "flex", alignItems: "flex-start", gap: 12, marginBottom: 8, flexWrap: "wrap" }}>
         <div className="section-title" style={{ marginBottom: 0 }}>{YEAR} <span>Results</span></div>
-        <button onClick={loadAll} style={{ marginLeft: "auto", padding: "6px 14px", background: "transparent", border: "1px solid #333", color: "#666", fontFamily: "Orbitron", fontSize: 9, letterSpacing: 2, cursor: "pointer", borderRadius: 2, textTransform: "uppercase", transition: "all 0.2s" }}
+        <button onClick={loadAll} style={{ marginLeft: "auto", padding: "6px 14px", background: "transparent", border: "1px solid #333", color: "var(--text3)", fontFamily: "Orbitron", fontSize: 9, letterSpacing: 2, cursor: "pointer", borderRadius: 2, textTransform: "uppercase", transition: "all 0.2s" }}
           onMouseEnter={e => { e.target.style.borderColor="#e10600"; e.target.style.color="#fff"; }}
           onMouseLeave={e => { e.target.style.borderColor="#333"; e.target.style.color="#666"; }}>
           ↻ Refresh
@@ -1503,7 +1503,7 @@ function ResultsSection() {
           <span style={{ fontSize: 10, color: "#00dc78", fontFamily: "Orbitron", letterSpacing: 1 }}>LIVE · OpenF1 API</span>
         </div>
         {lastUpdated && (
-          <span style={{ fontSize: 10, color: "#444" }}>Updated {lastUpdated.toLocaleTimeString()}</span>
+          <span style={{ fontSize: 10, color: "var(--text4)" }}>Updated {lastUpdated.toLocaleTimeString()}</span>
         )}
       </div>
 
@@ -1520,16 +1520,16 @@ function ResultsSection() {
       )}
 
       {error && !loading && (
-        <div style={{ background: "#0d0d15", border: "1px solid #2a0000", borderLeft: "3px solid #e10600", padding: 20, borderRadius: 2, marginBottom: 20 }}>
+        <div style={{ background: "var(--card-bg)", border: "1px solid #2a0000", borderLeft: "3px solid #e10600", padding: 20, borderRadius: 2, marginBottom: 20 }}>
           <div style={{ fontFamily: "Orbitron", fontSize: 11, color: "#e10600", letterSpacing: 2, marginBottom: 8 }}>DATA UNAVAILABLE</div>
-          <p style={{ fontSize: 12, color: "#777", lineHeight: 1.7 }}>{error}. The OpenF1 API may be temporarily down, or the {YEAR} season data may not yet be available.</p>
-          <button onClick={loadAll} style={{ marginTop: 12, padding: "7px 16px", background: "#e10600", border: "none", color: "#fff", fontFamily: "Orbitron", fontSize: 9, letterSpacing: 2, cursor: "pointer", borderRadius: 2 }}>RETRY</button>
+          <p style={{ fontSize: 12, color: "var(--text3)", lineHeight: 1.7 }}>{error}. The OpenF1 API may be temporarily down, or the {YEAR} season data may not yet be available.</p>
+          <button onClick={loadAll} style={{ marginTop: 12, padding: "7px 16px", background: "#e10600", border: "none", color: "var(--text)", fontFamily: "Orbitron", fontSize: 9, letterSpacing: 2, cursor: "pointer", borderRadius: 2 }}>RETRY</button>
         </div>
       )}
 
       {!loading && !error && sessions.length === 0 && (
         <div className="card" style={{ textAlign: "center", padding: 40 }}>
-          <div style={{ fontFamily: "Orbitron", fontSize: 11, color: "#555", letterSpacing: 2 }}>NO RACES YET IN {YEAR}</div>
+          <div style={{ fontFamily: "Orbitron", fontSize: 11, color: "var(--text3)", letterSpacing: 2 }}>NO RACES YET IN {YEAR}</div>
         </div>
       )}
 
@@ -1537,7 +1537,7 @@ function ResultsSection() {
         <>
           {/* Race selector */}
           <div style={{ marginBottom: 20 }}>
-            <div style={{ fontSize: 10, color: "#555", fontFamily: "Orbitron", letterSpacing: 2, textTransform: "uppercase", marginBottom: 10 }}>Select Race</div>
+            <div style={{ fontSize: 10, color: "var(--text3)", fontFamily: "Orbitron", letterSpacing: 2, textTransform: "uppercase", marginBottom: 10 }}>Select Race</div>
             <div style={{ display: "flex", flexWrap: "wrap", gap: 6 }}>
               {sessions.map((s, i) => {
                 const isPast = new Date(s.date_end) < new Date();
@@ -1548,7 +1548,7 @@ function ResultsSection() {
                       padding: "5px 10px", borderRadius: 2, cursor: "pointer", fontFamily: "Orbitron",
                       fontSize: 9, letterSpacing: 1, textTransform: "uppercase", transition: "all 0.2s",
                       background: selectedIdx === i ? "#e10600" : "transparent",
-                      border: `1px solid ${selectedIdx === i ? "#e10600" : isPast ? "#2a2a3a" : "#1a1a2a"}`,
+                      border: `1px solid ${selectedIdx === i ? "#e10600" : isPast ? "var(--border2)" : "var(--border)"}`,
                       color: selectedIdx === i ? "#fff" : isPast ? "#888" : "#333",
                     }}>
                     R{i + 1} {circuitFlag(s.circuit_short_name)} {s.circuit_short_name}
@@ -1565,10 +1565,10 @@ function ResultsSection() {
                 <div style={{ fontFamily: "Orbitron", fontSize: 11, color: "#e10600", letterSpacing: 2, textTransform: "uppercase" }}>
                   Round {selectedIdx + 1}
                 </div>
-                <div style={{ fontFamily: "Orbitron", fontSize: 14, fontWeight: 700, color: "#fff" }}>
+                <div style={{ fontFamily: "Orbitron", fontSize: 14, fontWeight: 700, color: "var(--text)" }}>
                   {circuitFlag(selectedSession.circuit_short_name)} {selectedSession.meeting_name || selectedSession.circuit_short_name}
                 </div>
-                <div style={{ marginLeft: "auto", fontSize: 11, color: "#555" }}>
+                <div style={{ marginLeft: "auto", fontSize: 11, color: "var(--text3)" }}>
                   {selectedSession.country_name} · {new Date(selectedSession.date_start).toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" })}
                 </div>
               </div>
@@ -1591,13 +1591,13 @@ function ResultsSection() {
                   </thead>
                   <tbody>
                     {finishers.map(row => (
-                      <tr key={row.driverNumber} style={{ borderBottom: "1px solid #1e1e2e" }}>
+                      <tr key={row.driverNumber} style={{ borderBottom: "1px solid var(--border)" }}>
                         <td style={{ padding: "10px 12px" }}>
                           <span className={`pos-badge${row.pos === 1 ? " p1" : row.pos === 2 ? " p2" : row.pos === 3 ? " p3" : ""}`}>{row.pos}</span>
                         </td>
                         <td style={{ padding: "10px 12px" }}>
-                          <div style={{ fontWeight: 700, color: "#fff", fontSize: 13 }}>{row.name}</div>
-                          <div style={{ fontSize: 10, color: "#555", marginTop: 1, fontFamily: "Orbitron" }}>{row.shortName}</div>
+                          <div style={{ fontWeight: 700, color: "var(--text)", fontSize: 13 }}>{row.name}</div>
+                          <div style={{ fontSize: 10, color: "var(--text3)", marginTop: 1, fontFamily: "Orbitron" }}>{row.shortName}</div>
                         </td>
                         <td style={{ padding: "10px 12px" }}>
                           <span style={{ background: row.teamColour + "22", color: row.teamColour, border: `1px solid ${row.teamColour}44`, padding: "3px 8px", borderRadius: 2, fontSize: 10, fontWeight: 700, whiteSpace: "nowrap" }}>
@@ -1607,7 +1607,7 @@ function ResultsSection() {
                         <td style={{ padding: "10px 12px", fontFamily: "Orbitron", fontWeight: 700, color: row.pos <= 3 ? "#e10600" : "#aaa", fontSize: 13 }}>
                           {row.points || "—"}
                         </td>
-                        <td style={{ padding: "10px 12px", fontSize: 12, color: "#555" }}>{row.laps}</td>
+                        <td style={{ padding: "10px 12px", fontSize: 12, color: "var(--text3)" }}>{row.laps}</td>
                       </tr>
                     ))}
                   </tbody>
@@ -1620,10 +1620,10 @@ function ResultsSection() {
                   <div className="section-line" />
                   <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(min(100%,260px),1fr))", gap: 10, marginBottom: 32 }}>
                     {dnfs.map(d => (
-                      <div key={d.driverNumber} style={{ background: "#0d0d15", border: "1px solid #1e1e2e", borderLeft: "3px solid #333", padding: "12px 14px", borderRadius: 2 }}>
-                        <div style={{ fontWeight: 700, color: "#fff", fontSize: 13, marginBottom: 4 }}>{d.name}</div>
-                        <div style={{ fontSize: 10, color: "#666", textTransform: "uppercase", letterSpacing: 1, marginBottom: 4 }}>{d.team}</div>
-                        <div style={{ fontSize: 11, color: "#777" }}>DNF · {d.laps} of {d.winnerLaps} laps</div>
+                      <div key={d.driverNumber} style={{ background: "var(--card-bg)", border: "1px solid var(--border)", borderLeft: "3px solid #333", padding: "12px 14px", borderRadius: 2 }}>
+                        <div style={{ fontWeight: 700, color: "var(--text)", fontSize: 13, marginBottom: 4 }}>{d.name}</div>
+                        <div style={{ fontSize: 10, color: "var(--text3)", textTransform: "uppercase", letterSpacing: 1, marginBottom: 4 }}>{d.team}</div>
+                        <div style={{ fontSize: 11, color: "var(--text3)" }}>DNF · {d.laps} of {d.winnerLaps} laps</div>
                       </div>
                     ))}
                   </div>
@@ -1633,7 +1633,7 @@ function ResultsSection() {
           ) : (
             !loading && (
               <div className="card" style={{ textAlign: "center", padding: 32, marginBottom: 24 }}>
-                <div style={{ fontFamily: "Orbitron", fontSize: 10, color: "#555", letterSpacing: 2 }}>
+                <div style={{ fontFamily: "Orbitron", fontSize: 10, color: "var(--text3)", letterSpacing: 2 }}>
                   {new Date(selectedSession?.date_start) > new Date() ? "RACE NOT YET RUN" : "LOADING RESULTS..."}
                 </div>
               </div>
@@ -1658,7 +1658,7 @@ function ResultsSection() {
                   </thead>
                   <tbody>
                     {standings.slice(0, 20).map(row => (
-                      <tr key={row.name} style={{ borderBottom: "1px solid #1a1a2a" }}>
+                      <tr key={row.name} style={{ borderBottom: "1px solid var(--border)" }}>
                         <td style={{ padding: "8px 12px" }}>
                           <span className={`pos-badge${row.pos === 1 ? " p1" : row.pos === 2 ? " p2" : row.pos === 3 ? " p3" : ""}`}>{row.pos}</span>
                         </td>
@@ -1693,7 +1693,7 @@ function ResultsSection() {
                         </thead>
                         <tbody>
                           {constructors.map(row => (
-                            <tr key={row.team} style={{ borderBottom: "1px solid #1a1a2a" }}>
+                            <tr key={row.team} style={{ borderBottom: "1px solid var(--border)" }}>
                               <td style={{ padding: "8px 12px" }}>
                                 <span className={`pos-badge${row.pos === 1 ? " p1" : row.pos === 2 ? " p2" : row.pos === 3 ? " p3" : ""}`}>{row.pos}</span>
                               </td>
@@ -1710,7 +1710,7 @@ function ResultsSection() {
                 ) : null;
               })()}
 
-              <div style={{ fontSize: 10, color: "#333", textAlign: "center", marginBottom: 4 }}>
+              <div style={{ fontSize: 10, color: "var(--text4)", textAlign: "center", marginBottom: 4 }}>
                 After {sessions.filter(s => new Date(s.date_end) < new Date()).length} of {sessions.length} rounds · Data via OpenF1
               </div>
             </>
@@ -1871,10 +1871,10 @@ const ALL_TIME_RECORDS = [
     icon: "🏁", title: "Most Race Starts",
     rows: [
       { rank: 1, name: "Fernando Alonso 🇪🇸", value: "400+", note: "2001–present" },
-      { rank: 2, name: "Kimi Räikkönen 🇫🇮", value: "349", note: "2001–2021" },
-      { rank: 3, name: "Rubens Barrichello 🇧🇷", value: "326", note: "1993–2011" },
-      { rank: 4, name: "Michael Schumacher 🇩🇪", value: "308", note: "1991–2012" },
-      { rank: 5, name: "Lewis Hamilton 🇬🇧", value: "350+", note: "2007–present" },
+      { rank: 2, name: "Lewis Hamilton 🇬🇧", value: "350+", note: "2007–present" },
+      { rank: 3, name: "Kimi Räikkönen 🇫🇮", value: "349", note: "2001–2021" },
+      { rank: 4, name: "Rubens Barrichello 🇧🇷", value: "326", note: "1993–2011" },
+      { rank: 5, name: "Michael Schumacher 🇩🇪", value: "308", note: "1991–2012" },
     ]
   },
   {
@@ -1906,7 +1906,7 @@ function GlossarySection() {
     <div>
       <div className="section-title">F1 <span>Glossary</span></div>
       <div className="section-line" />
-      <p style={{ fontSize: 13, color: "#666", lineHeight: 1.7, marginBottom: 16 }}>
+      <p style={{ fontSize: 13, color: "var(--text3)", lineHeight: 1.7, marginBottom: 16 }}>
         Every term you'll hear during a race weekend — explained in plain English. Tap any card to expand.
       </p>
       <div className="search-wrap">
@@ -1925,7 +1925,7 @@ function GlossarySection() {
               <span>{g.term}</span>
               <span>
                 <span className="glossary-cat" style={{ background: g.catColor + "22", color: g.catColor, border: `1px solid ${g.catColor}44` }}>{g.cat}</span>
-                <span style={{ color: "#555", marginLeft: 8, fontSize: 10 }}>{expanded[g.term] ? "▲" : "▼"}</span>
+                <span style={{ color: "var(--text3)", marginLeft: 8, fontSize: 10 }}>{expanded[g.term] ? "▲" : "▼"}</span>
               </span>
             </div>
             {expanded[g.term] && <div className="glossary-def">{g.def}</div>}
@@ -1933,7 +1933,7 @@ function GlossarySection() {
           </div>
         ))}
       </div>
-      {filtered.length === 0 && <div style={{ color: "#555", textAlign: "center", padding: 40 }}>No terms found</div>}
+      {filtered.length === 0 && <div style={{ color: "var(--text3)", textAlign: "center", padding: 40 }}>No terms found</div>}
     </div>
   );
 }
@@ -1945,7 +1945,7 @@ function RulesSection() {
     <div>
       <div className="section-title">Explain <span>The Rules</span></div>
       <div className="section-line" />
-      <p style={{ fontSize: 13, color: "#666", lineHeight: 1.7, marginBottom: 20 }}>
+      <p style={{ fontSize: 13, color: "var(--text3)", lineHeight: 1.7, marginBottom: 20 }}>
         F1's rulebook is enormous. Here are the most confusing rules explained the way a friend would explain them — with real examples.
       </p>
       {F1_RULES.map((rule, i) => (
@@ -1973,15 +1973,15 @@ function CarCompareSection() {
     <div>
       <div className="section-title">2025 vs <span>2026 Cars</span></div>
       <div className="section-line" />
-      <p style={{ fontSize: 13, color: "#666", lineHeight: 1.7, marginBottom: 20 }}>
+      <p style={{ fontSize: 13, color: "var(--text3)", lineHeight: 1.7, marginBottom: 20 }}>
         2026 is the biggest regulation reset since 2014. Here's exactly what's changed between the two eras, side by side.
       </p>
       <div style={{ overflowX: "auto" }}>
         <table className="compare-table" style={{ minWidth: 600 }}>
           <thead>
             <tr>
-              <th style={{ background: "#0d0d15", color: "#555", width: 120 }}>Aspect</th>
-              <th style={{ background: "#12121c", color: "#888", width: "38%" }}>2025 Car</th>
+              <th style={{ background: "var(--card-bg)", color: "var(--text3)", width: 120 }}>Aspect</th>
+              <th style={{ background: "var(--bg3)", color: "var(--text2)", width: "38%" }}>2025 Car</th>
               <th style={{ background: "#1a0505", color: "#e10600", width: "38%" }}>2026 Car</th>
             </tr>
           </thead>
@@ -1992,11 +1992,11 @@ function CarCompareSection() {
                   <div style={{ fontSize: 16, marginBottom: 3 }}>{row.icon}</div>
                   <div className="compare-aspect">{row.aspect}</div>
                 </td>
-                <td style={{ borderLeft: "1px solid #1a1a2a", background: row.winner === 2025 ? "rgba(0,220,120,0.04)" : "transparent" }}>
+                <td style={{ borderLeft: "1px solid var(--border)", background: row.winner === 2025 ? "rgba(0,220,120,0.04)" : "transparent" }}>
                   {row.winner === 2025 && <span className="compare-badge" style={{ background: "rgba(0,220,120,0.15)", color: "#00dc78", border: "1px solid rgba(0,220,120,0.3)" }}>BETTER</span>}
-                  <div style={{ whiteSpace: "pre-line", color: "#aaa", fontSize: 12, lineHeight: 1.7 }}>{row.col2025}</div>
+                  <div style={{ whiteSpace: "pre-line", color: "var(--text2)", fontSize: 12, lineHeight: 1.7 }}>{row.col2025}</div>
                 </td>
-                <td style={{ borderLeft: "1px solid #1a1a2a", background: row.winner === 2026 ? "rgba(225,6,0,0.04)" : "transparent" }}>
+                <td style={{ borderLeft: "1px solid var(--border)", background: row.winner === 2026 ? "rgba(225,6,0,0.04)" : "transparent" }}>
                   {row.winner === 2026 && <span className="compare-badge" style={{ background: "rgba(225,6,0,0.12)", color: "#e10600", border: "1px solid rgba(225,6,0,0.3)" }}>NEW ERA</span>}
                   <div style={{ whiteSpace: "pre-line", color: row.winner === 2026 ? "#fff" : "#aaa", fontSize: 12, lineHeight: 1.7 }}>{row.col2026}</div>
                 </td>
@@ -2007,7 +2007,7 @@ function CarCompareSection() {
       </div>
       <div className="card" style={{ marginTop: 20, borderLeft: "3px solid #e10600" }}>
         <div style={{ fontFamily: "Orbitron", fontSize: 10, color: "#e10600", letterSpacing: 2, marginBottom: 8 }}>THE BIG PICTURE</div>
-        <p style={{ fontSize: 13, color: "#aaa", lineHeight: 1.8 }}>
+        <p style={{ fontSize: 13, color: "var(--text2)", lineHeight: 1.8 }}>
           The 2026 regulations represent the most ambitious overhaul in F1 history. The shift to 50/50 electric/combustion power, the removal of DRS, active aerodynamics, and the arrival of Audi and Ford all happen simultaneously. Every team starts from scratch. History shows that regulation resets create new winners — 2026 could change everything.
         </p>
       </div>
@@ -2021,7 +2021,7 @@ function RecordsSection() {
     <div>
       <div className="section-title">All-Time <span>Records</span></div>
       <div className="section-line" />
-      <p style={{ fontSize: 13, color: "#666", lineHeight: 1.7, marginBottom: 20 }}>
+      <p style={{ fontSize: 13, color: "var(--text3)", lineHeight: 1.7, marginBottom: 20 }}>
         F1 spans 75+ years and hundreds of drivers. Here are the records that define greatness.
       </p>
       <div className="records-grid">
@@ -2039,7 +2039,7 @@ function RecordsSection() {
                   </span>
                   <div style={{ flex: 1, minWidth: 0 }}>
                     <div className="record-driver-name">{row.name}</div>
-                    <div style={{ fontSize: 10, color: "#444", marginTop: 1 }}>{row.note}</div>
+                    <div style={{ fontSize: 10, color: "var(--text4)", marginTop: 1 }}>{row.note}</div>
                   </div>
                   <span className="record-value">{row.value}</span>
                 </div>
@@ -2048,8 +2048,8 @@ function RecordsSection() {
           </div>
         ))}
       </div>
-      <div style={{ marginTop: 20, padding: 14, background: "#0d0d15", border: "1px solid #1e1e2e", borderRadius: 2, textAlign: "center" }}>
-        <div style={{ fontSize: 11, color: "#444" }}>Records current as of 2026 season start · Active drivers' stats marked with +</div>
+      <div style={{ marginTop: 20, padding: 14, background: "var(--card-bg)", border: "1px solid var(--border)", borderRadius: 2, textAlign: "center" }}>
+        <div style={{ fontSize: 11, color: "var(--text4)" }}>Records current as of 2026 season start · Active drivers' stats marked with +</div>
       </div>
     </div>
   );
@@ -2144,7 +2144,7 @@ function QuizSection() {
         <div style={{ fontFamily: "Orbitron", fontSize: 18, fontWeight: 900, color: "#e10600", marginBottom: 8 }}>{grade.split(" ").slice(1).join(" ")}</div>
         <div style={{ fontSize: 32, fontWeight: 700, color: "var(--text)", marginBottom: 4 }}>{score} / {QUIZ_QUESTIONS.length}</div>
         <div style={{ fontSize: 14, color: "var(--text3)", marginBottom: 24 }}>{pct}% correct</div>
-        <button onClick={restart} style={{ padding: "10px 28px", background: "#e10600", border: "none", color: "#fff", fontFamily: "Orbitron", fontSize: 11, letterSpacing: 2, cursor: "pointer", borderRadius: 2 }}>TRY AGAIN</button>
+        <button onClick={restart} style={{ padding: "10px 28px", background: "#e10600", border: "none", color: "var(--text)", fontFamily: "Orbitron", fontSize: 11, letterSpacing: 2, cursor: "pointer", borderRadius: 2 }}>TRY AGAIN</button>
       </div>
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(min(100%,280px),1fr))", gap: 10 }}>
         {QUIZ_QUESTIONS.map((q, i) => (
@@ -2181,7 +2181,7 @@ function QuizSection() {
           <div style={{ marginTop: 16, padding: "12px 14px", background: "rgba(225,6,0,0.04)", border: "1px solid rgba(225,6,0,0.15)", borderRadius: 4 }}>
             <div style={{ fontSize: 11, color: "#e10600", fontFamily: "Orbitron", letterSpacing: 1, marginBottom: 6 }}>EXPLANATION</div>
             <p style={{ fontSize: 12, color: "var(--text2)", lineHeight: 1.7 }}>{q.exp}</p>
-            <button onClick={next} style={{ marginTop: 12, padding: "8px 20px", background: "#e10600", border: "none", color: "#fff", fontFamily: "Orbitron", fontSize: 10, letterSpacing: 2, cursor: "pointer", borderRadius: 2 }}>
+            <button onClick={next} style={{ marginTop: 12, padding: "8px 20px", background: "#e10600", border: "none", color: "var(--text)", fontFamily: "Orbitron", fontSize: 10, letterSpacing: 2, cursor: "pointer", borderRadius: 2 }}>
               {current + 1 >= QUIZ_QUESTIONS.length ? "SEE RESULTS" : "NEXT →"}
             </button>
           </div>
@@ -2211,8 +2211,8 @@ const ACTIVE_DRIVERS_2026 = [
   { name: "Alexander Albon", team: "Williams", color: "#64C4FF", short: "ALB" },
   { name: "Liam Lawson", team: "Racing Bulls", color: "#6692FF", short: "LAW" },
   { name: "Arvid Lindblad", team: "Racing Bulls", color: "#6692FF", short: "LIN" },
-  { name: "Nico Hülkenberg", team: "Audi", color: "#52E252", short: "HUL" },
-  { name: "Gabriel Bortoleto", team: "Audi", color: "#52E252", short: "BOR" },
+  { name: "Nico Hülkenberg", team: "Audi", color: "#BB0A21", short: "HUL" },
+  { name: "Gabriel Bortoleto", team: "Audi", color: "#BB0A21", short: "BOR" },
   { name: "Valtteri Bottas", team: "Cadillac", color: "#CC0000", short: "BOT" },
   { name: "Sergio Perez", team: "Cadillac", color: "#CC0000", short: "PER" },
 ];
@@ -2295,7 +2295,7 @@ function RacePredictorSection() {
               </div>
             ))}
             {complete && (
-              <button onClick={() => setSubmitted(true)} style={{ marginTop: 12, width: "100%", padding: "10px", background: "#e10600", border: "none", color: "#fff", fontFamily: "Orbitron", fontSize: 11, letterSpacing: 2, cursor: "pointer", borderRadius: 2 }}>
+              <button onClick={() => setSubmitted(true)} style={{ marginTop: 12, width: "100%", padding: "10px", background: "#e10600", border: "none", color: "var(--text)", fontFamily: "Orbitron", fontSize: 11, letterSpacing: 2, cursor: "pointer", borderRadius: 2 }}>
                 LOCK IN PREDICTION 🏁
               </button>
             )}
