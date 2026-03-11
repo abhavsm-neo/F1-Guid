@@ -1,5 +1,0 @@
-[[redirects]]
-  from = "/api/openf1/*"
-  to = "https://api.openf1.org/v1/:splat"
-  status = 200
-  force = true
