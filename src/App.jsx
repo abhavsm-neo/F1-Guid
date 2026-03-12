@@ -1076,7 +1076,340 @@ const styles = `
   }
   .team-detail { font-size: 12px; color: var(--text3); line-height: 1.7; }
 
-  /* ── Onboarding Modal ── */
+  /* ══════════════════════════════════════════════
+     UI/UX IMPROVEMENTS
+  ══════════════════════════════════════════════ */
+
+  /* ── Consistent type scale ── */
+  :root {
+    --fs-xs: 10px;
+    --fs-sm: 12px;
+    --fs-md: 13px;
+    --fs-lg: 15px;
+    --fs-xl: 18px;
+    --space-xs: 6px;
+    --space-sm: 12px;
+    --space-md: 20px;
+    --space-lg: 32px;
+  }
+
+  /* ── Better light mode ── */
+  .light-mode body,
+  .light-mode .f1-app { background: #f4f4f8; }
+  .light-mode .hero {
+    background: linear-gradient(135deg, #f4f4f8 0%, #f0e8e8 50%, #f4f4f8 100%);
+  }
+  .light-mode .nav {
+    box-shadow: 0 1px 0 rgba(0,0,0,0.08), 0 4px 16px rgba(0,0,0,0.06);
+  }
+  .light-mode .driver-card,
+  .light-mode .team-card,
+  .light-mode .circuit-card,
+  .light-mode .card,
+  .light-mode .how-card,
+  .light-mode .glossary-card,
+  .light-mode .rule-card,
+  .light-mode .record-card,
+  .light-mode .news-card,
+  .light-mode .h2h-card {
+    background: rgba(255,255,255,0.9);
+    box-shadow: 0 2px 12px rgba(0,0,0,0.08), 0 1px 0 rgba(255,255,255,1) inset;
+  }
+  .light-mode .driver-stat { background: #f0f0f8; }
+  .light-mode .countdown-num {
+    background: rgba(225,6,0,0.04);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  }
+
+  /* ── Button press/active states ── */
+  .year-btn:active,
+  .nav-btn:active,
+  .filter-pill:active,
+  .expand-btn:active,
+  .quiz-option:active,
+  .share-btn:active { transform: scale(0.97) !important; }
+  .year-btn.active:hover { filter: brightness(1.1); }
+
+  /* ── Section header with bookmark ── */
+  .section-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 8px;
+  }
+  .section-intro {
+    font-size: var(--fs-md);
+    color: var(--text3);
+    line-height: 1.75;
+    margin-bottom: var(--space-md);
+    max-width: 680px;
+    border-left: 2px solid rgba(225,6,0,0.2);
+    padding-left: 14px;
+  }
+
+  /* ── Featured next-race card ── */
+  .featured-race-card {
+    background: linear-gradient(135deg, rgba(225,6,0,0.08) 0%, var(--card-bg) 60%);
+    border: 1px solid rgba(225,6,0,0.25);
+    border-radius: 14px;
+    padding: 20px 24px;
+    margin-bottom: 28px;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    flex-wrap: wrap;
+    backdrop-filter: blur(14px);
+    box-shadow: 0 4px 24px rgba(225,6,0,0.08), var(--shadow);
+    position: relative;
+    overflow: hidden;
+  }
+  .featured-race-card::before {
+    content: '';
+    position: absolute;
+    top: -40px; right: -40px;
+    width: 180px; height: 180px;
+    background: radial-gradient(circle, rgba(225,6,0,0.1), transparent 70%);
+    pointer-events: none;
+  }
+  .featured-race-flag { font-size: 44px; line-height: 1; flex-shrink: 0; }
+  .featured-race-info { flex: 1; min-width: 160px; }
+  .featured-race-label {
+    font-size: 9px; font-family: 'Orbitron', sans-serif;
+    color: #e10600; letter-spacing: 3px; text-transform: uppercase;
+    margin-bottom: 4px; opacity: 0.8;
+  }
+  .featured-race-name {
+    font-family: 'Orbitron', sans-serif;
+    font-size: clamp(14px, 3vw, 20px);
+    font-weight: 900; color: var(--text);
+    text-transform: uppercase; letter-spacing: 1px;
+    text-shadow: 0 0 20px rgba(255,255,255,0.05);
+  }
+  .featured-race-sub {
+    font-size: 12px; color: var(--text3); margin-top: 4px;
+  }
+  .featured-race-countdown {
+    display: flex; gap: 10px; flex-shrink: 0;
+  }
+  .featured-tile {
+    text-align: center;
+    background: rgba(0,0,0,0.2);
+    border: 1px solid rgba(225,6,0,0.2);
+    border-radius: 8px;
+    padding: 8px 12px;
+    min-width: 52px;
+    backdrop-filter: blur(8px);
+  }
+  .light-mode .featured-tile { background: rgba(255,255,255,0.6); }
+  .featured-tile-num {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 20px; font-weight: 900; color: var(--text); line-height: 1;
+  }
+  .featured-tile-label {
+    font-size: 8px; color: var(--text4);
+    text-transform: uppercase; letter-spacing: 1px;
+    font-family: 'Orbitron', sans-serif; margin-top: 3px;
+  }
+
+  /* ── Bottom mobile nav ── */
+  .mobile-nav {
+    display: none;
+    position: fixed;
+    bottom: 0; left: 0; right: 0;
+    background: rgba(10,10,18,0.95);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-top: 1px solid var(--border);
+    z-index: 200;
+    padding: 0 0 env(safe-area-inset-bottom, 0);
+    box-shadow: 0 -4px 24px rgba(0,0,0,0.4);
+  }
+  .light-mode .mobile-nav { background: rgba(248,248,255,0.97); }
+  .mobile-nav-inner {
+    display: flex;
+    justify-content: space-around;
+    align-items: stretch;
+  }
+  .mobile-nav-btn {
+    display: flex; flex-direction: column; align-items: center;
+    gap: 3px; padding: 10px 6px;
+    flex: 1; background: none; border: none;
+    cursor: pointer; transition: all 0.2s;
+    position: relative;
+  }
+  .mobile-nav-btn.active::after {
+    content: ''; position: absolute; top: 0; left: 20%; right: 20%;
+    height: 2px; background: #e10600;
+    border-radius: 0 0 2px 2px;
+    box-shadow: 0 0 6px rgba(225,6,0,0.5);
+  }
+  .mobile-nav-icon { font-size: 18px; }
+  .mobile-nav-label {
+    font-size: 9px; font-family: 'Exo 2', sans-serif;
+    color: var(--text3); letter-spacing: 0.5px; text-align: center;
+    white-space: nowrap;
+  }
+  .mobile-nav-btn.active .mobile-nav-label { color: #e10600; }
+  .mobile-nav-more-sheet {
+    position: fixed; inset: 0; z-index: 300;
+    background: rgba(0,0,0,0.6); backdrop-filter: blur(4px);
+    display: flex; align-items: flex-end;
+    animation: sectionIn 0.25s both;
+  }
+  .mobile-nav-sheet-inner {
+    background: var(--bg2);
+    border-top: 2px solid #e10600;
+    border-radius: 16px 16px 0 0;
+    padding: 20px 16px calc(20px + env(safe-area-inset-bottom, 0));
+    width: 100%;
+    max-height: 80vh; overflow-y: auto;
+  }
+  .mobile-sheet-item {
+    display: flex; align-items: center; gap: 14px;
+    padding: 12px 14px; border-radius: 8px;
+    cursor: pointer; transition: all 0.15s;
+    background: none; border: none; width: 100%; text-align: left;
+    margin-bottom: 4px;
+  }
+  .mobile-sheet-item:hover, .mobile-sheet-item:active { background: rgba(225,6,0,0.06); }
+  .mobile-sheet-item.active { background: rgba(225,6,0,0.1); }
+  @media (max-width: 640px) {
+    .mobile-nav { display: block; }
+    .nav { display: none; }
+    .global-search-bar { display: none; }
+    .main { padding: 14px 12px 80px; }
+    .hero { padding: 20px 14px 16px; }
+    .countdown-tiles { gap: 6px; }
+    .countdown-num {
+      font-size: 20px;
+      min-width: 44px;
+      padding: 6px 8px;
+    }
+    .card-grid { grid-template-columns: 1fr; }
+    .driver-stat-row { gap: 4px; }
+    .featured-race-card { padding: 16px; gap: 14px; }
+    .featured-race-flag { font-size: 32px; }
+    .featured-tile-num { font-size: 16px; }
+    .compare-select-row { grid-template-columns: 1fr; }
+    .tracker-chart { padding: 12px 8px; }
+    .points-wrap { grid-template-columns: 1fr; }
+  }
+
+  /* ── Skeleton loaders ── */
+  .skeleton-card {
+    background: var(--card-bg);
+    border: 1px solid var(--glass-border);
+    border-radius: 12px;
+    padding: 18px;
+    box-shadow: var(--shadow);
+  }
+  .skel { border-radius: 4px; }
+  .skel-title { height: 14px; width: 60%; margin-bottom: 10px; }
+  .skel-line { height: 10px; margin-bottom: 7px; }
+  .skel-line.w-80 { width: 80%; }
+  .skel-line.w-60 { width: 60%; }
+  .skel-line.w-40 { width: 40%; }
+  .skel-img { height: 140px; width: 100%; margin-bottom: 12px; border-radius: 8px; }
+
+  /* ── Empty state ── */
+  .empty-state {
+    display: flex; flex-direction: column; align-items: center;
+    justify-content: center; padding: 60px 20px; text-align: center;
+    color: var(--text4);
+  }
+  .empty-state-icon { font-size: 48px; margin-bottom: 14px; opacity: 0.5; }
+  .empty-state-title {
+    font-family: 'Orbitron', sans-serif; font-size: 12px;
+    letter-spacing: 2px; color: var(--text3); margin-bottom: 6px;
+  }
+  .empty-state-sub { font-size: 12px; color: var(--text4); max-width: 240px; line-height: 1.6; }
+
+  /* ── Expand btn — more visible ── */
+  .expand-btn {
+    display: flex; align-items: center; gap: 6px;
+    background: transparent;
+    border: 1px solid var(--border2);
+    color: var(--text3);
+    padding: 7px 14px;
+    font-size: 11px;
+    cursor: pointer;
+    font-family: 'Exo 2', sans-serif;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin-top: 12px;
+    transition: all 0.2s;
+    border-radius: 20px;
+    width: 100%;
+    justify-content: center;
+  }
+  .expand-btn:hover { border-color: #e10600; color: #e10600; box-shadow: 0 0 10px rgba(225,6,0,0.12); background: rgba(225,6,0,0.04); }
+  .expand-btn-arrow { transition: transform 0.25s cubic-bezier(0.34,1.56,0.64,1); }
+  .expand-btn-arrow.open { transform: rotate(180deg); }
+
+  /* ── Breadcrumb ── */
+  .breadcrumb {
+    display: flex; align-items: center; gap: 6px;
+    font-size: 10px; color: var(--text4);
+    font-family: 'Orbitron', sans-serif; letter-spacing: 1px;
+    margin-bottom: 16px;
+    text-transform: uppercase;
+  }
+  .breadcrumb-sep { color: var(--text4); opacity: 0.5; }
+  .breadcrumb-current { color: #e10600; }
+
+  /* ── Pulse animation (for live indicator) ── */
+  @keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.5; transform: scale(0.8); }
+  }
+
+  /* ── Toast notification ── */
+  .toast {
+    position: fixed; bottom: 80px; left: 50%; transform: translateX(-50%) translateY(0);
+    background: var(--bg2); border: 1px solid var(--glass-border);
+    border-left: 3px solid #e10600;
+    border-radius: 10px; padding: 10px 18px;
+    font-size: 13px; color: var(--text);
+    box-shadow: 0 8px 30px rgba(0,0,0,0.5);
+    z-index: 999; white-space: nowrap;
+    backdrop-filter: blur(16px);
+    animation: toastIn 0.3s cubic-bezier(0.34,1.56,0.64,1) both;
+    pointer-events: none;
+  }
+  @keyframes toastIn {
+    from { opacity: 0; transform: translateX(-50%) translateY(16px); }
+    to { opacity: 1; transform: translateX(-50%) translateY(0); }
+  }
+
+  /* ── Richer search results ── */
+  .search-result-item {
+    display: flex; align-items: center; gap: 12px;
+    width: 100%; padding: 10px 14px;
+    background: none; border: none; cursor: pointer;
+    text-align: left; border-bottom: 1px solid var(--border);
+    transition: all 0.15s;
+  }
+  .search-result-item:hover { background: rgba(225,6,0,0.05); padding-left: 18px; }
+  .search-result-item:last-child { border-bottom: none; }
+  .search-result-icon { font-size: 18px; flex-shrink: 0; width: 32px; text-align: center; }
+  .search-result-body { flex: 1; min-width: 0; }
+  .search-result-title { font-size: 13px; font-weight: 700; color: var(--text); margin-bottom: 1px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .search-result-meta { font-size: 10px; color: var(--text3); letter-spacing: 0.5px; }
+  .search-result-type {
+    font-size: 9px; padding: 2px 8px; border-radius: 20px;
+    background: rgba(225,6,0,0.08); color: #e10600;
+    font-family: 'Orbitron', sans-serif; letter-spacing: 1px;
+    text-transform: uppercase; flex-shrink: 0;
+    border: 1px solid rgba(225,6,0,0.15);
+  }
+
+  /* ── Light mode improvements ── */
+  .light-mode .skeleton { background: linear-gradient(90deg, #e8e8f0 25%, #f0f0f8 50%, #e8e8f0 75%); background-size: 200% 100%; }
+  .light-mode .onboarding-modal { background: #fff; }
+  .light-mode .mobile-nav-sheet-inner { background: #fff; }
+  .light-mode .search-result-item:hover { background: rgba(225,6,0,0.04); }
+
   .onboarding-overlay {
     position: fixed; inset: 0; z-index: 1000;
     background: rgba(0,0,0,0.85);
@@ -1329,6 +1662,92 @@ const POINTS_DATA = [
   { pos: 10, points: 1 },
 ];
 
+// ─── REUSABLE UI HELPERS ─────────────────────────────────────────────────────
+
+function SectionHeader({ title, accent, group, intro, icon }) {
+  return (
+    <div>
+      <div className="breadcrumb">
+        <span>{group}</span>
+        <span className="breadcrumb-sep">›</span>
+        <span className="breadcrumb-current">{icon} {title.replace(/<[^>]+>/g, '')} {accent}</span>
+      </div>
+      <div className="section-title">{title} <span>{accent}</span></div>
+      <div className="section-line" />
+      {intro && <p className="section-intro">{intro}</p>}
+    </div>
+  );
+}
+
+function SkeletonCards({ count = 6, hasImage = false }) {
+  return (
+    <div className="card-grid">
+      {Array.from({ length: count }).map((_, i) => (
+        <div key={i} className="skeleton-card" style={{ animationDelay: `${i * 0.05}s` }}>
+          {hasImage && <div className="skeleton skel skel-img" />}
+          <div className="skeleton skel skel-title" />
+          <div className="skeleton skel skel-line w-80" />
+          <div className="skeleton skel skel-line w-60" />
+          <div className="skeleton skel skel-line w-40" />
+        </div>
+      ))}
+    </div>
+  );
+}
+
+function EmptyState({ icon = "🔍", title = "NOTHING FOUND", sub = "Try a different search or filter." }) {
+  return (
+    <div className="empty-state">
+      <div className="empty-state-icon">{icon}</div>
+      <div className="empty-state-title">{title}</div>
+      <div className="empty-state-sub">{sub}</div>
+    </div>
+  );
+}
+
+function FeaturedRaceCard() {
+  const [timeLeft, setTimeLeft] = useState({ d: 0, h: 0, m: 0, s: 0 });
+  const nextRace = RACE_CALENDAR_2026.find(r => new Date(r.date) > new Date()) || RACE_CALENDAR_2026[RACE_CALENDAR_2026.length - 1];
+
+  useEffect(() => {
+    function tick() {
+      const diff = new Date(nextRace.date) - new Date();
+      if (diff <= 0) { setTimeLeft({ d:0, h:0, m:0, s:0 }); return; }
+      setTimeLeft({
+        d: Math.floor(diff / 86400000),
+        h: Math.floor((diff % 86400000) / 3600000),
+        m: Math.floor((diff % 3600000) / 60000),
+        s: Math.floor((diff % 60000) / 1000),
+      });
+    }
+    tick();
+    const id = setInterval(tick, 1000);
+    return () => clearInterval(id);
+  }, []);
+
+  const pad = n => String(n).padStart(2, "0");
+  const raceDate = new Date(nextRace.date).toLocaleDateString("en-GB", { weekday: "short", day: "numeric", month: "long" });
+
+  return (
+    <div className="featured-race-card">
+      <div className="featured-race-flag">{nextRace.flag}</div>
+      <div className="featured-race-info">
+        <div className="featured-race-label">Round {nextRace.round} · Next Race</div>
+        <div className="featured-race-name">{nextRace.name}</div>
+        <div className="featured-race-sub">{nextRace.circuit} · {raceDate}</div>
+      </div>
+      <div className="featured-race-countdown">
+        {[["d","Days"], ["h","Hrs"], ["m","Min"], ["s","Sec"]].map(([k, l]) => (
+          <div key={k} className="featured-tile">
+            <div className="featured-tile-num">{pad(timeLeft[k])}</div>
+            <div className="featured-tile-label">{l}</div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
 function RatingBar({ label, value }) {
   return (
     <div className="rating-bar-wrap">
@@ -1339,6 +1758,7 @@ function RatingBar({ label, value }) {
     </div>
   );
 }
+
 
 function DriverCard({ driver }) {
   const [expanded, setExpanded] = useState(false);
@@ -1382,7 +1802,7 @@ function DriverCard({ driver }) {
           <div className="driver-stat"><div className="driver-stat-val">{driver.wins}</div><div className="driver-stat-lbl">Wins</div></div>
           <div className="driver-stat"><div className="driver-stat-val">{driver.poles}</div><div className="driver-stat-lbl">Poles</div></div>
         </div>
-        <p className="driver-desc">{driver.desc}</p>
+        <p className="driver-desc" style={{ display: expanded ? undefined : "-webkit-box", WebkitLineClamp: expanded ? undefined : 3, WebkitBoxOrient: "vertical", overflow: expanded ? undefined : "hidden" }}>{driver.desc}</p>
         {expanded && (
           <>
             <RatingBar label="Raw Speed" value={driver.skill} />
@@ -1394,7 +1814,8 @@ function DriverCard({ driver }) {
           </>
         )}
         <button className="expand-btn" onClick={() => setExpanded(!expanded)}>
-          {expanded ? "▲ Less" : "▼ Ratings & Media"}
+          <span className={`expand-btn-arrow${expanded ? " open" : ""}`}>▼</span>
+          {expanded ? "Show Less" : "Ratings & Media"}
         </button>
       </div>
     </div>
@@ -1457,7 +1878,8 @@ function TeamCard({ team }) {
           </div>
         )}
         <button className="expand-btn" onClick={() => setExpanded(!expanded)}>
-          {expanded ? "▲ Less" : "▼ Engine Details"}
+          <span className={`expand-btn-arrow${expanded ? " open" : ""}`}>▼</span>
+          {expanded ? "Show Less" : "Engine Details"}
         </button>
       </div>
     </div>
@@ -1467,8 +1889,10 @@ function TeamCard({ team }) {
 function HowItWorks() {
   return (
     <div>
-      <div className="section-title">How <span>F1</span> Works</div>
-      <div className="section-line" />
+      <SectionHeader title="How" accent="F1 Works" group="Learn the Basics" icon="🏁"
+        intro="New to Formula 1? Start here. This covers everything that happens across a race weekend — from practice to the podium — plus the rules, tyres, and tactics that make every race unpredictable." />
+      <FeaturedRaceCard />
+
       <div className="how-grid">
         {[
           { title: "What is F1?", text: "Formula 1 is the pinnacle of motorsport — the fastest, most technologically advanced racing series on Earth. 10 teams, 20 drivers, ~24 races a year across the globe. Each team builds their own car around a common set of rules." },
@@ -1494,8 +1918,8 @@ function HowItWorks() {
 function PointsSystem() {
   return (
     <div>
-      <div className="section-title">Points <span>System</span></div>
-      <div className="section-line" />
+      <SectionHeader title="Points" accent="System" group="Learn the Basics" icon="📊"
+        intro="Points are awarded to the top 10 finishers in every race. The driver and constructor with the most points at the end of the season win the championship." />
       <div className="points-wrap">
         <div>
           <table className="points-table">
@@ -1553,8 +1977,8 @@ function DriversSection() {
   });
   return (
     <div>
-      <div className="section-title">2026 <span>Drivers</span></div>
-      <div className="section-line" />
+      <SectionHeader title="2026" accent="Drivers" group="2026 Season" icon="🏎️"
+        intro="All 22 drivers on the 2026 grid — their career stats, ratings, and the story behind each one. Tap any card to reveal detailed ratings and media profile." />
       <div style={{ display: "flex", gap: 8, marginBottom: 16 }}>
         <button className={`year-btn${!showDropped ? " active" : ""}`} onClick={() => setShowDropped(false)}>🏎️ Active ({active.length})</button>
         <button className={`year-btn${showDropped ? " active" : ""}`} onClick={() => setShowDropped(true)}>💀 No 2026 Seat ({dropped.length})</button>
@@ -1571,7 +1995,7 @@ function DriversSection() {
       <div className="card-grid">
         {filtered.map(d => <DriverCard key={d.id} driver={d} />)}
       </div>
-      {filtered.length === 0 && <div style={{ color: "var(--text4)", textAlign: "center", padding: 40 }}>No drivers found</div>}
+      {filtered.length === 0 && <EmptyState icon="🏎️" title="NO DRIVERS FOUND" sub={`No drivers match "${search || filter}" — try clearing your search or filter.`} />}
     </div>
   );
 }
@@ -1587,8 +2011,8 @@ function TeamsSection() {
   });
   return (
     <div>
-      <div className="section-title">The <span>Teams</span></div>
-      <div className="section-line" />
+      <SectionHeader title="The" accent="Teams" group="2026 Season" icon="🔧"
+        intro="All 11 constructors — their engines, drivers, team principals, and what the 2026 regulation reset means for each one." />
       <div className="year-toggle">
         <button className={`year-btn${year === "2025" ? " active" : ""}`} onClick={() => setYear("2025")}>2025 Season</button>
         <button className={`year-btn${year === "2026" ? " active" : ""}`} onClick={() => setYear("2026")}>
@@ -1839,51 +2263,48 @@ function ResultsSection() {
 
   return (
     <div>
-      <div style={{ display: "flex", alignItems: "flex-start", gap: 12, marginBottom: 8, flexWrap: "wrap" }}>
-        <div className="section-title" style={{ marginBottom: 0 }}>{YEAR} <span>Results</span></div>
-        <button onClick={loadAll} style={{ marginLeft: "auto", padding: "6px 14px", background: "transparent", border: "1px solid #333", color: "var(--text3)", fontFamily: "Orbitron", fontSize: 9, letterSpacing: 2, cursor: "pointer", borderRadius: 2, textTransform: "uppercase", transition: "all 0.2s" }}
-          onMouseEnter={e => { e.target.style.borderColor="#e10600"; e.target.style.color="#fff"; }}
-          onMouseLeave={e => { e.target.style.borderColor="#333"; e.target.style.color="#666"; }}>
-          ↻ Refresh
-        </button>
-      </div>
-      <div className="section-line" />
-
-      {/* Data source badge */}
+      <SectionHeader title={`${YEAR}`} accent="Results" group="Race & Stats" icon="🏆"
+        intro="Live race results, driver championship standings and constructor standings — powered by the OpenF1 API." />
       <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 16, flexWrap: "wrap" }}>
-        <div style={{ display: "inline-flex", alignItems: "center", gap: 6, padding: "4px 10px", background: "rgba(0,220,120,0.08)", border: "1px solid rgba(0,220,120,0.25)", borderRadius: 2 }}>
+        <div style={{ display: "inline-flex", alignItems: "center", gap: 6, padding: "4px 12px", background: "rgba(0,220,120,0.08)", border: "1px solid rgba(0,220,120,0.25)", borderRadius: 20 }}>
           <div style={{ width: 6, height: 6, borderRadius: "50%", background: loading ? "#666" : "#00dc78", boxShadow: loading ? "none" : "0 0 6px #00dc78" }} />
           <span style={{ fontSize: 10, color: "#00dc78", fontFamily: "Orbitron", letterSpacing: 1 }}>LIVE · OpenF1 API</span>
         </div>
-        {lastUpdated && (
-          <span style={{ fontSize: 10, color: "var(--text4)" }}>Updated {lastUpdated.toLocaleTimeString()}</span>
-        )}
+        {lastUpdated && <span style={{ fontSize: 10, color: "var(--text4)" }}>Updated {lastUpdated.toLocaleTimeString()}</span>}
+        <button onClick={loadAll} style={{ marginLeft: "auto", padding: "6px 14px", background: "transparent", border: "1px solid var(--border2)", color: "var(--text3)", fontFamily: "Orbitron", fontSize: 9, letterSpacing: 2, cursor: "pointer", borderRadius: 20, transition: "all 0.2s" }}
+          onMouseEnter={e => { e.target.style.borderColor="#e10600"; e.target.style.color="var(--text)"; }}
+          onMouseLeave={e => { e.target.style.borderColor=""; e.target.style.color=""; }}>
+          ↻ Refresh
+        </button>
       </div>
 
       {loading && (
-        <div style={{ textAlign: "center", padding: "60px 20px" }}>
-          <div style={{ fontFamily: "Orbitron", fontSize: 11, color: "#e10600", letterSpacing: 3, marginBottom: 16 }}>LOADING RACE DATA...</div>
-          <div style={{ display: "flex", justifyContent: "center", gap: 6 }}>
-            {[0,1,2].map(i => (
-              <div key={i} style={{ width: 8, height: 8, borderRadius: "50%", background: "#e10600", animation: `pulse 1.2s ${i*0.2}s infinite`, opacity: 0.8 }} />
+        <div>
+          <div style={{ display: "flex", gap: 8, marginBottom: 14, flexWrap: "wrap" }}>
+            {[1,2,3,4].map(i => <div key={i} className="skeleton skel" style={{ height: 36, width: 100, borderRadius: 6 }} />)}
+          </div>
+          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16 }}>
+            {[1,2].map(i => (
+              <div key={i} className="skeleton-card">
+                <div className="skeleton skel skel-title" />
+                {[1,2,3,4,5].map(j => <div key={j} className="skeleton skel skel-line w-80" style={{ marginBottom: 8 }} />)}
+              </div>
             ))}
           </div>
-          <style>{`@keyframes pulse { 0%,100%{transform:scale(1);opacity:0.4} 50%{transform:scale(1.4);opacity:1} }`}</style>
         </div>
       )}
 
       {error && !loading && (
-        <div style={{ background: "var(--card-bg)", border: "1px solid #2a0000", borderLeft: "3px solid #e10600", padding: 20, borderRadius: 2, marginBottom: 20 }}>
+        <div className="card" style={{ borderLeft: "3px solid #e10600", padding: 24, textAlign: "center" }}>
+          <div style={{ fontSize: 32, marginBottom: 10 }}>📡</div>
           <div style={{ fontFamily: "Orbitron", fontSize: 11, color: "#e10600", letterSpacing: 2, marginBottom: 8 }}>DATA UNAVAILABLE</div>
-          <p style={{ fontSize: 12, color: "var(--text3)", lineHeight: 1.7 }}>{error}. The OpenF1 API may be temporarily down, or the {YEAR} season data may not yet be available.</p>
-          <button onClick={loadAll} style={{ marginTop: 12, padding: "7px 16px", background: "#e10600", border: "none", color: "var(--text)", fontFamily: "Orbitron", fontSize: 9, letterSpacing: 2, cursor: "pointer", borderRadius: 2 }}>RETRY</button>
+          <p style={{ fontSize: 12, color: "var(--text3)", lineHeight: 1.7, marginBottom: 14 }}>{error}. The OpenF1 API may be temporarily down, or the {YEAR} season data may not yet be available.</p>
+          <button onClick={loadAll} style={{ padding: "8px 18px", background: "#e10600", border: "none", color: "#fff", fontFamily: "Orbitron", fontSize: 9, letterSpacing: 2, cursor: "pointer", borderRadius: 20 }}>RETRY</button>
         </div>
       )}
 
       {!loading && !error && sessions.length === 0 && (
-        <div className="card" style={{ textAlign: "center", padding: 40 }}>
-          <div style={{ fontFamily: "Orbitron", fontSize: 11, color: "var(--text3)", letterSpacing: 2 }}>NO RACES YET IN {YEAR}</div>
-        </div>
+        <EmptyState icon="🏆" title={`NO RACES YET IN ${YEAR}`} sub="Race data will appear here once the season begins." />
       )}
 
       {!loading && sessions.length > 0 && (
@@ -2257,11 +2678,8 @@ function GlossarySection() {
 
   return (
     <div>
-      <div className="section-title">F1 <span>Glossary</span></div>
-      <div className="section-line" />
-      <p style={{ fontSize: 13, color: "var(--text3)", lineHeight: 1.7, marginBottom: 16 }}>
-        Every term you'll hear during a race weekend — explained in plain English. Tap any card to expand.
-      </p>
+      <SectionHeader title="F1" accent="Glossary" group="Learn the Basics" icon="📖"
+        intro="Every piece of jargon you'll hear during a race weekend — explained clearly. Tap any term to expand the full definition." />
       <div className="search-wrap">
         <span className="search-icon">🔍</span>
         <input className="search-input" placeholder="Search terms..." value={search} onChange={e => setSearch(e.target.value)} />
@@ -2278,7 +2696,7 @@ function GlossarySection() {
               <span>{g.term}</span>
               <span>
                 <span className="glossary-cat" style={{ background: g.catColor + "22", color: g.catColor, border: `1px solid ${g.catColor}44` }}>{g.cat}</span>
-                <span style={{ color: "var(--text3)", marginLeft: 8, fontSize: 10 }}>{expanded[g.term] ? "▲" : "▼"}</span>
+                <span style={{ color: "var(--text3)", marginLeft: 8, fontSize: 10, transition: "transform 0.2s", display: "inline-block", transform: expanded[g.term] ? "rotate(180deg)" : "none" }}>▼</span>
               </span>
             </div>
             {expanded[g.term] && <div className="glossary-def">{g.def}</div>}
@@ -2286,7 +2704,7 @@ function GlossarySection() {
           </div>
         ))}
       </div>
-      {filtered.length === 0 && <div style={{ color: "var(--text3)", textAlign: "center", padding: 40 }}>No terms found</div>}
+      {filtered.length === 0 && <EmptyState icon="📖" title="NO TERMS FOUND" sub={`Nothing matches "${search}" — try a different search.`} />}
     </div>
   );
 }
@@ -2296,11 +2714,8 @@ function RulesSection() {
   const [open, setOpen] = useState(null);
   return (
     <div>
-      <div className="section-title">Explain <span>The Rules</span></div>
-      <div className="section-line" />
-      <p style={{ fontSize: 13, color: "var(--text3)", lineHeight: 1.7, marginBottom: 20 }}>
-        F1's rulebook is enormous. Here are the most confusing rules explained the way a friend would explain them — with real examples.
-      </p>
+      <SectionHeader title="Explain" accent="The Rules" group="Learn the Basics" icon="📋"
+        intro="F1's rulebook is enormous. Here are the most confusing rules explained the way a knowledgeable friend would — with real examples from actual races." />
       {F1_RULES.map((rule, i) => (
         <div key={i} className="rule-card">
           <div className="rule-header" onClick={() => setOpen(open === i ? null : i)}>
@@ -2699,22 +3114,35 @@ function NewsSection() {
 
   return (
     <div>
-      <div className="section-title">F1 <span>News</span></div>
-      <div className="section-line" />
+      <SectionHeader title="F1" accent="News" group="Race & Stats" icon="📰"
+        intro="The latest F1 headlines pulled live from Motorsport.com. Updated automatically." />
       <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 20 }}>
-        <div style={{ display: "inline-flex", alignItems: "center", gap: 6, padding: "4px 10px", background: "rgba(0,220,120,0.08)", border: "1px solid rgba(0,220,120,0.25)", borderRadius: 2 }}>
-          <div style={{ width: 6, height: 6, borderRadius: "50%", background: "#00dc78", boxShadow: "0 0 6px #00dc78" }} />
+        <div style={{ display: "inline-flex", alignItems: "center", gap: 6, padding: "4px 12px", background: "rgba(0,220,120,0.08)", border: "1px solid rgba(0,220,120,0.25)", borderRadius: 20 }}>
+          <div style={{ width: 6, height: 6, borderRadius: "50%", background: "#00dc78", boxShadow: "0 0 6px #00dc78", animation: "pulse 2s infinite" }} />
           <span style={{ fontSize: 10, color: "#00dc78", fontFamily: "Orbitron", letterSpacing: 1 }}>LIVE · Motorsport.com</span>
         </div>
       </div>
-
       {loading && (
-        <div style={{ textAlign: "center", padding: "60px 20px" }}>
-          <div style={{ fontFamily: "Orbitron", fontSize: 11, color: "#e10600", letterSpacing: 3 }}>LOADING NEWS...</div>
+        <div className="news-grid">
+          {Array.from({ length: 6 }).map((_, i) => (
+            <div key={i} className="skeleton-card">
+              <div className="skeleton skel skel-img" />
+              <div className="skeleton skel skel-title" />
+              <div className="skeleton skel skel-line w-80" />
+              <div className="skeleton skel skel-line w-40" />
+            </div>
+          ))}
         </div>
       )}
-      {error && <div className="card" style={{ borderColor: "#e10600", padding: 20 }}><p style={{ color: "var(--text3)" }}>{error}</p></div>}
-      {!loading && !error && (
+      {error && (
+        <div className="card" style={{ borderColor: "#e10600", padding: 28, textAlign: "center" }}>
+          <div style={{ fontSize: 32, marginBottom: 10 }}>📡</div>
+          <div style={{ fontFamily: "Orbitron", fontSize: 11, color: "#e10600", letterSpacing: 2, marginBottom: 6 }}>CONNECTION ERROR</div>
+          <p style={{ color: "var(--text3)", fontSize: 13 }}>{error}</p>
+        </div>
+      )}
+      {!loading && !error && news.length === 0 && <EmptyState icon="📰" title="NO NEWS FOUND" sub="Could not load articles. Check back later." />}
+      {!loading && !error && news.length > 0 && (
         <div className="news-grid">
           {news.map((item, i) => (
             <a key={i} href={item.link} target="_blank" rel="noopener noreferrer" className="news-card" style={{ textDecoration: "none" }}>
@@ -2827,15 +3255,29 @@ function PointsGraph({ standings }) {
 
 // ─── GLOBAL SEARCH ────────────────────────────────────────────────────────────
 const SEARCH_INDEX = [
-  ...ACTIVE_DRIVERS_2026.map(d => ({ type: "Driver", title: d.name, sub: d.team, section: "drivers", icon: "🏎️" })),
-  ...GLOSSARY.map(g => ({ type: "Term", title: g.term, sub: g.cat, section: "glossary", icon: "📖" })),
-  ...RACE_CALENDAR_2026.map(r => ({ type: "Circuit", title: r.name, sub: r.circuit, section: "circuits", icon: "🗺️" })),
+  ...ACTIVE_DRIVERS_2026.map(d => ({ type: "Driver", title: d.name, sub: d.team, section: "drivers", icon: "🏎️", color: d.color })),
+  ...GLOSSARY.map(g => ({ type: "Term", title: g.term, sub: g.def?.slice(0, 60) + "…", section: "glossary", icon: "📖", color: "#e10600" })),
+  ...RACE_CALENDAR_2026.map(r => ({ type: "Circuit", title: r.name, sub: r.circuit, section: "circuits", icon: "🗺️", color: "#00dc78", extra: r.flag })),
+  { type: "Section", title: "Driver Compare", sub: "Radar chart — pick any two drivers", section: "drivercompare", icon: "🆚", color: "#FF8000" },
+  { type: "Section", title: "Championship Tracker", sub: "Round-by-round WDC battle 2021–2024", section: "championship", icon: "📈", color: "#3671C6" },
+  { type: "Section", title: "Tyre Strategy", sub: "Pit stop strategies from iconic races", section: "tyrestrategy", icon: "🏎", color: "#FFD700" },
+  { type: "Section", title: "Which Team Are You?", sub: "Personality quiz — find your F1 team", section: "teamquiz", icon: "🎯", color: "#229971" },
+  { type: "Section", title: "Teammate H2H", sub: "2024 qualifying and race head-to-head stats", section: "h2h", icon: "⚔️", color: "#9966FF" },
+  { type: "Section", title: "Race Predictor", sub: "Build your predicted top 10 grid", section: "predictor", icon: "🔮", color: "#e10600" },
+  { type: "Section", title: "F1 Quiz", sub: "15 questions to test your knowledge", section: "quiz", icon: "🧠", color: "#27F4D2" },
+  { type: "Section", title: "Live Results", sub: "Race results & driver standings", section: "results", icon: "🏆", color: "#FFD700" },
 ];
+
+const TYPE_COLORS = {
+  Driver: "#e10600", Term: "#9966FF", Circuit: "#00dc78", Section: "#606080"
+};
 
 function GlobalSearch({ onNavigate }) {
   const [query, setQuery] = useState("");
   const [open, setOpen] = useState(false);
+  const [focused, setFocused] = useState(-1);
   const ref = useRef();
+  const inputRef = useRef();
 
   useEffect(() => {
     function handle(e) { if (!ref.current?.contains(e.target)) setOpen(false); }
@@ -2846,35 +3288,117 @@ function GlobalSearch({ onNavigate }) {
   const results = query.length > 1
     ? SEARCH_INDEX.filter(item =>
         item.title.toLowerCase().includes(query.toLowerCase()) ||
-        item.sub.toLowerCase().includes(query.toLowerCase())
-      ).slice(0, 8)
+        (item.sub || "").toLowerCase().includes(query.toLowerCase())
+      ).slice(0, 7)
     : [];
 
+  function handleKey(e) {
+    if (!open) return;
+    if (e.key === "ArrowDown") { e.preventDefault(); setFocused(f => Math.min(f + 1, results.length - 1)); }
+    if (e.key === "ArrowUp") { e.preventDefault(); setFocused(f => Math.max(f - 1, 0)); }
+    if (e.key === "Enter" && focused >= 0 && results[focused]) {
+      onNavigate(results[focused].section); setQuery(""); setOpen(false); setFocused(-1);
+    }
+    if (e.key === "Escape") { setOpen(false); setFocused(-1); }
+  }
+
+  // Highlight matched text
+  function highlight(text, q) {
+    if (!q || q.length < 2) return text;
+    const idx = text.toLowerCase().indexOf(q.toLowerCase());
+    if (idx === -1) return text;
+    return <>{text.slice(0, idx)}<mark style={{ background: "rgba(225,6,0,0.25)", color: "var(--text)", borderRadius: 2, padding: "0 1px" }}>{text.slice(idx, idx + q.length)}</mark>{text.slice(idx + q.length)}</>;
+  }
+
   return (
-    <div ref={ref} style={{ position: "relative", width: "100%", maxWidth: 400 }}>
-      <div style={{ display: "flex", alignItems: "center", gap: 8, padding: "8px 12px", background: "var(--bg3)", border: "1px solid var(--border)", borderRadius: 4 }}>
-        <span style={{ fontSize: 14 }}>🔍</span>
-        <input
+    <div ref={ref} style={{ position: "relative", width: "100%", maxWidth: 480 }}>
+      <div style={{
+        display: "flex", alignItems: "center", gap: 10, padding: "9px 14px",
+        background: "var(--card-bg)", border: `1px solid ${open ? "rgba(225,6,0,0.4)" : "var(--glass-border)"}`,
+        borderRadius: 10, transition: "border-color 0.2s, box-shadow 0.2s",
+        boxShadow: open ? "0 0 0 3px rgba(225,6,0,0.08)" : "var(--shadow)",
+        backdropFilter: "blur(12px)",
+      }}>
+        <span style={{ fontSize: 14, color: "var(--text3)", flexShrink: 0 }}>🔍</span>
+        <input ref={inputRef}
           value={query}
-          onChange={e => { setQuery(e.target.value); setOpen(true); }}
+          onChange={e => { setQuery(e.target.value); setOpen(true); setFocused(-1); }}
           onFocus={() => setOpen(true)}
-          placeholder="Search drivers, circuits, terms..."
+          onKeyDown={handleKey}
+          placeholder="Search drivers, circuits, features..."
           style={{ flex: 1, background: "none", border: "none", outline: "none", color: "var(--text)", fontSize: 13, fontFamily: "Exo 2, sans-serif" }}
         />
-        {query && <button onClick={() => { setQuery(""); setOpen(false); }} style={{ background: "none", border: "none", color: "var(--text3)", cursor: "pointer", fontSize: 14 }}>✕</button>}
+        {query && (
+          <button onClick={() => { setQuery(""); setOpen(false); inputRef.current?.focus(); }}
+            style={{ background: "none", border: "none", color: "var(--text4)", cursor: "pointer", fontSize: 13, lineHeight: 1, padding: "2px 4px", borderRadius: 4, transition: "color 0.15s" }}
+            onMouseEnter={e => e.target.style.color = "var(--text)"}
+            onMouseLeave={e => e.target.style.color = "var(--text4)"}>✕</button>
+        )}
+        {!query && <span style={{ fontSize: 10, color: "var(--text4)", fontFamily: "Orbitron", letterSpacing: 1, flexShrink: 0 }}>⌘K</span>}
       </div>
-      {open && results.length > 0 && (
-        <div style={{ position: "absolute", top: "110%", left: 0, right: 0, background: "var(--bg2)", border: "1px solid var(--border)", borderTop: "2px solid #e10600", borderRadius: "0 0 6px 6px", zIndex: 300, boxShadow: "0 8px 24px rgba(0,0,0,0.4)" }}>
-          {results.map((r, i) => (
-            <button key={i} onClick={() => { onNavigate(r.section); setQuery(""); setOpen(false); }}
-              style={{ display: "flex", alignItems: "center", gap: 10, width: "100%", padding: "10px 14px", background: "none", border: "none", cursor: "pointer", textAlign: "left", borderBottom: "1px solid var(--border)" }}>
-              <span style={{ fontSize: 16 }}>{r.icon}</span>
-              <div>
-                <div style={{ fontSize: 13, fontWeight: 700, color: "var(--text)" }}>{r.title}</div>
-                <div style={{ fontSize: 10, color: "var(--text3)" }}>{r.type} · {r.sub}</div>
+
+      {open && query.length > 1 && (
+        <div style={{
+          position: "absolute", top: "calc(100% + 6px)", left: 0, right: 0,
+          background: "rgba(10,10,20,0.95)", backdropFilter: "blur(24px)",
+          border: "1px solid var(--glass-border)", borderTop: "2px solid #e10600",
+          borderRadius: "0 0 12px 12px", zIndex: 500,
+          boxShadow: "0 20px 60px rgba(0,0,0,0.6)",
+          overflow: "hidden",
+        }}>
+          {results.length > 0 ? (
+            <>
+              {results.map((r, i) => (
+                <button key={i}
+                  onClick={() => { onNavigate(r.section); setQuery(""); setOpen(false); setFocused(-1); }}
+                  style={{
+                    display: "flex", alignItems: "center", gap: 12, width: "100%",
+                    padding: "11px 16px", background: focused === i ? "rgba(225,6,0,0.08)" : "none",
+                    border: "none", borderBottom: "1px solid var(--border)", cursor: "pointer",
+                    textAlign: "left", transition: "background 0.1s",
+                  }}
+                  onMouseEnter={() => setFocused(i)}
+                  onMouseLeave={() => setFocused(-1)}>
+                  {/* Icon with team/type colour background */}
+                  <div style={{
+                    width: 36, height: 36, borderRadius: 8, flexShrink: 0,
+                    background: `${r.color || "#e10600"}18`,
+                    border: `1px solid ${r.color || "#e10600"}33`,
+                    display: "flex", alignItems: "center", justifyContent: "center",
+                    fontSize: 16,
+                  }}>
+                    {r.extra || r.icon}
+                  </div>
+                  <div style={{ flex: 1, minWidth: 0 }}>
+                    <div style={{ fontSize: 13, fontWeight: 700, color: "var(--text)", marginBottom: 2 }}>
+                      {highlight(r.title, query)}
+                    </div>
+                    <div style={{ fontSize: 10, color: "var(--text3)", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+                      {r.sub}
+                    </div>
+                  </div>
+                  {/* Type badge */}
+                  <div style={{
+                    fontSize: 8, fontFamily: "Orbitron", letterSpacing: 1,
+                    padding: "2px 7px", borderRadius: 20, flexShrink: 0,
+                    background: `${TYPE_COLORS[r.type] || "#606080"}18`,
+                    color: TYPE_COLORS[r.type] || "#606080",
+                    border: `1px solid ${TYPE_COLORS[r.type] || "#606080"}33`,
+                    textTransform: "uppercase",
+                  }}>{r.type}</div>
+                </button>
+              ))}
+              <div style={{ padding: "8px 16px", fontSize: 10, color: "var(--text4)", fontFamily: "Orbitron", letterSpacing: 1 }}>
+                {results.length} RESULT{results.length !== 1 ? "S" : ""} · ↑↓ NAVIGATE · ↵ SELECT
               </div>
-            </button>
-          ))}
+            </>
+          ) : (
+            <div style={{ padding: "24px 16px", textAlign: "center" }}>
+              <div style={{ fontSize: 24, marginBottom: 8 }}>🔎</div>
+              <div style={{ fontFamily: "Orbitron", fontSize: 10, color: "var(--text3)", letterSpacing: 2 }}>NO RESULTS FOR "{query.toUpperCase()}"</div>
+              <div style={{ fontSize: 11, color: "var(--text4)", marginTop: 4 }}>Try a driver name, circuit, or F1 term</div>
+            </div>
+          )}
         </div>
       )}
     </div>
@@ -3989,6 +4513,99 @@ const NAV_GROUPS = [
 
 const SECTIONS = NAV_GROUPS.flatMap(g => g.sections);
 
+// ─── MOBILE BOTTOM NAV ───────────────────────────────────────────────────────
+const MOBILE_QUICK_TABS = [
+  { id: "how",       icon: "🏁", label: "Learn" },
+  { id: "drivers",   icon: "🏎️", label: "Drivers" },
+  { id: "circuits",  icon: "🗺️", label: "Circuits" },
+  { id: "results",   icon: "🏆", label: "Results" },
+  { id: "__more__",  icon: "☰",  label: "More" },
+];
+
+function MobileNav({ active, onSelect }) {
+  const [showSheet, setShowSheet] = useState(false);
+  const [sheetSearch, setSheetSearch] = useState("");
+
+  const ALL_MOBILE_SECTIONS = NAV_GROUPS.flatMap(g =>
+    g.sections.map(s => ({ ...s, group: g.label }))
+  ).concat([{ id: "bookmarks", icon: "🔖", label: "Bookmarks", group: "Me" }]);
+
+  const filtered = sheetSearch
+    ? ALL_MOBILE_SECTIONS.filter(s =>
+        s.label.toLowerCase().includes(sheetSearch.toLowerCase()) ||
+        (s.desc || "").toLowerCase().includes(sheetSearch.toLowerCase())
+      )
+    : ALL_MOBILE_SECTIONS;
+
+  const grouped = filtered.reduce((acc, s) => {
+    if (!acc[s.group]) acc[s.group] = [];
+    acc[s.group].push(s);
+    return acc;
+  }, {});
+
+  function go(id) { onSelect(id); setShowSheet(false); setSheetSearch(""); }
+
+  return (
+    <>
+      <div className="mobile-nav">
+        <div className="mobile-nav-inner">
+          {MOBILE_QUICK_TABS.map(tab => {
+            const isMore = tab.id === "__more__";
+            const isActive = !isMore && active === tab.id;
+            return (
+              <button key={tab.id} className={`mobile-nav-btn${isActive ? " active" : ""}`}
+                onClick={() => isMore ? setShowSheet(s => !s) : go(tab.id)}>
+                <span className="mobile-nav-icon">{tab.icon}</span>
+                <span className="mobile-nav-label" style={{ color: isMore && showSheet ? "#e10600" : undefined }}>{tab.label}</span>
+              </button>
+            );
+          })}
+        </div>
+      </div>
+
+      {showSheet && (
+        <div className="mobile-nav-more-sheet" onClick={() => setShowSheet(false)}>
+          <div className="mobile-nav-sheet-inner" onClick={e => e.stopPropagation()}>
+            <div style={{ width: 36, height: 4, background: "var(--border2)", borderRadius: 2, margin: "0 auto 16px" }} />
+            <div style={{ fontFamily: "Orbitron", fontSize: 11, color: "#e10600", letterSpacing: 2, marginBottom: 12 }}>ALL SECTIONS</div>
+            <div style={{ display: "flex", alignItems: "center", gap: 8, background: "var(--bg3)", borderRadius: 8, padding: "8px 12px", marginBottom: 14, border: "1px solid var(--border)" }}>
+              <span style={{ fontSize: 13, opacity: 0.5 }}>🔍</span>
+              <input value={sheetSearch} onChange={e => setSheetSearch(e.target.value)}
+                placeholder="Search sections…"
+                style={{ background: "none", border: "none", outline: "none", fontSize: 13, color: "var(--text)", flex: 1, fontFamily: "'Exo 2', sans-serif" }} />
+            </div>
+            {Object.entries(grouped).map(([group, sections]) => (
+              <div key={group} style={{ marginBottom: 12 }}>
+                <div style={{ fontSize: 9, color: "var(--text4)", fontFamily: "Orbitron", letterSpacing: 2, marginBottom: 6, paddingLeft: 14 }}>{group.toUpperCase()}</div>
+                {sections.map(s => (
+                  <button key={s.id} className={`mobile-sheet-item${active === s.id ? " active" : ""}`} onClick={() => go(s.id)}>
+                    <span style={{ fontSize: 20 }}>{s.icon}</span>
+                    <div style={{ flex: 1 }}>
+                      <div style={{ fontSize: 13, fontWeight: 700, color: active === s.id ? "#e10600" : "var(--text)" }}>{s.label}</div>
+                      {s.desc && <div style={{ fontSize: 10, color: "var(--text4)", marginTop: 1, lineHeight: 1.4 }}>{s.desc}</div>}
+                    </div>
+                    {active === s.id && <span style={{ color: "#e10600", fontSize: 14 }}>●</span>}
+                  </button>
+                ))}
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+    </>
+  );
+}
+
+// ─── TOAST HOOK ──────────────────────────────────────────────────────────────
+function useToast() {
+  const [toast, setToast] = useState(null);
+  function showToast(msg) {
+    setToast(msg);
+    setTimeout(() => setToast(null), 2200);
+  }
+  return [toast, showToast];
+}
+
 export default function F1Guide() {
   const [active, setActive] = useState("how");
   const [openGroup, setOpenGroup] = useState(null);
@@ -4004,8 +4621,14 @@ export default function F1Guide() {
   // Persist bookmarks
   useEffect(() => { localStorage.setItem("f1guide_bookmarks", JSON.stringify(bookmarks)); }, [bookmarks]);
 
+  const [toastMsg, showToast] = useToast();
+
   function toggleBookmark(id) {
-    setBookmarks(bms => bms.includes(id) ? bms.filter(b => b !== id) : [...bms, id]);
+    setBookmarks(bms => {
+      const isAdding = !bms.includes(id);
+      showToast(isAdding ? "⭐ Bookmarked!" : "Removed bookmark");
+      return isAdding ? [...bms, id] : bms.filter(b => b !== id);
+    });
   }
 
   useEffect(() => {
@@ -4039,6 +4662,7 @@ export default function F1Guide() {
         <div className="orb orb-3" />
 
         {showOnboarding && <OnboardingModal onClose={handleOnboardingClose} onSelect={id => { selectSection(id); handleOnboardingClose(); }} />}
+        {toastMsg && <div className="toast">{toastMsg}</div>}
 
         <div className="content">
           <div className="hero">
@@ -4120,6 +4744,7 @@ export default function F1Guide() {
               {active === "bookmarks"    && <BookmarksSection bookmarks={bookmarks} onNavigate={selectSection} onRemove={id => toggleBookmark(id)} />}
             </div>
           </main>
+          <MobileNav active={active} onSelect={selectSection} />
         </div>
       </div>
     </>
