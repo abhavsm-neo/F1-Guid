@@ -3710,12 +3710,30 @@ function CircuitsSection() {
               <div className="circuit-round">R{c.round}</div>
             </div>
             <div className="circuit-body">
-              {c.mapUrl ? (
-                <img src={c.mapUrl} alt={`${c.name} circuit map`} className="circuit-map-img"
-                  onError={e => { e.target.style.display = "none"; e.target.nextSibling.style.display = "flex"; }} />
-              ) : null}
-              <div className="circuit-map-fallback" style={{ display: c.mapUrl ? "none" : "flex" }}>
-                <span style={{ fontSize: 40 }}>{c.flag}</span>
+              {/* Styled circuit placeholder — consistent across all platforms */}
+              <div style={{
+                width: "100%", height: 110, borderRadius: 8, marginBottom: 10,
+                background: `linear-gradient(135deg, var(--bg3) 0%, var(--bg2) 100%)`,
+                border: "1px solid var(--border)",
+                display: "flex", alignItems: "center", justifyContent: "space-between",
+                padding: "0 18px", overflow: "hidden", position: "relative",
+              }}>
+                {/* Circuit round watermark */}
+                <div style={{ position: "absolute", right: -8, top: -12, fontFamily: "Orbitron", fontSize: 72, fontWeight: 900, color: "rgba(225,6,0,0.06)", lineHeight: 1, pointerEvents: "none" }}>
+                  {c.round}
+                </div>
+                {/* Left: round + name */}
+                <div>
+                  <div style={{ fontFamily: "Orbitron", fontSize: 9, color: "#e10600", letterSpacing: 3, marginBottom: 4 }}>ROUND {c.round}</div>
+                  <div style={{ fontFamily: "Orbitron", fontSize: 16, fontWeight: 900, color: "var(--text)", lineHeight: 1.2, maxWidth: 160 }}>{c.circuit.toUpperCase()}</div>
+                </div>
+                {/* Right: DRS + length pill */}
+                <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-end", gap: 6 }}>
+                  <div style={{ background: "rgba(225,6,0,0.12)", border: "1px solid rgba(225,6,0,0.25)", borderRadius: 20, padding: "3px 10px", fontSize: 9, fontFamily: "Orbitron", color: "#e10600", letterSpacing: 1 }}>
+                    DRS ×{c.drs}
+                  </div>
+                  <div style={{ fontSize: 11, color: "var(--text3)", fontFamily: "Orbitron" }}>{c.length}</div>
+                </div>
               </div>
               <div className="circuit-stats">
                 <div className="circuit-stat-item">
