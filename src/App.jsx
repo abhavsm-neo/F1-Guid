@@ -57,7 +57,7 @@ const styles = `
     min-height: 100vh;
     background: var(--bg);
     position: relative;
-    overflow-x: hidden;
+    overflow-x: clip;
     transition: background 0.4s;
   }
 
@@ -3667,9 +3667,9 @@ function CircuitsSection() {
 
       {/* Detail modal */}
       {selected && (
-        <div style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.85)", zIndex: 200, display: "flex", alignItems: "center", justifyContent: "center", padding: 20 }}
+        <div style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.85)", zIndex: 9999, display: "flex", alignItems: "center", justifyContent: "center", padding: 20 }}
           onClick={() => setSelected(null)}>
-          <div style={{ background: "var(--bg2)", border: "1px solid #e10600", borderRadius: 6, maxWidth: 520, width: "100%", padding: 28, position: "relative" }}
+          <div style={{ background: "var(--bg2)", border: "1px solid #e10600", borderRadius: 6, maxWidth: 520, width: "100%", padding: 28, position: "relative", maxHeight: "90vh", overflowY: "auto" }}
             onClick={e => e.stopPropagation()}>
             <button onClick={() => setSelected(null)} style={{ position: "absolute", top: 14, right: 16, background: "none", border: "none", color: "var(--text3)", fontSize: 20, cursor: "pointer", lineHeight: 1 }}>✕</button>
             <div style={{ fontSize: 36, marginBottom: 8 }}>{selected.flag}</div>
