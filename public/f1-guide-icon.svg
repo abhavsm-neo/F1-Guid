@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+  <defs>
+    <clipPath id="c"><rect width="64" height="64" rx="14"/></clipPath>
+  </defs>
+  <g clip-path="url(#c)">
+    <!-- Dark background -->
+    <rect width="64" height="64" fill="#0d0d0d"/>
+    <!-- Red speed stripe bottom -->
+    <rect x="0" y="50" width="64" height="14" fill="#e10600"/>
+    <!-- Diagonal slash accent -->
+    <polygon points="38,50 50,50 64,22 52,22" fill="#b30000" opacity="0.55"/>
+  </g>
+  
+  <!-- F (white) -->
+  <rect x="8"  y="10" width="5"  height="28" rx="2" fill="white"/>
+  <rect x="8"  y="10" width="16" height="5"  rx="2" fill="white"/>
+  <rect x="8"  y="21" width="12" height="4.5" rx="2" fill="white"/>
+
+  <!-- 1 (red) -->
+  <rect x="33" y="10" width="5"  height="28" rx="2" fill="#ff1e00"/>
+  <rect x="28" y="34" width="15" height="4.5" rx="2" fill="#ff1e00"/>
+  <rect x="28" y="10" width="10" height="5"  rx="2" fill="#ff1e00"/>
+</svg>

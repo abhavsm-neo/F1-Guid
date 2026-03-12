@@ -1546,7 +1546,137 @@ const styles = `
     .compare-select-row { grid-template-columns: 1fr; }
     .tracker-year-tabs { gap: 6px; }
   }
+
+  /* ── Homepage ── */
+  .home-hero {
+    background: linear-gradient(135deg, rgba(225,6,0,0.06) 0%, transparent 50%);
+    border: 1px solid rgba(225,6,0,0.12);
+    border-radius: 16px; padding: 32px 28px; margin-bottom: 28px;
+    position: relative; overflow: hidden;
+    backdrop-filter: blur(14px);
+  }
+  .home-hero::after {
+    content: 'F1'; position: absolute; right: -20px; top: -30px;
+    font-size: 140px; font-family: 'Orbitron', sans-serif; font-weight: 900;
+    color: rgba(225,6,0,0.04); pointer-events: none; line-height: 1;
+    letter-spacing: -8px;
+  }
+  .home-quick-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    gap: 10px; margin-bottom: 28px;
+  }
+  .home-quick-card {
+    background: var(--card-bg); border: 1px solid var(--glass-border);
+    border-radius: 12px; padding: 16px 14px; cursor: pointer;
+    transition: all 0.25s cubic-bezier(0.22,1,0.36,1);
+    backdrop-filter: blur(10px);
+    display: flex; flex-direction: column; gap: 6px;
+  }
+  .home-quick-card:hover { transform: translateY(-3px); border-color: rgba(225,6,0,0.3); box-shadow: var(--shadow-hover); }
+  .home-quick-card:active { transform: scale(0.98); }
+  .home-quick-icon { font-size: 22px; }
+  .home-quick-label { font-family: 'Orbitron', sans-serif; font-size: 10px; color: var(--text); font-weight: 700; letter-spacing: 1px; }
+  .home-quick-sub { font-size: 10px; color: var(--text4); line-height: 1.4; }
+  .home-section-title {
+    font-family: 'Orbitron', sans-serif; font-size: 10px;
+    color: #e10600; letter-spacing: 3px; text-transform: uppercase;
+    margin-bottom: 12px; margin-top: 4px;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .home-section-title::after {
+    content: ''; flex: 1; height: 1px;
+    background: linear-gradient(to right, rgba(225,6,0,0.2), transparent);
+  }
+  .power-rank-row {
+    display: flex; align-items: center; gap: 14px;
+    padding: 12px 16px; margin-bottom: 6px;
+    background: var(--card-bg); border: 1px solid var(--glass-border);
+    border-radius: 10px; cursor: pointer;
+    transition: all 0.2s; backdrop-filter: blur(8px);
+  }
+  .power-rank-row:hover { transform: translateX(4px); box-shadow: var(--shadow-hover); }
+  .power-rank-num {
+    font-family: 'Orbitron', sans-serif; font-size: 18px;
+    font-weight: 900; color: var(--text4); min-width: 28px;
+  }
+  .power-rank-bar {
+    height: 4px; border-radius: 2px; flex: 1;
+    background: var(--bg3); overflow: hidden;
+  }
+  .power-rank-fill {
+    height: 100%; border-radius: 2px;
+    transition: width 0.8s cubic-bezier(0.22,1,0.36,1);
+  }
+  .changelog-item {
+    display: flex; gap: 12px; padding: 10px 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .changelog-item:last-child { border-bottom: none; }
+  .changelog-dot {
+    width: 8px; height: 8px; border-radius: 50%;
+    flex-shrink: 0; margin-top: 5px;
+  }
+  @media (max-width: 600px) {
+    .home-quick-grid { grid-template-columns: repeat(2, 1fr); }
+    .home-hero { padding: 20px 16px; }
+    .home-hero::after { font-size: 80px; }
+  }
+
+  /* ── Circuit map image ── */
+  .circuit-map-img {
+    width: 100%; height: 140px; object-fit: contain;
+    border-radius: 8px; background: var(--bg3);
+    margin-bottom: 10px; display: block;
+    filter: var(--circuit-img-filter, none);
+    transition: filter 0.2s;
+  }
+  .circuit-card:hover .circuit-map-img { filter: var(--circuit-img-filter-hover, brightness(1.05)); }
+  .circuit-map-fallback {
+    width: 100%; height: 100px;
+    display: flex; align-items: center; justify-content: center;
+    background: var(--bg3); border-radius: 8px;
+    font-size: 36px; margin-bottom: 10px;
+    border: 1px solid var(--border);
+  }
+  .light-mode { --circuit-img-filter: none; --circuit-img-filter-hover: brightness(0.95); }
+
+  /* ── Season preview ── */
+  .preview-team-card {
+    background: var(--card-bg); border: 1px solid var(--glass-border);
+    border-radius: 14px; padding: 20px; margin-bottom: 12px;
+    backdrop-filter: blur(12px); box-shadow: var(--shadow);
+    transition: all 0.25s; position: relative; overflow: hidden;
+  }
+  .preview-team-card::before {
+    content: ''; position: absolute; left: 0; top: 0; bottom: 0;
+    width: 4px; border-radius: 14px 0 0 14px;
+  }
+  .preview-team-card:hover { box-shadow: var(--shadow-hover); transform: translateX(3px); }
+  .preview-race-card {
+    background: var(--card-bg); border: 1px solid var(--glass-border);
+    border-radius: 12px; padding: 16px 18px; margin-bottom: 8px;
+    backdrop-filter: blur(10px); cursor: pointer; transition: all 0.2s;
+  }
+  .preview-race-card:hover { border-color: rgba(225,6,0,0.25); box-shadow: var(--shadow); }
+  .rookie-grid {
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 12px; margin-top: 4px;
+  }
+  .rookie-card {
+    background: var(--card-bg); border: 1px solid var(--glass-border);
+    border-radius: 12px; padding: 16px; backdrop-filter: blur(10px);
+    transition: all 0.2s; box-shadow: var(--shadow);
+  }
+  .rookie-card:hover { box-shadow: var(--shadow-hover); transform: translateY(-2px); }
+  .prediction-badge {
+    display: inline-flex; align-items: center; gap: 4px;
+    padding: 3px 10px; border-radius: 20px;
+    font-size: 9px; font-family: 'Orbitron', sans-serif;
+    letter-spacing: 1px; text-transform: uppercase;
+  }
 `;
+
 
 const TEAMS_2025 = [
   { id: "redbull", name: "Oracle Red Bull Racing", base: "Milton Keynes, UK", color: "#3671C6", engine: "Honda RBPT", tp: "Christian Horner", founded: 2005, championships: "6 Constructors", drivers: ["Max Verstappen", "Liam Lawson"], desc: "Still the benchmark, built around Verstappen. Lawson replaces Perez for 2025 after Checo's poor end to 2024. The Horner controversies continue but results keep coming. Honda RBPT remains one of the best power units on the grid.", engineNote: "Honda RBPT – Honda's works-level unit built exclusively for Red Bull. Returned in 2019 and together they've dominated since 2022." },
@@ -2825,30 +2955,30 @@ function RecordsSection() {
 
 // ─── 2026 Race Calendar ──────────────────────────────────────────────────────
 const RACE_CALENDAR_2026 = [
-  { round: 1,  flag: "🇦🇺", name: "Australian GP",       circuit: "Albert Park",              date: "2026-03-08T05:00:00Z",  laps: 58, length: "5.278 km", lapRecord: "1:20.235 (Bottas, 2023)",          drs: 3, tags: ["Street-adjacent","Fast","Overtaking"],          desc: "The season opener in Melbourne. A fast, flowing street-adjacent circuit that rewards car balance. The Albert Park lake provides a stunning backdrop." },
-  { round: 2,  flag: "🇨🇳", name: "Chinese GP",           circuit: "Shanghai",                 date: "2026-03-15T07:00:00Z",  laps: 56, length: "5.451 km", lapRecord: "1:32.238 (M.Schumacher, 2004)",    drs: 2, tags: ["High-deg","Technical","Sprint"],                  desc: "Shanghai's long back straight enables DRS battles. Tyres take a heavy hit through the sweeping final sector. A Sprint weekend." },
-  { round: 3,  flag: "🇯🇵", name: "Japanese GP",          circuit: "Suzuka",                   date: "2026-03-29T05:00:00Z",  laps: 53, length: "5.807 km", lapRecord: "1:30.983 (Verstappen, 2023)",      drs: 2, tags: ["Driver Favourite","Figure-8","High Speed"],       desc: "One of the most beloved circuits in the world. Suzuka's figure-of-eight layout and legendary corners like 130R and the Esses make it a true driver's circuit." },
-  { round: 4,  flag: "🇧🇭", name: "Bahrain GP",           circuit: "Bahrain International",    date: "2026-04-12T15:00:00Z",  laps: 57, length: "5.412 km", lapRecord: "1:31.447 (De La Rosa, 2005)",      drs: 3, tags: ["Night Race","High Deg","Dusty"],                  desc: "Run under floodlights, Bahrain is famous for heavy tyre degradation and sandy, abrasive asphalt. Sector 2's flowing middle section rewards mechanical grip." },
-  { round: 5,  flag: "🇸🇦", name: "Saudi Arabian GP",     circuit: "Jeddah Corniche",          date: "2026-04-19T17:00:00Z",  laps: 50, length: "6.174 km", lapRecord: "1:30.734 (Verstappen, 2021)",      drs: 3, tags: ["Fastest Street","Night Race","Walls"],             desc: "The fastest street circuit on the calendar. Walls are millimetres away at 300+ km/h. Safety cars are virtually guaranteed. Terrifying and spectacular in equal measure." },
-  { round: 6,  flag: "🇺🇸", name: "Miami GP",             circuit: "Miami International",      date: "2026-05-03T19:00:00Z",  laps: 57, length: "5.412 km", lapRecord: "1:29.708 (Verstappen, 2023)",      drs: 3, tags: ["Street","Spectacle","Sprint"],                   desc: "F1's glamorous American showcase. Built around the Hard Rock Stadium. The fake marina is iconic. A Sprint weekend." },
-  { round: 7,  flag: "🇨🇦", name: "Canadian GP",          circuit: "Gilles Villeneuve",        date: "2026-05-24T18:00:00Z",  laps: 70, length: "4.361 km", lapRecord: "1:13.078 (Bottas, 2019)",          drs: 3, tags: ["Wall of Champions","Braking","Sprint"],            desc: "The legendary Wall of Champions has claimed countless cars. Heavy braking zones and long straights create genuine overtaking. A Sprint weekend." },
-  { round: 8,  flag: "🇲🇨", name: "Monaco GP",            circuit: "Circuit de Monaco",        date: "2026-06-07T13:00:00Z",  laps: 78, length: "3.337 km", lapRecord: "1:12.909 (Leclerc, 2024)",         drs: 1, tags: ["Iconic","No Overtaking","Prestige"],               desc: "The jewel of the F1 calendar. Impossibly narrow streets, yachts in the harbour, zero overtaking. Monaco is about qualifying — P1 Saturday usually means P1 Sunday." },
-  { round: 9,  flag: "🇪🇸", name: "Barcelona-Catalunya GP",circuit: "Circuit de Barcelona-Catalunya", date: "2026-06-14T13:00:00Z", laps: 66, length: "4.657 km", lapRecord: "1:16.330 (Verstappen, 2023)", drs: 2, tags: ["Benchmark","High Deg","Testing Venue"],           desc: "Teams know this circuit better than any other — F1's main winter testing venue. A true benchmark for car performance. The Spanish GP name moves to Madrid in 2026." },
-  { round: 10, flag: "🇦🇹", name: "Austrian GP",          circuit: "Red Bull Ring",            date: "2026-06-28T13:00:00Z",  laps: 71, length: "4.318 km", lapRecord: "1:05.619 (Leclerc, 2020)",         drs: 3, tags: ["Short Lap","High Speed","Spectacle"],             desc: "One of F1's shortest laps but packed with high-speed corners. Tifosi and Orange Army fans make the grandstands a cauldron." },
-  { round: 11, flag: "🇬🇧", name: "British GP",           circuit: "Silverstone",              date: "2026-07-05T14:00:00Z",  laps: 52, length: "5.891 km", lapRecord: "1:27.097 (Hamilton, 2020)",        drs: 2, tags: ["High Speed","Home Race","Sprint"],                desc: "Home of British motorsport. Maggotts-Becketts-Chapel is arguably the most spectacular sequence in F1. A Sprint weekend." },
-  { round: 12, flag: "🇧🇪", name: "Belgian GP",           circuit: "Spa-Francorchamps",        date: "2026-07-19T13:00:00Z",  laps: 44, length: "7.004 km", lapRecord: "1:46.286 (Bottas, 2018)",          drs: 2, tags: ["Longest Circuit","Eau Rouge","Weather"],           desc: "The greatest circuit in the world according to many drivers. Eau Rouge/Raidillon is breathtaking. Weather can change lap by lap — dry, wet, and back again." },
-  { round: 13, flag: "🇭🇺", name: "Hungarian GP",         circuit: "Hungaroring",              date: "2026-07-26T13:00:00Z",  laps: 70, length: "4.381 km", lapRecord: "1:16.627 (Hamilton, 2020)",        drs: 2, tags: ["Monaco of non-streets","Hot","Tactical"],          desc: "Often called the Monaco of non-street circuits for its lack of overtaking. Extremely hot and physically demanding. Strategy and qualifying are everything." },
-  { round: 14, flag: "🇳🇱", name: "Dutch GP",             circuit: "Zandvoort",                date: "2026-08-23T13:00:00Z",  laps: 72, length: "4.259 km", lapRecord: "1:11.097 (Verstappen, 2023)",      drs: 2, tags: ["Banked Corners","Orange Army","Sprint"],            desc: "The final Dutch GP on the calendar — Zandvoort drops off after 2026. Unique banked corners. A Sprint weekend. The Orange Army goes all out for one last home race." },
-  { round: 15, flag: "🇮🇹", name: "Italian GP",           circuit: "Monza",                    date: "2026-09-06T13:00:00Z",  laps: 53, length: "5.793 km", lapRecord: "1:21.046 (Barrichello, 2004)",     drs: 3, tags: ["Temple of Speed","Slipstream","Tifosi"],           desc: "The Temple of Speed. Monza is all about raw horsepower and slipstreaming battles. The Tifosi are some of sport's most passionate fans. Engine manufacturers' playground." },
-  { round: 16, flag: "🇪🇸", name: "Spanish GP",           circuit: "Madrid Street Circuit",    date: "2026-09-13T13:00:00Z",  laps: 0,  length: "TBC",       lapRecord: "N/A — debut race",                drs: 0, tags: ["NEW VENUE","Street","Madrid Debut"],                 desc: "Madrid makes its F1 debut in 2026. The Spanish GP moves from Barcelona to a brand new street circuit built around the IFEMA convention centre in the Spanish capital." },
-  { round: 17, flag: "🇦🇿", name: "Azerbaijan GP",        circuit: "Baku City Circuit",        date: "2026-09-26T11:00:00Z",  laps: 51, length: "6.003 km", lapRecord: "1:43.009 (Leclerc, 2019)",         drs: 2, tags: ["Street","Chaos","Saturday Race"],                  desc: "Baku is F1's chaos capital — and in 2026 it's a Saturday race. The longest straight on the calendar leads into an incredibly tight castle section. Drama guaranteed." },
-  { round: 18, flag: "🇸🇬", name: "Singapore GP",         circuit: "Marina Bay",               date: "2026-10-11T12:00:00Z",  laps: 62, length: "4.940 km", lapRecord: "1:35.867 (Russell, 2023)",         drs: 3, tags: ["Night Race","Street","Sprint"],                    desc: "The original night race. Stifling humidity and heat make it the most physically demanding event of the year. A Sprint weekend." },
-  { round: 19, flag: "🇺🇸", name: "US GP",                circuit: "Circuit of the Americas",  date: "2026-10-25T19:00:00Z",  laps: 56, length: "5.513 km", lapRecord: "1:36.169 (Hamilton, 2019)",        drs: 2, tags: ["Undulation","Turn 1","Fan Favourite"],              desc: "COTA's dramatic uphill Turn 1 is one of the most iconic starts in F1. Huge elevation changes throughout the lap. Austin fans bring serious American energy." },
-  { round: 20, flag: "🇲🇽", name: "Mexican GP",           circuit: "Hermanos Rodríguez",       date: "2026-11-01T20:00:00Z",  laps: 71, length: "4.304 km", lapRecord: "1:17.774 (Bottas, 2021)",          drs: 3, tags: ["High Altitude","Low Downforce","Party"],            desc: "High altitude (2,240m) means thin air — engine power is reduced, and downforce behaves differently. Mexico City fans are the most passionate on the calendar." },
-  { round: 21, flag: "🇧🇷", name: "Brazilian GP",         circuit: "Interlagos",               date: "2026-11-08T17:00:00Z",  laps: 71, length: "4.309 km", lapRecord: "1:10.540 (Barrichello, 2004)",     drs: 2, tags: ["Sprint","Anticlockwise","Dramatic"],              desc: "Interlagos runs anticlockwise. The atmosphere is electric — Brazilian fans are legendary. The circuit has produced some of the greatest moments in F1 history." },
-  { round: 22, flag: "🇺🇸", name: "Las Vegas GP",         circuit: "Las Vegas Strip",          date: "2026-11-21T06:00:00Z",  laps: 50, length: "6.201 km", lapRecord: "1:35.490 (Leclerc, 2023)",         drs: 2, tags: ["Night Race","Saturday Race","Spectacle"],           desc: "F1 on the Strip — a Saturday night race. The longest night race on the calendar through the neon heart of Las Vegas. Bitterly cold conditions create tyre drama." },
-  { round: 23, flag: "🇶🇦", name: "Qatar GP",             circuit: "Lusail",                   date: "2026-11-29T15:00:00Z",  laps: 57, length: "5.380 km", lapRecord: "1:24.319 (Russell, 2023)",         drs: 2, tags: ["Sprint","High Speed","Night"],                    desc: "Lusail is a flowing, high-speed circuit under lights. Heavy tyre degradation and physically demanding corners. A Sprint weekend." },
-  { round: 24, flag: "🇦🇪", name: "Abu Dhabi GP",         circuit: "Yas Marina",               date: "2026-12-06T13:00:00Z",  laps: 58, length: "5.281 km", lapRecord: "1:26.103 (Leclerc, 2023)",         drs: 3, tags: ["Season Finale","Twilight","Championships"],        desc: "The season finale. Yas Marina runs from sunset into night — stunning visually. Championships are won and lost here, and it's where the paddock says goodbye for another year." },
+  { round: 1,  flag: "🇦🇺", name: "Australian GP",       circuit: "Albert Park",              mapUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/a/ab/Albert_Park_circuit_map.svg/320px-Albert_Park_circuit_map.svg.png", date: "2026-03-08T05:00:00Z",  laps: 58, length: "5.278 km", lapRecord: "1:20.235 (Bottas, 2023)",          drs: 3, tags: ["Street-adjacent","Fast","Overtaking"],          desc: "The season opener in Melbourne. A fast, flowing street-adjacent circuit that rewards car balance. The Albert Park lake provides a stunning backdrop." },
+  { round: 2,  flag: "🇨🇳", name: "Chinese GP",           circuit: "Shanghai",                 mapUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c7/Shanghai_circuit_map.svg/320px-Shanghai_circuit_map.svg.png", date: "2026-03-15T07:00:00Z",  laps: 56, length: "5.451 km", lapRecord: "1:32.238 (M.Schumacher, 2004)",    drs: 2, tags: ["High-deg","Technical","Sprint"],                  desc: "Shanghai's long back straight enables DRS battles. Tyres take a heavy hit through the sweeping final sector. A Sprint weekend." },
+  { round: 3,  flag: "🇯🇵", name: "Japanese GP",          circuit: "Suzuka",                   mapUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/c/ce/Suzuka_circuit_map.svg/320px-Suzuka_circuit_map.svg.png", date: "2026-03-29T05:00:00Z",  laps: 53, length: "5.807 km", lapRecord: "1:30.983 (Verstappen, 2023)",      drs: 2, tags: ["Driver Favourite","Figure-8","High Speed"],       desc: "One of the most beloved circuits in the world. Suzuka's figure-of-eight layout and legendary corners like 130R and the Esses make it a true driver's circuit." },
+  { round: 4,  flag: "🇧🇭", name: "Bahrain GP",           circuit: "Bahrain International",    mapUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/8/8c/Bahrain_International_Circuit_map.svg/320px-Bahrain_International_Circuit_map.svg.png", date: "2026-04-12T15:00:00Z",  laps: 57, length: "5.412 km", lapRecord: "1:31.447 (De La Rosa, 2005)",      drs: 3, tags: ["Night Race","High Deg","Dusty"],                  desc: "Run under floodlights, Bahrain is famous for heavy tyre degradation and sandy, abrasive asphalt. Sector 2's flowing middle section rewards mechanical grip." },
+  { round: 5,  flag: "🇸🇦", name: "Saudi Arabian GP",     circuit: "Jeddah Corniche",          mapUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/1/1f/Jeddah_Corniche_Circuit_map.svg/320px-Jeddah_Corniche_Circuit_map.svg.png", date: "2026-04-19T17:00:00Z",  laps: 50, length: "6.174 km", lapRecord: "1:30.734 (Verstappen, 2021)",      drs: 3, tags: ["Fastest Street","Night Race","Walls"],             desc: "The fastest street circuit on the calendar. Walls are millimetres away at 300+ km/h. Safety cars are virtually guaranteed. Terrifying and spectacular in equal measure." },
+  { round: 6,  flag: "🇺🇸", name: "Miami GP",             circuit: "Miami International",      mapUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/b/bf/Miami_International_Autodrome_track_map.svg/320px-Miami_International_Autodrome_track_map.svg.png", date: "2026-05-03T19:00:00Z",  laps: 57, length: "5.412 km", lapRecord: "1:29.708 (Verstappen, 2023)",      drs: 3, tags: ["Street","Spectacle","Sprint"],                   desc: "F1's glamorous American showcase. Built around the Hard Rock Stadium. The fake marina is iconic. A Sprint weekend." },
+  { round: 7,  flag: "🇨🇦", name: "Canadian GP",          circuit: "Gilles Villeneuve",        mapUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e8/Circuit_Gilles_Villeneuve_track_map.svg/320px-Circuit_Gilles_Villeneuve_track_map.svg.png", date: "2026-05-24T18:00:00Z",  laps: 70, length: "4.361 km", lapRecord: "1:13.078 (Bottas, 2019)",          drs: 3, tags: ["Wall of Champions","Braking","Sprint"],            desc: "The legendary Wall of Champions has claimed countless cars. Heavy braking zones and long straights create genuine overtaking. A Sprint weekend." },
+  { round: 8,  flag: "🇲🇨", name: "Monaco GP",            circuit: "Circuit de Monaco",        mapUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/3/32/Circuit_de_Monaco.svg/320px-Circuit_de_Monaco.svg.png", date: "2026-06-07T13:00:00Z",  laps: 78, length: "3.337 km", lapRecord: "1:12.909 (Leclerc, 2024)",         drs: 1, tags: ["Iconic","No Overtaking","Prestige"],               desc: "The jewel of the F1 calendar. Impossibly narrow streets, yachts in the harbour, zero overtaking. Monaco is about qualifying — P1 Saturday usually means P1 Sunday." },
+  { round: 9,  flag: "🇪🇸", name: "Barcelona-Catalunya GP",circuit: "Circuit de Barcelona-Catalunya", mapUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/4/47/Circuit_de_Barcelona-Catalunya_track_map.svg/320px-Circuit_de_Barcelona-Catalunya_track_map.svg.png", date: "2026-06-14T13:00:00Z", laps: 66, length: "4.657 km", lapRecord: "1:16.330 (Verstappen, 2023)", drs: 2, tags: ["Benchmark","High Deg","Testing Venue"],           desc: "Teams know this circuit better than any other — F1's main winter testing venue. A true benchmark for car performance. The Spanish GP name moves to Madrid in 2026." },
+  { round: 10, flag: "🇦🇹", name: "Austrian GP",          circuit: "Red Bull Ring",            mapUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/8/81/Red_Bull_Ring_track_map.svg/320px-Red_Bull_Ring_track_map.svg.png", date: "2026-06-28T13:00:00Z",  laps: 71, length: "4.318 km", lapRecord: "1:05.619 (Leclerc, 2020)",         drs: 3, tags: ["Short Lap","High Speed","Spectacle"],             desc: "One of F1's shortest laps but packed with high-speed corners. Tifosi and Orange Army fans make the grandstands a cauldron." },
+  { round: 11, flag: "🇬🇧", name: "British GP",           circuit: "Silverstone",              mapUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c3/Silverstone_circuit_map.svg/320px-Silverstone_circuit_map.svg.png", date: "2026-07-05T14:00:00Z",  laps: 52, length: "5.891 km", lapRecord: "1:27.097 (Hamilton, 2020)",        drs: 2, tags: ["High Speed","Home Race","Sprint"],                desc: "Home of British motorsport. Maggotts-Becketts-Chapel is arguably the most spectacular sequence in F1. A Sprint weekend." },
+  { round: 12, flag: "🇧🇪", name: "Belgian GP",           circuit: "Spa-Francorchamps",        mapUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/1/1f/Spa-Francorchamps_circuit.svg/320px-Spa-Francorchamps_circuit.svg.png", date: "2026-07-19T13:00:00Z",  laps: 44, length: "7.004 km", lapRecord: "1:46.286 (Bottas, 2018)",          drs: 2, tags: ["Longest Circuit","Eau Rouge","Weather"],           desc: "The greatest circuit in the world according to many drivers. Eau Rouge/Raidillon is breathtaking. Weather can change lap by lap — dry, wet, and back again." },
+  { round: 13, flag: "🇭🇺", name: "Hungarian GP",         circuit: "Hungaroring",              mapUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/9/9e/Hungaroring_track_map.svg/320px-Hungaroring_track_map.svg.png", date: "2026-07-26T13:00:00Z",  laps: 70, length: "4.381 km", lapRecord: "1:16.627 (Hamilton, 2020)",        drs: 2, tags: ["Monaco of non-streets","Hot","Tactical"],          desc: "Often called the Monaco of non-street circuits for its lack of overtaking. Extremely hot and physically demanding. Strategy and qualifying are everything." },
+  { round: 14, flag: "🇳🇱", name: "Dutch GP",             circuit: "Zandvoort",                mapUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b0/Zandvoort_circuit_2021.svg/320px-Zandvoort_circuit_2021.svg.png", date: "2026-08-23T13:00:00Z",  laps: 72, length: "4.259 km", lapRecord: "1:11.097 (Verstappen, 2023)",      drs: 2, tags: ["Banked Corners","Orange Army","Sprint"],            desc: "The final Dutch GP on the calendar — Zandvoort drops off after 2026. Unique banked corners. A Sprint weekend. The Orange Army goes all out for one last home race." },
+  { round: 15, flag: "🇮🇹", name: "Italian GP",           circuit: "Monza",                    mapUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c8/Monza_track_map.svg/320px-Monza_track_map.svg.png", date: "2026-09-06T13:00:00Z",  laps: 53, length: "5.793 km", lapRecord: "1:21.046 (Barrichello, 2004)",     drs: 3, tags: ["Temple of Speed","Slipstream","Tifosi"],           desc: "The Temple of Speed. Monza is all about raw horsepower and slipstreaming battles. The Tifosi are some of sport's most passionate fans. Engine manufacturers' playground." },
+  { round: 16, flag: "🇪🇸", name: "Spanish GP",           circuit: "Madrid Street Circuit",    mapUrl: "", date: "2026-09-13T13:00:00Z",  laps: 0,  length: "TBC",       lapRecord: "N/A — debut race",                drs: 0, tags: ["NEW VENUE","Street","Madrid Debut"],                 desc: "Madrid makes its F1 debut in 2026. The Spanish GP moves from Barcelona to a brand new street circuit built around the IFEMA convention centre in the Spanish capital." },
+  { round: 17, flag: "🇦🇿", name: "Azerbaijan GP",        circuit: "Baku City Circuit",        mapUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d8/Baku_City_Circuit_track_map.svg/320px-Baku_City_Circuit_track_map.svg.png", date: "2026-09-26T11:00:00Z",  laps: 51, length: "6.003 km", lapRecord: "1:43.009 (Leclerc, 2019)",         drs: 2, tags: ["Street","Chaos","Saturday Race"],                  desc: "Baku is F1's chaos capital — and in 2026 it's a Saturday race. The longest straight on the calendar leads into an incredibly tight castle section. Drama guaranteed." },
+  { round: 18, flag: "🇸🇬", name: "Singapore GP",         circuit: "Marina Bay",               mapUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/5/5f/Marina_Bay_Street_Circuit_Track_Map.svg/320px-Marina_Bay_Street_Circuit_Track_Map.svg.png", date: "2026-10-11T12:00:00Z",  laps: 62, length: "4.940 km", lapRecord: "1:35.867 (Russell, 2023)",         drs: 3, tags: ["Night Race","Street","Sprint"],                    desc: "The original night race. Stifling humidity and heat make it the most physically demanding event of the year. A Sprint weekend." },
+  { round: 19, flag: "🇺🇸", name: "US GP",                circuit: "Circuit of the Americas",  mapUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/5/55/Circuit_of_the_Americas_track_map.svg/320px-Circuit_of_the_Americas_track_map.svg.png", date: "2026-10-25T19:00:00Z",  laps: 56, length: "5.513 km", lapRecord: "1:36.169 (Hamilton, 2019)",        drs: 2, tags: ["Undulation","Turn 1","Fan Favourite"],              desc: "COTA's dramatic uphill Turn 1 is one of the most iconic starts in F1. Huge elevation changes throughout the lap. Austin fans bring serious American energy." },
+  { round: 20, flag: "🇲🇽", name: "Mexican GP",           circuit: "Hermanos Rodríguez",       mapUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c3/Hermanos_Rodriguez_track_map.svg/320px-Hermanos_Rodriguez_track_map.svg.png", date: "2026-11-01T20:00:00Z",  laps: 71, length: "4.304 km", lapRecord: "1:17.774 (Bottas, 2021)",          drs: 3, tags: ["High Altitude","Low Downforce","Party"],            desc: "High altitude (2,240m) means thin air — engine power is reduced, and downforce behaves differently. Mexico City fans are the most passionate on the calendar." },
+  { round: 21, flag: "🇧🇷", name: "Brazilian GP",         circuit: "Interlagos",               mapUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c3/Interlagos_circuit.svg/320px-Interlagos_circuit.svg.png", date: "2026-11-08T17:00:00Z",  laps: 71, length: "4.309 km", lapRecord: "1:10.540 (Barrichello, 2004)",     drs: 2, tags: ["Sprint","Anticlockwise","Dramatic"],              desc: "Interlagos runs anticlockwise. The atmosphere is electric — Brazilian fans are legendary. The circuit has produced some of the greatest moments in F1 history." },
+  { round: 22, flag: "🇺🇸", name: "Las Vegas GP",         circuit: "Las Vegas Strip",          mapUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6e/Las_Vegas_Street_Circuit_track_map.svg/320px-Las_Vegas_Street_Circuit_track_map.svg.png", date: "2026-11-21T06:00:00Z",  laps: 50, length: "6.201 km", lapRecord: "1:35.490 (Leclerc, 2023)",         drs: 2, tags: ["Night Race","Saturday Race","Spectacle"],           desc: "F1 on the Strip — a Saturday night race. The longest night race on the calendar through the neon heart of Las Vegas. Bitterly cold conditions create tyre drama." },
+  { round: 23, flag: "🇶🇦", name: "Qatar GP",             circuit: "Lusail",                   mapUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/7/7e/Losail_International_Circuit_track_map.svg/320px-Losail_International_Circuit_track_map.svg.png", date: "2026-11-29T15:00:00Z",  laps: 57, length: "5.380 km", lapRecord: "1:24.319 (Russell, 2023)",         drs: 2, tags: ["Sprint","High Speed","Night"],                    desc: "Lusail is a flowing, high-speed circuit under lights. Heavy tyre degradation and physically demanding corners. A Sprint weekend." },
+  { round: 24, flag: "🇦🇪", name: "Abu Dhabi GP",         circuit: "Yas Marina",               mapUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d5/Yas_Marina_Circuit_layout.svg/320px-Yas_Marina_Circuit_layout.svg.png", date: "2026-12-06T13:00:00Z",  laps: 58, length: "5.281 km", lapRecord: "1:26.103 (Leclerc, 2023)",         drs: 3, tags: ["Season Finale","Twilight","Championships"],        desc: "The season finale. Yas Marina runs from sunset into night — stunning visually. Championships are won and lost here, and it's where the paddock says goodbye for another year." },
 ];
 
 // ─── QUIZ DATA ────────────────────────────────────────────────────────────────
@@ -3255,18 +3385,62 @@ function PointsGraph({ standings }) {
 
 // ─── GLOBAL SEARCH ────────────────────────────────────────────────────────────
 const SEARCH_INDEX = [
-  ...ACTIVE_DRIVERS_2026.map(d => ({ type: "Driver", title: d.name, sub: d.team, section: "drivers", icon: "🏎️", color: d.color })),
-  ...GLOSSARY.map(g => ({ type: "Term", title: g.term, sub: g.def?.slice(0, 60) + "…", section: "glossary", icon: "📖", color: "#e10600" })),
-  ...RACE_CALENDAR_2026.map(r => ({ type: "Circuit", title: r.name, sub: r.circuit, section: "circuits", icon: "🗺️", color: "#00dc78", extra: r.flag })),
-  { type: "Section", title: "Driver Compare", sub: "Radar chart — pick any two drivers", section: "drivercompare", icon: "🆚", color: "#FF8000" },
+  // Drivers — full name, team, bio keywords
+  ...DRIVERS_2025.map(d => ({
+    type: "Driver", title: d.name, sub: `${d.team} · ${d.championships ? d.championships + "× Champion · " : ""}${d.wins} wins`,
+    section: "drivers", icon: "🏎️", color: d.teamColor, extra: `#${d.number}`
+  })),
+  // Glossary — full definition searchable
+  ...GLOSSARY.map(g => ({
+    type: "Term", title: g.term, sub: g.def.slice(0, 80) + "…",
+    section: "glossary", icon: "📖", color: g.catColor || "#e10600",
+    keywords: g.def.toLowerCase()
+  })),
+  // Circuits — name, circuit, description, tags all searchable
+  ...RACE_CALENDAR_2026.map(r => ({
+    type: "Circuit", title: r.name, sub: `${r.circuit} · Round ${r.round} · ${r.length}`,
+    section: "circuits", icon: "🗺️", color: "#00dc78", extra: r.flag,
+    keywords: (r.desc + " " + r.tags.join(" ")).toLowerCase()
+  })),
+  // Rules — title and plain text searchable
+  ...F1_RULES.map(rule => ({
+    type: "Rule", title: rule.title, sub: rule.plain.slice(0, 80) + "…",
+    section: "rules", icon: rule.icon, color: "#FFD700",
+    keywords: (rule.plain + " " + rule.example).toLowerCase()
+  })),
+  // Teams
+  ...TEAMS_2026.map(t => ({
+    type: "Team", title: t.name, sub: `${t.engine} · ${t.drivers.join(" & ")}`,
+    section: "teams", icon: "🔧", color: t.color,
+    keywords: (t.desc + " " + t.engineNote).toLowerCase()
+  })),
+  // Sections
+  { type: "Section", title: "How F1 Works", sub: "Race weekends, qualifying, tyres & strategy", section: "how", icon: "🏁", color: "#e10600" },
+  { type: "Section", title: "Points System", sub: "How points are scored & championships decided", section: "points", icon: "📊", color: "#e10600" },
+  { type: "Section", title: "Driver Compare", sub: "Radar chart — pick any two drivers head-to-head", section: "drivercompare", icon: "🆚", color: "#FF8000" },
   { type: "Section", title: "Championship Tracker", sub: "Round-by-round WDC battle 2021–2024", section: "championship", icon: "📈", color: "#3671C6" },
-  { type: "Section", title: "Tyre Strategy", sub: "Pit stop strategies from iconic races", section: "tyrestrategy", icon: "🏎", color: "#FFD700" },
-  { type: "Section", title: "Which Team Are You?", sub: "Personality quiz — find your F1 team", section: "teamquiz", icon: "🎯", color: "#229971" },
-  { type: "Section", title: "Teammate H2H", sub: "2024 qualifying and race head-to-head stats", section: "h2h", icon: "⚔️", color: "#9966FF" },
-  { type: "Section", title: "Race Predictor", sub: "Build your predicted top 10 grid", section: "predictor", icon: "🔮", color: "#e10600" },
+  { type: "Section", title: "Tyre Strategy", sub: "Pit stop strategies from iconic races visualised", section: "tyrestrategy", icon: "🏎", color: "#FFD700" },
+  { type: "Section", title: "Which Team Are You?", sub: "8 personality questions to find your F1 team", section: "teamquiz", icon: "🎯", color: "#229971" },
+  { type: "Section", title: "Teammate H2H", sub: "2024 qualifying & race head-to-head records", section: "h2h", icon: "⚔️", color: "#9966FF" },
+  { type: "Section", title: "Race Predictor", sub: "Build & share your predicted top 10 grid", section: "predictor", icon: "🔮", color: "#e10600" },
   { type: "Section", title: "F1 Quiz", sub: "15 questions to test your knowledge", section: "quiz", icon: "🧠", color: "#27F4D2" },
-  { type: "Section", title: "Live Results", sub: "Race results & driver standings", section: "results", icon: "🏆", color: "#FFD700" },
+  { type: "Section", title: "Live Results", sub: "Race results, driver & constructor standings", section: "results", icon: "🏆", color: "#FFD700" },
+  { type: "Section", title: "All-Time Records", sub: "Most wins, poles, titles & fastest laps in history", section: "records", icon: "🎖️", color: "#cd7f32" },
+  { type: "Section", title: "2026 Season Preview", sub: "Power rankings, race previews & rookie spotlights", section: "preview", icon: "🔭", color: "#e10600" },
+  { type: "Section", title: "F1 News", sub: "Latest headlines from Motorsport.com", section: "news", icon: "📰", color: "#00dc78" },
+  { type: "Section", title: "Driver Changes", sub: "Every major move 2018–2026 explained", section: "history", icon: "📅", color: "#606080" },
+  { type: "Section", title: "Car Compare 2025 vs 2026", sub: "Technical regulation changes side by side", section: "compare", icon: "⚡", color: "#e10600" },
 ];
+
+// Deep search — also match keywords field
+function searchIndex(query) {
+  const q = query.toLowerCase();
+  return SEARCH_INDEX.filter(item =>
+    item.title.toLowerCase().includes(q) ||
+    (item.sub || "").toLowerCase().includes(q) ||
+    (item.keywords || "").includes(q)
+  ).slice(0, 8);
+}
 
 const TYPE_COLORS = {
   Driver: "#e10600", Term: "#9966FF", Circuit: "#00dc78", Section: "#606080"
@@ -3285,12 +3459,7 @@ function GlobalSearch({ onNavigate }) {
     return () => document.removeEventListener("mousedown", handle);
   }, []);
 
-  const results = query.length > 1
-    ? SEARCH_INDEX.filter(item =>
-        item.title.toLowerCase().includes(query.toLowerCase()) ||
-        (item.sub || "").toLowerCase().includes(query.toLowerCase())
-      ).slice(0, 7)
-    : [];
+  const results = query.length > 1 ? searchIndex(query) : [];
 
   function handleKey(e) {
     if (!open) return;
@@ -3541,6 +3710,13 @@ function CircuitsSection() {
               <div className="circuit-round">R{c.round}</div>
             </div>
             <div className="circuit-body">
+              {c.mapUrl ? (
+                <img src={c.mapUrl} alt={`${c.name} circuit map`} className="circuit-map-img"
+                  onError={e => { e.target.style.display = "none"; e.target.nextSibling.style.display = "flex"; }} />
+              ) : null}
+              <div className="circuit-map-fallback" style={{ display: c.mapUrl ? "none" : "flex" }}>
+                <span style={{ fontSize: 40 }}>{c.flag}</span>
+              </div>
               <div className="circuit-stats">
                 <div className="circuit-stat-item">
                   <span className="circuit-stat-lbl">Length</span>
@@ -4474,6 +4650,290 @@ function useShareCard(picks, race) {
   return downloadShareCard;
 }
 
+// ─── 2026 SEASON PREVIEW DATA ────────────────────────────────────────────────
+const POWER_RANKINGS_2026 = [
+  { pos: 1, team: "McLaren", color: "#FF8000", drivers: "Norris / Piastri", power: 96, verdict: "Title favourites. Best driver pairing on the grid, Mercedes power expected to be strong, and they're coming off the back of 2024's fastest car. Norris is the man to beat.", tag: "🏆 FAVOURITES" },
+  { pos: 2, team: "Mercedes", color: "#27F4D2", drivers: "Russell / Antonelli", power: 91, verdict: "Own-engine team — huge advantage if their 2026 unit fires. Russell leads with maturity, Antonelli is raw but thrillingly fast. Could dominate if they nail the new regs.", tag: "⚡ DARK HORSE" },
+  { pos: 3, team: "Ferrari", color: "#E8002D", drivers: "Hamilton / Leclerc", power: 90, verdict: "Hamilton's final chapter. Ferrari's Maranello PU lab worked for years on 2026. Leclerc's raw speed plus Hamilton's championship brain makes them a massive threat.", tag: "🔥 CONTENDERS" },
+  { pos: 4, team: "Red Bull", color: "#3671C6", drivers: "Verstappen / Hadjar", power: 88, verdict: "Verstappen makes any car a title threat. Question marks over the new Ford RBPT unit in its debut year. Hadjar is exciting but unproven. VER will drag them into fights they shouldn't win.", tag: "💪 CONTENDERS" },
+  { pos: 5, team: "Aston Martin", color: "#229971", drivers: "Alonso / Stroll", power: 82, verdict: "The wild card. Honda works PU is a massive coup — Honda nearly won the title in 2021. If the engine is strong and the chassis follows, Alonso at 44 could have one last shot at glory.", tag: "🎲 WILDCARD" },
+  { pos: 6, team: "Williams", color: "#64C4FF", drivers: "Sainz / Albon", power: 74, verdict: "Best midfield lineup. Mercedes customer with a reborn chassis programme. Sainz is too good for midfield forever. Watch for big upsets at the right circuits.", tag: "📈 ON THE RISE" },
+  { pos: 7, team: "Alpine", color: "#0093CC", drivers: "Gasly / Colapinto", power: 70, verdict: "Now on Mercedes power — a massive upgrade from Renault. New PU takes time to optimise but ceiling is much higher. Colapinto is a fan favourite from his Williams cameo in 2024.", tag: "🔄 REBUILDING" },
+  { pos: 8, team: "Haas", color: "#B6BABD", drivers: "Ocon / Bearman", power: 66, verdict: "Ferrari customer keeps them relevant. Bearman is a future star, Ocon is solid. They'll punch above their weight when Ferrari's PU advantage kicks in.", tag: "🎯 SOLID MID" },
+  { pos: 9, team: "Audi F1", color: "#BB0A21", drivers: "Hülkenberg / Bortoleto", power: 60, verdict: "The most fascinating wildcard in years. A brand new manufacturer with zero F1 engine experience. Could be surprisingly competitive or genuinely off the pace — nobody knows. Bortoleto is electrifying.", tag: "❓ UNKNOWN" },
+  { pos: 10, team: "Racing Bulls", color: "#6692FF", drivers: "Lawson / Lindblad", power: 58, verdict: "Ford RBPT customer inherits Red Bull's tech but usually a step behind. Lawson rebuilding after his RB demotion. Lindblad is the youngest on the grid — thrilling potential.", tag: "🌱 REBUILDING" },
+  { pos: 11, team: "Cadillac", color: "#CC0000", drivers: "Bottas / Pérez", power: 44, verdict: "Rookie team with veteran drivers — perfect symmetry. Ferrari customer engine gives them a competitive baseline. Realistic target: finish races, stay inside 107%, and shock everyone once. That's Year 1.", tag: "🇺🇸 NEW ENTRANT" },
+];
+
+const RACE_PREVIEWS_2026 = [
+  { round: 1, flag: "🇦🇺", name: "Australian GP", circuit: "Albert Park", date: "Mar 8", pick: "Norris", pickColor: "#FF8000", prediction: "McLaren won 3 of the last 4 Australian GPs. Norris loves flowing circuits. Verstappen will hunt him down but lacks the race pace to overtake.", rating: "⭐⭐⭐⭐", watchFor: "First glimpse of 2026 power unit pecking order" },
+  { round: 2, flag: "🇨🇳", name: "Chinese GP", circuit: "Shanghai", date: "Mar 15", pick: "Russell", pickColor: "#27F4D2", prediction: "If Mercedes nail the new PU, Shanghai is exactly where they'll announce themselves. Long straights, engine-sensitive. Russell's clean racecraft suits a high-tyre-deg opener.", rating: "⭐⭐⭐⭐⭐", watchFor: "Mercedes home PU advantage on debut" },
+  { round: 3, flag: "🇯🇵", name: "Japanese GP", circuit: "Suzuka", date: "Mar 29", pick: "Verstappen", pickColor: "#3671C6", prediction: "Verstappen has won 3 of the last 3 at Suzuka. His feel for high-speed corners is unmatched. Even if Red Bull are a step back, this is his track. Practically guaranteed.", rating: "⭐⭐⭐⭐⭐", watchFor: "Can any 2026 car match the Red Bull at Suzuka?" },
+  { round: 8, flag: "🇲🇨", name: "Monaco GP", circuit: "Monte Carlo", date: "Jun 7", pick: "Leclerc", pickColor: "#E8002D", prediction: "Leclerc dominated Monaco qualifying in 2024 and 2022. His local circuit mastery is unreal. Hamilton is hunting his first Monaco win — the one gap in his record. Ferrari infight incoming.", rating: "⭐⭐⭐⭐⭐", watchFor: "Hamilton's one missing trophy. Leclerc defending his home turf." },
+  { round: 12, flag: "🇧🇪", name: "Belgian GP", circuit: "Spa-Francorchamps", date: "Jul 19", pick: "Alonso", pickColor: "#229971", prediction: "If the Honda PU is as strong as hoped, Spa's Kemmel Straight is where it shows up. Alonso won here in 2013 in what many call the greatest single wet-weather drive of the modern era.", rating: "⭐⭐⭐⭐⭐", watchFor: "Honda vs Mercedes vs Ferrari power — the engine war verdict" },
+  { round: 17, flag: "🇦🇿", name: "Azerbaijan GP", circuit: "Baku", date: "Sep 26", pick: "Safety Car", pickColor: "#ffc800", prediction: "Baku produces carnage every single year. The longest straight + tightest walls + battle-hungry midfield = guaranteed drama. Winner could be anyone. Cadillac's best shot at a shock result.", rating: "⭐⭐⭐⭐⭐", watchFor: "Pure anarchy. Cadillac's debut upset potential." },
+];
+
+const ROOKIES_2026 = [
+  { name: "Isack Hadjar", flag: "🇫🇷🇩🇿", team: "Red Bull Racing", color: "#3671C6", number: 6, age: 20, background: "French-Algerian. Red Bull junior. Won F2 2024. Promoted to Red Bull after impressing at Racing Bulls in 2025. The seat Tsunoda was controversially overlooked for.", potential: 95, watchFor: "Being Verstappen's teammate is the hardest job in F1. How close can he get?" },
+  { name: "Arvid Lindblad", flag: "🇬🇧🇸🇪", team: "Racing Bulls", color: "#6692FF", number: 8, age: 18, background: "British-Swedish. Red Bull junior. Youngest on the 2026 grid. Won Formula 3 at 17. Skipped most of F2 — Red Bull believe he's ready now. Born in 2007.", potential: 90, watchFor: "The youngest driver since Max Verstappen in 2015. Raw talent vs steep learning curve." },
+  { name: "Gabriel Bortoleto", flag: "🇧🇷", team: "Audi F1", color: "#BB0A21", number: 5, age: 21, background: "Brazilian. McLaren junior before Audi. Won F2 and F3 consecutively. Compelling personality. Stepping into the hardest team situation on the grid — brand new manufacturer.", potential: 88, watchFor: "How does he handle a brand new car, brand new manufacturer, and massive expectations?" },
+  { name: "Oliver Bearman", flag: "🇬🇧", team: "Haas", color: "#B6BABD", number: 87, age: 20, background: "British. Ferrari junior. Scored points on two F1 substitute appearances in 2024. Full debut in 2025 with Haas. Now in his second season — the step where you find out if someone is truly quick.", potential: 85, watchFor: "His second year is the real test. First impressions were stellar." },
+  { name: "Franco Colapinto", flag: "🇦🇷", team: "Alpine", color: "#0093CC", number: 43, age: 22, background: "Argentine. Burst onto the scene in 8 races at Williams in 2024 after Sargeant dropped. Argentina went wild. Alpine signed him for 2026 after Doohan was dropped mid-2025.", potential: 83, watchFor: "Wild card. Proved himself in 8 races. Now gets a full season to show it wasn't a fluke." },
+];
+
+// ─── HOMEPAGE SECTION ────────────────────────────────────────────────────────
+function HomeSection({ onNavigate }) {
+  const nextRace = RACE_CALENDAR_2026.find(r => new Date(r.date) > new Date()) || RACE_CALENDAR_2026[RACE_CALENDAR_2026.length - 1];
+  const upcomingRaces = RACE_CALENDAR_2026.filter(r => new Date(r.date) > new Date()).slice(0, 3);
+
+  const QUICK_LINKS = [
+    { id: "drivers",      icon: "🏎️", label: "Drivers",           sub: "All 22 on the 2026 grid" },
+    { id: "circuits",     icon: "🗺️", label: "Circuits",          sub: "24 races, maps & times" },
+    { id: "results",      icon: "🏆", label: "Live Results",       sub: "Powered by OpenF1 API" },
+    { id: "preview",      icon: "🔭", label: "Season Preview",     sub: "Power rankings & picks" },
+    { id: "drivercompare",icon: "🆚", label: "Driver Compare",     sub: "Head-to-head radar chart" },
+    { id: "championship", icon: "📈", label: "Battle Tracker",     sub: "WDC drama round by round" },
+    { id: "teamquiz",     icon: "🎯", label: "Which team are you?",sub: "Find your F1 personality" },
+    { id: "tyrestrategy", icon: "🏎",  label: "Tyre Strategy",      sub: "Iconic pit stop visualised" },
+    { id: "news",         icon: "📰", label: "F1 News",            sub: "Live from Motorsport.com" },
+    { id: "quiz",         icon: "🧠", label: "F1 Quiz",            sub: "Test your knowledge" },
+    { id: "glossary",     icon: "📖", label: "Glossary",           sub: "Every term explained" },
+    { id: "h2h",          icon: "⚔️", label: "Teammate H2H",       sub: "2024 qualifying battles" },
+  ];
+
+  const CHANGELOG = [
+    { color: "#e10600", text: "2026 Season Preview added — power rankings, race picks & rookie spotlights" },
+    { color: "#FF8000", text: "Circuit maps now show Wikimedia circuit layouts on every card" },
+    { color: "#27F4D2", text: "Search now covers glossary definitions, rules text & circuit descriptions" },
+    { color: "#00dc78", text: "Driver Compare radar chart, Championship Tracker & Team Quiz added" },
+    { color: "#9966FF", text: "Mobile bottom tab bar, bookmarks, onboarding flow & share card added" },
+  ];
+
+  return (
+    <div>
+      {/* Welcome hero */}
+      <div className="home-hero">
+        <div style={{ fontFamily: "Orbitron", fontSize: 10, color: "#e10600", letterSpacing: 4, marginBottom: 8, textTransform: "uppercase" }}>Welcome to</div>
+        <div style={{ fontFamily: "Orbitron", fontSize: "clamp(22px, 5vw, 36px)", fontWeight: 900, color: "var(--text)", lineHeight: 1.1, marginBottom: 8 }}>
+          The F1 <span style={{ color: "#e10600", textShadow: "0 0 30px rgba(225,6,0,0.4)" }}>Beginner's</span> Guide
+        </div>
+        <p style={{ fontSize: 13, color: "var(--text3)", lineHeight: 1.75, maxWidth: 520, marginBottom: 20 }}>
+          Everything you need to understand Formula 1 — from your first race weekend to tyre strategy, driver politics, and the full 2026 season. Start anywhere, go deep everywhere.
+        </p>
+        <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
+          <button onClick={() => onNavigate("how")} style={{ padding: "10px 20px", background: "#e10600", border: "none", color: "#fff", fontFamily: "Orbitron", fontSize: 10, letterSpacing: 2, cursor: "pointer", borderRadius: 8, boxShadow: "0 4px 20px rgba(225,6,0,0.35)", transition: "all 0.2s" }}
+            onMouseEnter={e => e.currentTarget.style.transform = "translateY(-2px)"}
+            onMouseLeave={e => e.currentTarget.style.transform = ""}>
+            START HERE →
+          </button>
+          <button onClick={() => onNavigate("preview")} style={{ padding: "10px 20px", background: "transparent", border: "1px solid var(--border2)", color: "var(--text2)", fontFamily: "Orbitron", fontSize: 10, letterSpacing: 2, cursor: "pointer", borderRadius: 8, transition: "all 0.2s" }}
+            onMouseEnter={e => { e.currentTarget.style.borderColor="#e10600"; e.currentTarget.style.color="#e10600"; }}
+            onMouseLeave={e => { e.currentTarget.style.borderColor=""; e.currentTarget.style.color=""; }}>
+            2026 SEASON →
+          </button>
+        </div>
+      </div>
+
+      {/* Next race */}
+      {nextRace && (
+        <div style={{ marginBottom: 28 }}>
+          <div className="home-section-title">NEXT RACE</div>
+          <div className="featured-race-card" style={{ cursor: "pointer" }} onClick={() => onNavigate("circuits")}>
+            <div className="featured-race-flag">{nextRace.flag}</div>
+            <div className="featured-race-info">
+              <div className="featured-race-label">Round {nextRace.round} · {nextRace.circuit}</div>
+              <div className="featured-race-name">{nextRace.name}</div>
+              <div className="featured-race-sub">{new Date(nextRace.date).toLocaleDateString("en-GB", { weekday: "long", day: "numeric", month: "long" })}</div>
+              {upcomingRaces.length > 1 && (
+                <div style={{ marginTop: 8, display: "flex", gap: 8, flexWrap: "wrap" }}>
+                  {upcomingRaces.slice(1, 3).map(r => (
+                    <span key={r.round} style={{ fontSize: 10, color: "var(--text4)", background: "var(--bg3)", padding: "2px 8px", borderRadius: 20 }}>
+                      {r.flag} R{r.round} · {new Date(r.date).toLocaleDateString("en-GB", { day: "numeric", month: "short" })}
+                    </span>
+                  ))}
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Quick access grid */}
+      <div className="home-section-title">EXPLORE</div>
+      <div className="home-quick-grid">
+        {QUICK_LINKS.map(q => (
+          <div key={q.id} className="home-quick-card" onClick={() => onNavigate(q.id)}>
+            <div className="home-quick-icon">{q.icon}</div>
+            <div className="home-quick-label">{q.label}</div>
+            <div className="home-quick-sub">{q.sub}</div>
+          </div>
+        ))}
+      </div>
+
+      {/* Power rankings teaser */}
+      <div style={{ marginBottom: 28 }}>
+        <div className="home-section-title">2026 POWER RANKINGS</div>
+        {POWER_RANKINGS_2026.slice(0, 5).map(r => (
+          <div key={r.team} className="power-rank-row" onClick={() => onNavigate("preview")}>
+            <div className="power-rank-num" style={{ color: r.pos <= 3 ? r.color : "var(--text4)" }}>
+              {r.pos <= 3 ? ["🥇","🥈","🥉"][r.pos - 1] : r.pos}
+            </div>
+            <div style={{ width: 12, height: 12, borderRadius: 3, background: r.color, flexShrink: 0 }} />
+            <div style={{ flex: 1, minWidth: 0 }}>
+              <div style={{ fontSize: 13, fontWeight: 700, color: "var(--text)" }}>{r.team}</div>
+              <div style={{ fontSize: 10, color: "var(--text4)" }}>{r.drivers}</div>
+            </div>
+            <div className="power-rank-bar" style={{ maxWidth: 120 }}>
+              <div className="power-rank-fill" style={{ width: `${r.power}%`, background: r.color, boxShadow: `0 0 6px ${r.color}60` }} />
+            </div>
+            <div style={{ fontSize: 11, fontFamily: "Orbitron", color: r.color, minWidth: 28, textAlign: "right" }}>{r.power}</div>
+          </div>
+        ))}
+        <button onClick={() => onNavigate("preview")} style={{ width: "100%", marginTop: 8, padding: "9px", background: "transparent", border: "1px solid var(--border2)", color: "var(--text3)", fontFamily: "Orbitron", fontSize: 9, letterSpacing: 2, cursor: "pointer", borderRadius: 8, transition: "all 0.2s" }}
+          onMouseEnter={e => { e.currentTarget.style.borderColor="#e10600"; e.currentTarget.style.color="#e10600"; }}
+          onMouseLeave={e => { e.currentTarget.style.borderColor=""; e.currentTarget.style.color=""; }}>
+          VIEW ALL 11 TEAMS →
+        </button>
+      </div>
+
+      {/* What's new */}
+      <div style={{ marginBottom: 16 }}>
+        <div className="home-section-title">WHAT'S NEW</div>
+        <div className="card" style={{ padding: "14px 18px" }}>
+          {CHANGELOG.map((item, i) => (
+            <div key={i} className="changelog-item">
+              <div className="changelog-dot" style={{ background: item.color, boxShadow: `0 0 6px ${item.color}60` }} />
+              <div style={{ fontSize: 12, color: "var(--text2)", lineHeight: 1.6 }}>{item.text}</div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ─── 2026 SEASON PREVIEW SECTION ─────────────────────────────────────────────
+function SeasonPreviewSection({ onNavigate }) {
+  const [tab, setTab] = useState("power");
+
+  return (
+    <div>
+      <div className="section-title">2026 <span>Season Preview</span></div>
+      <div className="section-line" />
+      <p style={{ fontSize: 13, color: "var(--text3)", lineHeight: 1.75, marginBottom: 20 }}>
+        The 2026 season is the biggest regulation reset in F1 history. New power units, new aerodynamics, a new team, and the most competitive driver market in years. Here's the full picture.
+      </p>
+
+      <div style={{ display: "flex", gap: 8, marginBottom: 24, flexWrap: "wrap" }}>
+        {[["power","⚡ Power Rankings"], ["races","🏁 Race Picks"], ["rookies","🌱 Rookies to Watch"]].map(([k, l]) => (
+          <button key={k} className={`year-btn${tab === k ? " active" : ""}`} onClick={() => setTab(k)}>{l}</button>
+        ))}
+      </div>
+
+      {tab === "power" && (
+        <div>
+          <div className="card" style={{ marginBottom: 20, borderLeft: "3px solid #e10600" }}>
+            <p style={{ fontSize: 12, color: "var(--text2)", lineHeight: 1.75 }}>
+              <strong style={{ color: "#e10600" }}>Rankings methodology:</strong> Based on 2024/2025 chassis performance, expected 2026 power unit competitiveness, driver lineup quality, and regulation change adaptability. The new PU rules create enormous uncertainty — these rankings reflect best estimates before testing.
+            </p>
+          </div>
+          {POWER_RANKINGS_2026.map(r => (
+            <div key={r.team} className="preview-team-card" style={{ borderLeftColor: r.color, paddingLeft: 22 }}>
+              <div style={{ position: "absolute", left: 0, top: 0, bottom: 0, width: 4, background: r.color, borderRadius: "14px 0 0 14px", boxShadow: `0 0 10px ${r.color}60` }} />
+              <div style={{ display: "flex", alignItems: "flex-start", gap: 14, flexWrap: "wrap" }}>
+                <div style={{ fontFamily: "Orbitron", fontSize: 28, fontWeight: 900, color: r.color, minWidth: 36, lineHeight: 1 }}>
+                  {r.pos <= 3 ? ["🥇","🥈","🥉"][r.pos - 1] : `P${r.pos}`}
+                </div>
+                <div style={{ flex: 1, minWidth: 200 }}>
+                  <div style={{ display: "flex", alignItems: "center", gap: 10, flexWrap: "wrap", marginBottom: 4 }}>
+                    <span style={{ fontFamily: "Orbitron", fontSize: 14, fontWeight: 900, color: "var(--text)" }}>{r.team}</span>
+                    <span className="prediction-badge" style={{ background: r.color + "18", color: r.color, border: `1px solid ${r.color}30` }}>{r.tag}</span>
+                  </div>
+                  <div style={{ fontSize: 11, color: "var(--text3)", marginBottom: 8 }}>
+                    {r.drivers}
+                  </div>
+                  <p style={{ fontSize: 12, color: "var(--text2)", lineHeight: 1.75 }}>{r.verdict}</p>
+                  <div style={{ display: "flex", alignItems: "center", gap: 10, marginTop: 10 }}>
+                    <div style={{ flex: 1, height: 6, background: "var(--bg3)", borderRadius: 3, overflow: "hidden" }}>
+                      <div style={{ height: "100%", width: `${r.power}%`, background: `linear-gradient(to right, ${r.color}80, ${r.color})`, borderRadius: 3, transition: "width 0.8s", boxShadow: `0 0 8px ${r.color}60` }} />
+                    </div>
+                    <span style={{ fontFamily: "Orbitron", fontSize: 12, color: r.color, fontWeight: 700 }}>{r.power}/100</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+
+      {tab === "races" && (
+        <div>
+          <div className="card" style={{ marginBottom: 20, borderLeft: "3px solid #e10600" }}>
+            <p style={{ fontSize: 12, color: "var(--text2)", lineHeight: 1.75 }}>
+              <strong style={{ color: "#e10600" }}>Disclaimer:</strong> These are analyst-style picks, not predictions. F1 is inherently unpredictable — the fun is seeing how wrong (or right) these calls turn out to be. Updated after each race.
+            </p>
+          </div>
+          {RACE_PREVIEWS_2026.map(r => (
+            <div key={r.round} className="preview-race-card">
+              <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 10 }}>
+                <span style={{ fontSize: 28 }}>{r.flag}</span>
+                <div style={{ flex: 1 }}>
+                  <div style={{ fontFamily: "Orbitron", fontSize: 12, fontWeight: 900, color: "var(--text)" }}>{r.name}</div>
+                  <div style={{ fontSize: 10, color: "var(--text3)" }}>R{r.round} · {r.circuit} · {r.date}</div>
+                </div>
+                <div style={{ fontSize: 10, color: "var(--text4)" }}>{r.rating}</div>
+              </div>
+              <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 8 }}>
+                <span style={{ fontSize: 9, color: "var(--text4)", fontFamily: "Orbitron", letterSpacing: 1 }}>OUR PICK:</span>
+                <span style={{ fontFamily: "Orbitron", fontSize: 11, fontWeight: 900, color: r.pickColor, textShadow: `0 0 10px ${r.pickColor}60` }}>{r.pick}</span>
+              </div>
+              <p style={{ fontSize: 12, color: "var(--text3)", lineHeight: 1.75, marginBottom: 8 }}>{r.prediction}</p>
+              <div style={{ fontSize: 10, color: "#00dc78", background: "rgba(0,220,120,0.08)", border: "1px solid rgba(0,220,120,0.2)", borderRadius: 6, padding: "4px 10px", display: "inline-block" }}>
+                👀 {r.watchFor}
+              </div>
+            </div>
+          ))}
+          <div className="card" style={{ marginTop: 16, textAlign: "center", padding: 20 }}>
+            <div style={{ fontFamily: "Orbitron", fontSize: 10, color: "var(--text3)", letterSpacing: 2 }}>MORE RACE PREVIEWS</div>
+            <p style={{ fontSize: 12, color: "var(--text4)", marginTop: 6 }}>Full-season previews will update as the 2026 calendar progresses.</p>
+          </div>
+        </div>
+      )}
+
+      {tab === "rookies" && (
+        <div>
+          <div className="card" style={{ marginBottom: 20, borderLeft: "3px solid #00dc78" }}>
+            <p style={{ fontSize: 12, color: "var(--text2)", lineHeight: 1.75 }}>
+              <strong style={{ color: "#00dc78" }}>5 rookies or near-rookies</strong> on the 2026 grid — the highest number in a decade. All of them have genuine speed. Several of them might be future world champions.
+            </p>
+          </div>
+          <div className="rookie-grid">
+            {ROOKIES_2026.map(r => (
+              <div key={r.name} className="rookie-card" style={{ borderTop: `2px solid ${r.color}` }}>
+                <div style={{ display: "flex", align: "center", justifyContent: "space-between", marginBottom: 8 }}>
+                  <span style={{ fontSize: 18 }}>{r.flag}</span>
+                  <span style={{ fontFamily: "Orbitron", fontSize: 20, fontWeight: 900, color: r.color + "40" }}>#{r.number}</span>
+                </div>
+                <div style={{ fontFamily: "Orbitron", fontSize: 13, fontWeight: 900, color: "var(--text)", marginBottom: 2 }}>{r.name}</div>
+                <div style={{ fontSize: 10, color: r.color, marginBottom: 8, fontFamily: "Orbitron", letterSpacing: 1 }}>{r.team} · Age {r.age}</div>
+                <p style={{ fontSize: 11, color: "var(--text3)", lineHeight: 1.7, marginBottom: 10 }}>{r.background}</p>
+                <div style={{ borderTop: "1px solid var(--border)", paddingTop: 8 }}>
+                  <div style={{ fontSize: 9, color: "var(--text4)", fontFamily: "Orbitron", letterSpacing: 1, marginBottom: 4 }}>CEILING</div>
+                  <div style={{ height: 6, background: "var(--bg3)", borderRadius: 3, overflow: "hidden", marginBottom: 6 }}>
+                    <div style={{ height: "100%", width: `${r.potential}%`, background: r.color, boxShadow: `0 0 6px ${r.color}60`, borderRadius: 3 }} />
+                  </div>
+                  <div style={{ fontSize: 10, color: "#00dc78", lineHeight: 1.5 }}>👀 {r.watchFor}</div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
 const NAV_GROUPS = [
   {
     label: "Learn the Basics",
@@ -4490,6 +4950,7 @@ const NAV_GROUPS = [
   {
     label: "2026 Season",
     sections: [
+      { id: "preview",      icon: "🔭", label: "Season Preview",   desc: "Power rankings, race picks & rookie spotlights" },
       { id: "drivers",      icon: "🏎️", label: "Drivers",          desc: "All 22 drivers with ratings, stats & profiles" },
       { id: "teams",        icon: "🔧", label: "Teams",             desc: "All 11 constructors across 2025 & 2026" },
       { id: "history",      icon: "📅", label: "Driver Changes",    desc: "Every major move 2018–2026 and the reason why" },
@@ -4501,7 +4962,7 @@ const NAV_GROUPS = [
   {
     label: "Race & Stats",
     sections: [
-      { id: "circuits",     icon: "🗺️", label: "Circuit Guide",    desc: "All 24 circuits with session times & calendar" },
+      { id: "circuits",     icon: "🗺️", label: "Circuit Guide",    desc: "All 24 circuits with maps, session times & calendar" },
       { id: "results",      icon: "🏆", label: "Live Results",      desc: "Race results, driver & constructor standings" },
       { id: "championship", icon: "📈", label: "Championship Tracker", desc: "Round-by-round WDC battle for 2021–2024" },
       { id: "h2h",          icon: "⚔️", label: "Teammate H2H",      desc: "2024 qualifying & race head-to-head records" },
@@ -4515,10 +4976,10 @@ const SECTIONS = NAV_GROUPS.flatMap(g => g.sections);
 
 // ─── MOBILE BOTTOM NAV ───────────────────────────────────────────────────────
 const MOBILE_QUICK_TABS = [
-  { id: "how",       icon: "🏁", label: "Learn" },
+  { id: "home",      icon: "🏠", label: "Home" },
   { id: "drivers",   icon: "🏎️", label: "Drivers" },
   { id: "circuits",  icon: "🗺️", label: "Circuits" },
-  { id: "results",   icon: "🏆", label: "Results" },
+  { id: "preview",   icon: "🔭", label: "Preview" },
   { id: "__more__",  icon: "☰",  label: "More" },
 ];
 
@@ -4607,7 +5068,7 @@ function useToast() {
 }
 
 export default function F1Guide() {
-  const [active, setActive] = useState("how");
+  const [active, setActive] = useState("home");
   const [openGroup, setOpenGroup] = useState(null);
   const [darkMode, setDarkMode] = useState(true);
   const [showOnboarding, setShowOnboarding] = useState(() => !localStorage.getItem("f1guide_visited"));
@@ -4672,6 +5133,12 @@ export default function F1Guide() {
           </div>
           <nav className="nav">
             <div className="nav-inner">
+              {/* Home shortcut */}
+              <button className={`nav-dropdown-item${active === "home" ? " active" : ""}`}
+                onClick={() => selectSection("home")}
+                style={{ display: "flex", alignItems: "center", gap: 6, padding: "8px 14px", borderRadius: 8, border: "none", background: active === "home" ? "rgba(225,6,0,0.08)" : "transparent", cursor: "pointer", color: active === "home" ? "#e10600" : "var(--text2)", fontFamily: "Exo 2, sans-serif", fontSize: 13, fontWeight: active === "home" ? 700 : 500, transition: "all 0.2s" }}>
+                🏠 Home
+              </button>
               {NAV_GROUPS.map(group => {
                 const isOpen = openGroup === group.label;
                 const hasActive = group.sections.some(s => s.id === active);
@@ -4722,6 +5189,7 @@ export default function F1Guide() {
                   </button>
                 </div>
               )}
+              {active === "home"         && <HomeSection onNavigate={selectSection} />}
               {active === "how"          && <HowItWorks />}
               {active === "points"       && <PointsSystem />}
               {active === "drivers"      && <DriversSection />}
@@ -4741,6 +5209,7 @@ export default function F1Guide() {
               {active === "teamquiz"     && <TeamQuizSection />}
               {active === "tyrestrategy" && <TyreStrategySection />}
               {active === "h2h"          && <HeadToHeadSection />}
+              {active === "preview"      && <SeasonPreviewSection onNavigate={selectSection} />}
               {active === "bookmarks"    && <BookmarksSection bookmarks={bookmarks} onNavigate={selectSection} onRemove={id => toggleBookmark(id)} />}
             </div>
           </main>
