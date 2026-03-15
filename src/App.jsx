@@ -2245,125 +2245,75 @@ function formatGap(ms) {
   return `+${m}:${(s % 60).toFixed(3).padStart(6,"0")}`;
 }
 
+// ─── Jolpica/Ergast helpers ──────────────────────────────────────────────────
+const JOLPICA = "https://api.jolpi.ca/ergast/f1";
+
+async function jolpicaGet(path) {
+  const res = await fetch(`${JOLPICA}${path}`);
+  if (!res.ok) throw new Error(`Jolpica fetch failed: ${res.status}`);
+  return res.json();
+}
+
+function ergastColor(constructorId) {
+  const MAP = {
+    red_bull: "#3671C6", ferrari: "#E8002D", mercedes: "#27F4D2",
+    mclaren: "#FF8000", aston_martin: "#229971", alpine: "#0093CC",
+    williams: "#64C4FF", haas: "#B6BABD", kick_sauber: "#52E252",
+    rb: "#6692FF", alphatauri: "#6692FF",
+  };
+  return MAP[constructorId] || "#aaa";
+}
+
 function ResultsSection() {
-  const [sessions, setSessions] = useState([]);        // all race sessions this year
-  const [selectedIdx, setSelectedIdx] = useState(0);  // which race is selected
-  const [results, setResults] = useState([]);          // race results for selected session
-  const [standings, setStandings] = useState([]);      // accumulated standings
+  const [races, setRaces] = useState([]);
+  const [selectedIdx, setSelectedIdx] = useState(0);
+  const [driverStandings, setDriverStandings] = useState([]);
+  const [constructorStandings, setConstructorStandings] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [lastUpdated, setLastUpdated] = useState(null);
 
   const YEAR = new Date().getFullYear();
 
-  // Step 1: fetch all race sessions for current year
-  async function fetchSessions() {
-    const res = await fetch(
-      `/api/openf1/sessions?session_type=Race&year=${YEAR}`
-    );
-    if (!res.ok) throw new Error("Failed to fetch sessions");
-    const data = await res.json();
-    // sort by date ascending
-    return data.sort((a, b) => new Date(a.date_start) - new Date(b.date_start));
-  }
-
-  // Step 2: fetch race positions for a session
-  async function fetchRaceResults(sessionKey) {
-    const [posRes, driversRes, lapsRes] = await Promise.all([
-      fetch(`/api/openf1/position?session_key=${sessionKey}`),
-      fetch(`/api/openf1/drivers?session_key=${sessionKey}`),
-      fetch(`/api/openf1/laps?session_key=${sessionKey}&is_pit_out_lap=false`),
-    ]);
-    const [positions, drivers, laps] = await Promise.all([
-      posRes.json(), driversRes.json(), lapsRes.json()
-    ]);
-
-    // Get last known position per driver
-    const latestPos = {};
-    for (const p of positions) {
-      if (!latestPos[p.driver_number] || p.date > latestPos[p.driver_number].date) {
-        latestPos[p.driver_number] = p;
-      }
-    }
-
-    // Map driver number → driver info
-    const driverMap = {};
-    for (const d of drivers) driverMap[d.driver_number] = d;
-
-    // Get final lap for each driver to compute gap
-    const finalLap = {};
-    for (const l of laps) {
-      if (!finalLap[l.driver_number] || l.lap_number > finalLap[l.driver_number].lap_number) {
-        finalLap[l.driver_number] = l;
-      }
-    }
-
-    // Winner's max lap
-    const winnerNum = Object.entries(latestPos).find(([,p]) => p.position === 1)?.[0];
-    const winnerLaps = winnerNum ? (finalLap[winnerNum]?.lap_number || 0) : 0;
-
-    const rows = Object.values(latestPos)
-      .sort((a, b) => a.position - b.position)
-      .map(p => {
-        const d = driverMap[p.driver_number] || {};
-        const driverLaps = finalLap[p.driver_number]?.lap_number || 0;
-        const dnf = winnerLaps > 0 && driverLaps < winnerLaps - 1;
-        return {
-          pos: p.position,
-          driverNumber: p.driver_number,
-          name: d.full_name || `Driver #${p.driver_number}`,
-          shortName: d.name_acronym || "",
-          team: d.team_name || "Unknown",
-          teamColour: d.team_colour ? `#${d.team_colour}` : teamColor(d.team_name),
-          points: p.position <= 10 && !dnf ? POINTS_MAP[p.position - 1] : 0,
-          dnf,
-          laps: driverLaps,
-          winnerLaps,
-        };
-      });
-
-    return rows;
-  }
-
-  // Build cumulative championship standings from all completed races
-  async function buildStandings(allSessions) {
-    const pts = {}; // driverName → {pts, team, teamColour}
-    for (const s of allSessions) {
-      try {
-        const rows = await fetchRaceResults(s.session_key);
-        for (const r of rows) {
-          if (!pts[r.name]) pts[r.name] = { pts: 0, team: r.team, teamColour: r.teamColour };
-          pts[r.name].pts += r.points;
-        }
-      } catch { /* skip failed sessions */ }
-    }
-    return Object.entries(pts)
-      .map(([name, v]) => ({ name, ...v }))
-      .sort((a, b) => b.pts - a.pts)
-      .map((d, i) => ({ ...d, pos: i + 1 }));
-  }
-
   async function loadAll() {
     setLoading(true);
     setError(null);
     try {
-      const allSessions = await fetchSessions();
-      if (!allSessions.length) { setSessions([]); setLoading(false); return; }
-      setSessions(allSessions);
-
-      // Default to latest completed race
-      const now = new Date();
-      const completed = allSessions.filter(s => new Date(s.date_end) < now);
-      const defaultIdx = completed.length > 0 ? completed.length - 1 : 0;
-      setSelectedIdx(defaultIdx);
-
-      // Load results for default race + full standings in parallel
-      const [raceRows, allStandings] = await Promise.all([
-        fetchRaceResults(allSessions[defaultIdx].session_key),
-        buildStandings(completed),
+      // Fetch races, driver standings, and constructor standings in parallel
+      const [racesData, drvData, ctorData] = await Promise.all([
+        jolpicaGet(`/${YEAR}/results.json?limit=50`),
+        jolpicaGet(`/${YEAR}/driverStandings.json`),
+        jolpicaGet(`/${YEAR}/constructorStandings.json`),
       ]);
-      setResults(raceRows);
-      setStandings(allStandings);
+
+      const allRaces = racesData?.MRData?.RaceTable?.Races || [];
+      // Only races with results
+      const completed = allRaces.filter(r => r.Results && r.Results.length > 0);
+      setRaces(completed);
+      if (completed.length > 0) setSelectedIdx(completed.length - 1);
+
+      // Driver standings
+      const drvList = drvData?.MRData?.StandingsTable?.StandingsLists?.[0]?.DriverStandings || [];
+      setDriverStandings(drvList.map((d, i) => ({
+        pos: i + 1,
+        name: `${d.Driver.givenName} ${d.Driver.familyName}`,
+        code: d.Driver.code || d.Driver.familyName.slice(0, 3).toUpperCase(),
+        team: d.Constructors?.[0]?.name || "—",
+        constructorId: d.Constructors?.[0]?.constructorId || "",
+        pts: parseFloat(d.points),
+        wins: parseInt(d.wins),
+      })));
+
+      // Constructor standings
+      const ctorList = ctorData?.MRData?.StandingsTable?.StandingsLists?.[0]?.ConstructorStandings || [];
+      setConstructorStandings(ctorList.map((c, i) => ({
+        pos: i + 1,
+        name: c.Constructor.name,
+        constructorId: c.Constructor.constructorId,
+        pts: parseFloat(c.points),
+        wins: parseInt(c.wins),
+      })));
+
       setLastUpdated(new Date());
     } catch (e) {
       setError(e.message || "Failed to load data");
@@ -2372,33 +2322,27 @@ function ResultsSection() {
     }
   }
 
-  async function switchRace(idx) {
-    setSelectedIdx(idx);
-    setResults([]);
-    try {
-      const rows = await fetchRaceResults(sessions[idx].session_key);
-      setResults(rows);
-    } catch { setResults([]); }
-  }
-
   // Load on mount
   useEffect(() => { loadAll(); }, []);
 
-  const selectedSession = sessions[selectedIdx];
-  const finishers = results.filter(r => !r.dnf);
-  const dnfs = results.filter(r => r.dnf);
+  const selectedRace = races[selectedIdx];
+  const raceResults = selectedRace?.Results || [];
+  const finishers = raceResults.filter(r => r.status === "Finished" || r.status?.startsWith("+"));
+  const dnfs = raceResults.filter(r => r.status !== "Finished" && !r.status?.startsWith("+"));
 
-  const thStyle = { background: "#e10600", color: "var(--text)", padding: "9px 12px", textAlign: "left", fontFamily: "Orbitron", fontSize: 10, letterSpacing: 2, textTransform: "uppercase" };
   const thStyleDark = { background: "var(--bg3)", color: "#e10600", padding: "8px 12px", fontFamily: "Orbitron", fontSize: 10, letterSpacing: 2, textTransform: "uppercase", textAlign: "left" };
+  const maxDriverPts = driverStandings[0]?.pts || 1;
+  const maxCtorPts = constructorStandings[0]?.pts || 1;
 
   return (
     <div>
       <SectionHeader title={`${YEAR}`} accent="Results" group="Race & Stats" icon="🏆"
-        intro="Live race results, driver championship standings and constructor standings — powered by the OpenF1 API." />
+        intro="Live race results, driver championship standings and constructor standings — powered by the Jolpica F1 API." />
+
       <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 16, flexWrap: "wrap" }}>
         <div style={{ display: "inline-flex", alignItems: "center", gap: 6, padding: "4px 12px", background: "rgba(0,220,120,0.08)", border: "1px solid rgba(0,220,120,0.25)", borderRadius: 20 }}>
           <div style={{ width: 6, height: 6, borderRadius: "50%", background: loading ? "#666" : "#00dc78", boxShadow: loading ? "none" : "0 0 6px #00dc78" }} />
-          <span style={{ fontSize: 10, color: "#00dc78", fontFamily: "Orbitron", letterSpacing: 1 }}>LIVE · OpenF1 API</span>
+          <span style={{ fontSize: 10, color: "#00dc78", fontFamily: "Orbitron", letterSpacing: 1 }}>LIVE · Jolpica F1 API</span>
         </div>
         {lastUpdated && <span style={{ fontSize: 10, color: "var(--text4)" }}>Updated {lastUpdated.toLocaleTimeString()}</span>}
         <button onClick={loadAll} style={{ marginLeft: "auto", padding: "6px 14px", background: "transparent", border: "1px solid var(--border2)", color: "var(--text3)", fontFamily: "Orbitron", fontSize: 9, letterSpacing: 2, cursor: "pointer", borderRadius: 20, transition: "all 0.2s" }}
@@ -2428,92 +2372,94 @@ function ResultsSection() {
         <div className="card" style={{ borderLeft: "3px solid #e10600", padding: 24, textAlign: "center" }}>
           <div style={{ fontSize: 32, marginBottom: 10 }}>📡</div>
           <div style={{ fontFamily: "Orbitron", fontSize: 11, color: "#e10600", letterSpacing: 2, marginBottom: 8 }}>DATA UNAVAILABLE</div>
-          <p style={{ fontSize: 12, color: "var(--text3)", lineHeight: 1.7, marginBottom: 14 }}>{error}. The OpenF1 API may be temporarily down, or the {YEAR} season data may not yet be available.</p>
+          <p style={{ fontSize: 12, color: "var(--text3)", lineHeight: 1.7, marginBottom: 14 }}>
+            {error} — please try again shortly.
+          </p>
           <button onClick={loadAll} style={{ padding: "8px 18px", background: "#e10600", border: "none", color: "#fff", fontFamily: "Orbitron", fontSize: 9, letterSpacing: 2, cursor: "pointer", borderRadius: 20 }}>RETRY</button>
         </div>
       )}
 
-      {!loading && !error && sessions.length === 0 && (
+      {!loading && !error && races.length === 0 && (
         <EmptyState icon="🏆" title={`NO RACES YET IN ${YEAR}`} sub="Race data will appear here once the season begins." />
       )}
 
-      {!loading && sessions.length > 0 && (
+      {!loading && races.length > 0 && (
         <>
           {/* Race selector */}
           <div style={{ marginBottom: 20 }}>
             <div style={{ fontSize: 10, color: "var(--text3)", fontFamily: "Orbitron", letterSpacing: 2, textTransform: "uppercase", marginBottom: 10 }}>Select Race</div>
             <div style={{ display: "flex", flexWrap: "wrap", gap: 6 }}>
-              {sessions.map((s, i) => {
-                const isPast = new Date(s.date_end) < new Date();
-                return (
-                  <button key={s.session_key}
-                    onClick={() => switchRace(i)}
-                    style={{
-                      padding: "5px 10px", borderRadius: 2, cursor: "pointer", fontFamily: "Orbitron",
-                      fontSize: 9, letterSpacing: 1, textTransform: "uppercase", transition: "all 0.2s",
-                      background: selectedIdx === i ? "#e10600" : "transparent",
-                      border: `1px solid ${selectedIdx === i ? "#e10600" : isPast ? "var(--border2)" : "var(--border)"}`,
-                      color: selectedIdx === i ? "#fff" : isPast ? "#888" : "#333",
-                    }}>
-                    R{i + 1} {circuitFlag(s.circuit_short_name)} {s.circuit_short_name}
-                  </button>
-                );
-              })}
+              {races.map((r, i) => (
+                <button key={r.round}
+                  onClick={() => setSelectedIdx(i)}
+                  style={{
+                    padding: "5px 10px", borderRadius: 2, cursor: "pointer", fontFamily: "Orbitron",
+                    fontSize: 9, letterSpacing: 1, textTransform: "uppercase", transition: "all 0.2s",
+                    background: selectedIdx === i ? "#e10600" : "transparent",
+                    border: `1px solid ${selectedIdx === i ? "#e10600" : "var(--border2)"}`,
+                    color: selectedIdx === i ? "#fff" : "#888",
+                  }}>
+                  R{r.round} {r.raceName.replace(" Grand Prix","").replace(" Prix","")}
+                </button>
+              ))}
             </div>
           </div>
 
           {/* Selected race header */}
-          {selectedSession && (
+          {selectedRace && (
             <div className="card" style={{ marginBottom: 20, borderLeft: "3px solid #e10600" }}>
               <div style={{ display: "flex", alignItems: "center", gap: 10, flexWrap: "wrap" }}>
                 <div style={{ fontFamily: "Orbitron", fontSize: 11, color: "#e10600", letterSpacing: 2, textTransform: "uppercase" }}>
-                  Round {selectedIdx + 1}
+                  Round {selectedRace.round}
                 </div>
                 <div style={{ fontFamily: "Orbitron", fontSize: 14, fontWeight: 700, color: "var(--text)" }}>
-                  {circuitFlag(selectedSession.circuit_short_name)} {selectedSession.meeting_name || selectedSession.circuit_short_name}
+                  {selectedRace.raceName}
                 </div>
                 <div style={{ marginLeft: "auto", fontSize: 11, color: "var(--text3)" }}>
-                  {selectedSession.country_name} · {new Date(selectedSession.date_start).toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" })}
+                  {selectedRace.Circuit?.circuitName} · {new Date(selectedRace.date).toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" })}
                 </div>
               </div>
             </div>
           )}
 
           {/* Results table */}
-          {results.length > 0 ? (
+          {raceResults.length > 0 ? (
             <>
               <div style={{ overflowX: "auto", marginBottom: 24 }}>
                 <table style={{ width: "100%", borderCollapse: "collapse", minWidth: 480 }}>
                   <thead>
                     <tr>
-                      <th style={thStyle}>Pos</th>
-                      <th style={thStyle}>Driver</th>
-                      <th style={thStyle}>Team</th>
-                      <th style={thStyle}>Pts</th>
-                      <th style={thStyle}>Laps</th>
+                      {["Pos","Driver","Team","Pts","Laps","Status"].map(h => (
+                        <th key={h} style={{ background: "#e10600", color: "#fff", padding: "9px 12px", textAlign: "left", fontFamily: "Orbitron", fontSize: 10, letterSpacing: 2, textTransform: "uppercase" }}>{h}</th>
+                      ))}
                     </tr>
                   </thead>
                   <tbody>
-                    {finishers.map(row => (
-                      <tr key={row.driverNumber} style={{ borderBottom: "1px solid var(--border)" }}>
-                        <td style={{ padding: "10px 12px" }}>
-                          <span className={`pos-badge${row.pos === 1 ? " p1" : row.pos === 2 ? " p2" : row.pos === 3 ? " p3" : ""}`}>{row.pos}</span>
-                        </td>
-                        <td style={{ padding: "10px 12px" }}>
-                          <div style={{ fontWeight: 700, color: "var(--text)", fontSize: 13 }}>{row.name}</div>
-                          <div style={{ fontSize: 10, color: "var(--text3)", marginTop: 1, fontFamily: "Orbitron" }}>{row.shortName}</div>
-                        </td>
-                        <td style={{ padding: "10px 12px" }}>
-                          <span style={{ background: row.teamColour + "22", color: row.teamColour, border: `1px solid ${row.teamColour}44`, padding: "3px 8px", borderRadius: 2, fontSize: 10, fontWeight: 700, whiteSpace: "nowrap" }}>
-                            {row.team}
-                          </span>
-                        </td>
-                        <td style={{ padding: "10px 12px", fontFamily: "Orbitron", fontWeight: 700, color: row.pos <= 3 ? "#e10600" : "#aaa", fontSize: 13 }}>
-                          {row.points || "—"}
-                        </td>
-                        <td style={{ padding: "10px 12px", fontSize: 12, color: "var(--text3)" }}>{row.laps}</td>
-                      </tr>
-                    ))}
+                    {finishers.map(row => {
+                      const cId = row.Constructor?.constructorId || "";
+                      const col = ergastColor(cId);
+                      return (
+                        <tr key={row.number} style={{ borderBottom: "1px solid var(--border)" }}>
+                          <td style={{ padding: "10px 12px" }}>
+                            <span className={`pos-badge${row.position === "1" ? " p1" : row.position === "2" ? " p2" : row.position === "3" ? " p3" : ""}`}>{row.position}</span>
+                          </td>
+                          <td style={{ padding: "10px 12px" }}>
+                            <div style={{ fontWeight: 700, color: "var(--text)", fontSize: 13 }}>{row.Driver.givenName} {row.Driver.familyName}</div>
+                            <div style={{ fontSize: 10, color: "var(--text3)", marginTop: 1, fontFamily: "Orbitron" }}>{row.Driver.code}</div>
+                          </td>
+                          <td style={{ padding: "10px 12px" }}>
+                            <span style={{ background: col + "22", color: col, border: `1px solid ${col}44`, padding: "3px 8px", borderRadius: 2, fontSize: 10, fontWeight: 700, whiteSpace: "nowrap" }}>
+                              {row.Constructor?.name}
+                            </span>
+                          </td>
+                          <td style={{ padding: "10px 12px", fontFamily: "Orbitron", fontWeight: 700, color: parseInt(row.position) <= 3 ? "#e10600" : "#aaa", fontSize: 13 }}>
+                            {row.points || "—"}
+                          </td>
+                          <td style={{ padding: "10px 12px", fontSize: 12, color: "var(--text3)" }}>{row.laps}</td>
+                          <td style={{ padding: "10px 12px", fontSize: 11, color: row.status === "Finished" ? "#00dc78" : "var(--text3)" }}>{row.status}</td>
+                        </tr>
+                      );
+                    })}
                   </tbody>
                 </table>
               </div>
@@ -2523,13 +2469,16 @@ function ResultsSection() {
                   <div className="section-title" style={{ fontSize: "clamp(13px,3vw,18px)", marginBottom: 8 }}>Did Not <span>Finish</span></div>
                   <div className="section-line" />
                   <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(min(100%,260px),1fr))", gap: 10, marginBottom: 32 }}>
-                    {dnfs.map(d => (
-                      <div key={d.driverNumber} style={{ background: "var(--card-bg)", border: "1px solid var(--border)", borderLeft: "3px solid #333", padding: "12px 14px", borderRadius: 2 }}>
-                        <div style={{ fontWeight: 700, color: "var(--text)", fontSize: 13, marginBottom: 4 }}>{d.name}</div>
-                        <div style={{ fontSize: 10, color: "var(--text3)", textTransform: "uppercase", letterSpacing: 1, marginBottom: 4 }}>{d.team}</div>
-                        <div style={{ fontSize: 11, color: "var(--text3)" }}>DNF · {d.laps} of {d.winnerLaps} laps</div>
-                      </div>
-                    ))}
+                    {dnfs.map(d => {
+                      const col = ergastColor(d.Constructor?.constructorId || "");
+                      return (
+                        <div key={d.number} style={{ background: "var(--card-bg)", border: "1px solid var(--border)", borderLeft: `3px solid ${col}`, padding: "12px 14px", borderRadius: 2 }}>
+                          <div style={{ fontWeight: 700, color: "var(--text)", fontSize: 13, marginBottom: 4 }}>{d.Driver.givenName} {d.Driver.familyName}</div>
+                          <div style={{ fontSize: 10, color: "var(--text3)", textTransform: "uppercase", letterSpacing: 1, marginBottom: 4 }}>{d.Constructor?.name}</div>
+                          <div style={{ fontSize: 11, color: "var(--text3)" }}>{d.status} · {d.laps} laps</div>
+                        </div>
+                      );
+                    })}
                   </div>
                 </>
               )}
@@ -2537,89 +2486,268 @@ function ResultsSection() {
           ) : (
             !loading && (
               <div className="card" style={{ textAlign: "center", padding: 32, marginBottom: 24 }}>
-                <div style={{ fontFamily: "Orbitron", fontSize: 10, color: "var(--text3)", letterSpacing: 2 }}>
-                  {new Date(selectedSession?.date_start) > new Date() ? "RACE NOT YET RUN" : "LOADING RESULTS..."}
-                </div>
+                <div style={{ fontFamily: "Orbitron", fontSize: 10, color: "var(--text3)", letterSpacing: 2 }}>NO RESULTS FOR THIS RACE YET</div>
               </div>
             )
           )}
 
-          {/* Championship standings */}
-          {standings.length > 0 && (
+          {/* Driver Championship Standings */}
+          {driverStandings.length > 0 && (
             <>
               <div className="section-title" style={{ fontSize: "clamp(13px,3vw,18px)", marginBottom: 8 }}>Drivers' <span>Championship</span></div>
               <div className="section-line" />
-              <PointsGraph standings={standings} />
               <div style={{ overflowX: "auto", marginBottom: 24 }}>
                 <table style={{ width: "100%", borderCollapse: "collapse", minWidth: 360 }}>
                   <thead>
                     <tr>
-                      <th style={thStyleDark}>Pos</th>
-                      <th style={thStyleDark}>Driver</th>
-                      <th style={thStyleDark}>Team</th>
-                      <th style={thStyleDark}>Pts</th>
+                      {["Pos","Driver","Team","Wins","Pts"].map(h => (
+                        <th key={h} style={thStyleDark}>{h}</th>
+                      ))}
                     </tr>
                   </thead>
                   <tbody>
-                    {standings.slice(0, 20).map(row => (
-                      <tr key={row.name} style={{ borderBottom: "1px solid var(--border)" }}>
-                        <td style={{ padding: "8px 12px" }}>
-                          <span className={`pos-badge${row.pos === 1 ? " p1" : row.pos === 2 ? " p2" : row.pos === 3 ? " p3" : ""}`}>{row.pos}</span>
-                        </td>
-                        <td style={{ padding: "8px 12px", fontSize: 13, color: row.pos <= 3 ? "#fff" : "#bbb", fontWeight: row.pos <= 3 ? 700 : 400 }}>{row.name}</td>
-                        <td style={{ padding: "8px 12px" }}>
-                          <span style={{ background: row.teamColour + "22", color: row.teamColour, border: `1px solid ${row.teamColour}44`, padding: "2px 7px", borderRadius: 2, fontSize: 10, fontWeight: 700 }}>
-                            {row.team}
-                          </span>
-                        </td>
-                        <td style={{ padding: "8px 12px", fontFamily: "Orbitron", fontWeight: 700, fontSize: 13, color: row.pos <= 3 ? "#e10600" : "#aaa" }}>{row.pts}</td>
-                      </tr>
-                    ))}
+                    {driverStandings.map(row => {
+                      const col = ergastColor(row.constructorId);
+                      return (
+                        <tr key={row.name} style={{ borderBottom: "1px solid var(--border)" }}>
+                          <td style={{ padding: "8px 12px" }}>
+                            <span className={`pos-badge${row.pos === 1 ? " p1" : row.pos === 2 ? " p2" : row.pos === 3 ? " p3" : ""}`}>{row.pos}</span>
+                          </td>
+                          <td style={{ padding: "8px 12px" }}>
+                            <div style={{ fontSize: 13, color: row.pos <= 3 ? "#fff" : "#bbb", fontWeight: row.pos <= 3 ? 700 : 400 }}>{row.name}</div>
+                            <div style={{ fontSize: 9, color: "var(--text4)", fontFamily: "Orbitron", letterSpacing: 1 }}>{row.code}</div>
+                          </td>
+                          <td style={{ padding: "8px 12px" }}>
+                            <span style={{ background: col + "22", color: col, border: `1px solid ${col}44`, padding: "2px 7px", borderRadius: 2, fontSize: 10, fontWeight: 700 }}>
+                              {row.team}
+                            </span>
+                          </td>
+                          <td style={{ padding: "8px 12px", fontFamily: "Orbitron", fontSize: 12, color: "var(--text3)" }}>{row.wins}</td>
+                          <td style={{ padding: "8px 12px", fontFamily: "Orbitron", fontWeight: 700, fontSize: 13, color: row.pos <= 3 ? "#e10600" : "#aaa" }}>{row.pts}</td>
+                        </tr>
+                      );
+                    })}
                   </tbody>
                 </table>
               </div>
+            </>
+          )}
 
-              {/* Constructor Standings */}
-              {(() => {
-                const constructors = buildConstructorStandings(standings);
-                return constructors.length > 0 ? (
-                  <>
-                    <div className="section-title" style={{ fontSize: "clamp(13px,3vw,18px)", marginBottom: 8 }}>Constructors' <span>Championship</span></div>
-                    <div className="section-line" />
-                    <div style={{ overflowX: "auto", marginBottom: 8 }}>
-                      <table style={{ width: "100%", borderCollapse: "collapse", minWidth: 300 }}>
-                        <thead>
-                          <tr>
-                            <th style={thStyleDark}>Pos</th>
-                            <th style={thStyleDark}>Constructor</th>
-                            <th style={thStyleDark}>Pts</th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          {constructors.map(row => (
-                            <tr key={row.team} style={{ borderBottom: "1px solid var(--border)" }}>
-                              <td style={{ padding: "8px 12px" }}>
-                                <span className={`pos-badge${row.pos === 1 ? " p1" : row.pos === 2 ? " p2" : row.pos === 3 ? " p3" : ""}`}>{row.pos}</span>
-                              </td>
-                              <td style={{ padding: "8px 12px" }}>
-                                <span style={{ background: row.colour + "22", color: row.colour, border: `1px solid ${row.colour}44`, padding: "2px 10px", borderRadius: 2, fontSize: 11, fontWeight: 700 }}>{row.team}</span>
-                              </td>
-                              <td style={{ padding: "8px 12px", fontFamily: "Orbitron", fontWeight: 700, fontSize: 13, color: row.pos <= 3 ? "#e10600" : "#aaa" }}>{row.pts}</td>
-                            </tr>
-                          ))}
-                        </tbody>
-                      </table>
-                    </div>
-                  </>
-                ) : null;
-              })()}
-
+          {/* Constructor Championship Standings */}
+          {constructorStandings.length > 0 && (
+            <>
+              <div className="section-title" style={{ fontSize: "clamp(13px,3vw,18px)", marginBottom: 8 }}>Constructors' <span>Championship</span></div>
+              <div className="section-line" />
+              <div style={{ overflowX: "auto", marginBottom: 8 }}>
+                <table style={{ width: "100%", borderCollapse: "collapse", minWidth: 300 }}>
+                  <thead>
+                    <tr>
+                      {["Pos","Constructor","Wins","Pts"].map(h => (
+                        <th key={h} style={thStyleDark}>{h}</th>
+                      ))}
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {constructorStandings.map(row => {
+                      const col = ergastColor(row.constructorId);
+                      return (
+                        <tr key={row.name} style={{ borderBottom: "1px solid var(--border)" }}>
+                          <td style={{ padding: "8px 12px" }}>
+                            <span className={`pos-badge${row.pos === 1 ? " p1" : row.pos === 2 ? " p2" : row.pos === 3 ? " p3" : ""}`}>{row.pos}</span>
+                          </td>
+                          <td style={{ padding: "8px 12px" }}>
+                            <span style={{ background: col + "22", color: col, border: `1px solid ${col}44`, padding: "2px 10px", borderRadius: 2, fontSize: 11, fontWeight: 700 }}>{row.name}</span>
+                          </td>
+                          <td style={{ padding: "8px 12px", fontFamily: "Orbitron", fontSize: 12, color: "var(--text3)" }}>{row.wins}</td>
+                          <td style={{ padding: "8px 12px", fontFamily: "Orbitron", fontWeight: 700, fontSize: 13, color: row.pos <= 3 ? "#e10600" : "#aaa" }}>{row.pts}</td>
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                </table>
+              </div>
               <div style={{ fontSize: 10, color: "var(--text4)", textAlign: "center", marginBottom: 4 }}>
-                After {sessions.filter(s => new Date(s.date_end) < new Date()).length} of {sessions.length} rounds · Data via OpenF1
+                After {races.length} of 24 rounds · Data via Jolpica F1 API
               </div>
             </>
           )}
         </>
+      )}
+    </div>
+  );
+}
+
+// ─── LIVE STANDINGS SECTION ───────────────────────────────────────────────────
+function LiveStandingsSection() {
+  const [driverStandings, setDriverStandings] = useState([]);
+  const [constructorStandings, setConstructorStandings] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [lastUpdated, setLastUpdated] = useState(null);
+  const YEAR = new Date().getFullYear();
+
+  async function loadStandings() {
+    setLoading(true);
+    setError(null);
+    try {
+      const [drvData, ctorData] = await Promise.all([
+        jolpicaGet(`/${YEAR}/driverStandings.json`),
+        jolpicaGet(`/${YEAR}/constructorStandings.json`),
+      ]);
+      const drvList = drvData?.MRData?.StandingsTable?.StandingsLists?.[0]?.DriverStandings || [];
+      setDriverStandings(drvList.map((d, i) => ({
+        pos: i + 1,
+        name: `${d.Driver.givenName} ${d.Driver.familyName}`,
+        code: d.Driver.code || d.Driver.familyName.slice(0,3).toUpperCase(),
+        team: d.Constructors?.[0]?.name || "—",
+        constructorId: d.Constructors?.[0]?.constructorId || "",
+        pts: parseFloat(d.points),
+        wins: parseInt(d.wins),
+      })));
+      const ctorList = ctorData?.MRData?.StandingsTable?.StandingsLists?.[0]?.ConstructorStandings || [];
+      setConstructorStandings(ctorList.map((c, i) => ({
+        pos: i + 1,
+        name: c.Constructor.name,
+        constructorId: c.Constructor.constructorId,
+        pts: parseFloat(c.points),
+        wins: parseInt(c.wins),
+      })));
+      setLastUpdated(new Date());
+    } catch(e) {
+      setError(e.message || "Failed to load standings");
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  useEffect(() => { loadStandings(); }, []);
+
+  const maxDriverPts = driverStandings[0]?.pts || 1;
+  const maxCtorPts = constructorStandings[0]?.pts || 1;
+
+  const podiumColors = ["#FFD700","#C0C0C0","#CD7F32"];
+
+  return (
+    <div>
+      <SectionHeader title={`${YEAR}`} accent="Live Standings" group="Race & Stats" icon="📊"
+        intro={`Current ${YEAR} World Drivers' and Constructors' Championship standings — always up to date.`} />
+
+      <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 20, flexWrap: "wrap" }}>
+        <div style={{ display: "inline-flex", alignItems: "center", gap: 6, padding: "4px 12px", background: "rgba(0,220,120,0.08)", border: "1px solid rgba(0,220,120,0.25)", borderRadius: 20 }}>
+          <div style={{ width: 6, height: 6, borderRadius: "50%", background: loading ? "#666" : "#00dc78", boxShadow: loading ? "none" : "0 0 6px #00dc78", animation: loading ? "none" : "pulse 2s infinite" }} />
+          <span style={{ fontSize: 10, color: "#00dc78", fontFamily: "Orbitron", letterSpacing: 1 }}>LIVE · Jolpica F1 API</span>
+        </div>
+        {lastUpdated && <span style={{ fontSize: 10, color: "var(--text4)" }}>Updated {lastUpdated.toLocaleTimeString()}</span>}
+        <button onClick={loadStandings} style={{ marginLeft: "auto", padding: "6px 14px", background: "transparent", border: "1px solid var(--border2)", color: "var(--text3)", fontFamily: "Orbitron", fontSize: 9, letterSpacing: 2, cursor: "pointer", borderRadius: 20 }}>↻ Refresh</button>
+      </div>
+
+      {loading && (
+        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16 }}>
+          {[1,2].map(i => (
+            <div key={i} className="skeleton-card">
+              <div className="skeleton skel skel-title" />
+              {[1,2,3,4,5,6,7,8].map(j => <div key={j} className="skeleton skel skel-line w-80" style={{ marginBottom: 8 }} />)}
+            </div>
+          ))}
+        </div>
+      )}
+
+      {error && !loading && (
+        <div className="card" style={{ borderLeft: "3px solid #e10600", padding: 24, textAlign: "center" }}>
+          <div style={{ fontSize: 32, marginBottom: 10 }}>📡</div>
+          <div style={{ fontFamily: "Orbitron", fontSize: 11, color: "#e10600", letterSpacing: 2, marginBottom: 8 }}>STANDINGS UNAVAILABLE</div>
+          <p style={{ fontSize: 12, color: "var(--text3)", marginBottom: 14 }}>{error}</p>
+          <button onClick={loadStandings} style={{ padding: "8px 18px", background: "#e10600", border: "none", color: "#fff", fontFamily: "Orbitron", fontSize: 9, letterSpacing: 2, cursor: "pointer", borderRadius: 20 }}>RETRY</button>
+        </div>
+      )}
+
+      {!loading && !error && driverStandings.length === 0 && (
+        <EmptyState icon="📊" title={`NO STANDINGS YET FOR ${YEAR}`} sub="Standings will appear after the first race of the season." />
+      )}
+
+      {!loading && driverStandings.length > 0 && (
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(min(100%, 520px), 1fr))", gap: 24 }}>
+
+          {/* ── Drivers' Championship ── */}
+          <div>
+            <div className="section-title" style={{ fontSize: "clamp(13px,3vw,20px)", marginBottom: 8 }}>Drivers' <span>Championship</span></div>
+            <div className="section-line" />
+            <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+              {driverStandings.map(row => {
+                const col = ergastColor(row.constructorId);
+                const pct = ((row.pts / maxDriverPts) * 100).toFixed(1);
+                const isTop3 = row.pos <= 3;
+                return (
+                  <div key={row.name} className="card" style={{
+                    padding: "12px 16px",
+                    borderLeft: `3px solid ${isTop3 ? podiumColors[row.pos-1] : col}`,
+                    transition: "all 0.2s",
+                  }}>
+                    <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 8 }}>
+                      <span style={{
+                        fontFamily: "Orbitron", fontWeight: 900, fontSize: 18,
+                        color: isTop3 ? podiumColors[row.pos-1] : "var(--text3)",
+                        minWidth: 28, textAlign: "center",
+                      }}>{row.pos}</span>
+                      <div style={{ flex: 1, minWidth: 0 }}>
+                        <div style={{ fontWeight: 700, fontSize: 14, color: "var(--text)", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{row.name}</div>
+                        <div style={{ display: "flex", alignItems: "center", gap: 6, marginTop: 2 }}>
+                          <span style={{ background: col + "22", color: col, border: `1px solid ${col}44`, padding: "1px 6px", borderRadius: 2, fontSize: 9, fontWeight: 700, fontFamily: "Orbitron" }}>{row.team}</span>
+                          {row.wins > 0 && <span style={{ fontSize: 9, color: "#FFD700", fontFamily: "Orbitron" }}>🏆 {row.wins}W</span>}
+                        </div>
+                      </div>
+                      <div style={{ fontFamily: "Orbitron", fontWeight: 900, fontSize: 22, color: isTop3 ? "#e10600" : "var(--text2)", minWidth: 48, textAlign: "right" }}>{row.pts}</div>
+                    </div>
+                    {/* Points bar */}
+                    <div style={{ height: 4, background: "var(--border)", borderRadius: 2, overflow: "hidden" }}>
+                      <div style={{ height: "100%", width: `${pct}%`, background: isTop3 ? `linear-gradient(90deg, ${podiumColors[row.pos-1]}, ${col})` : col, borderRadius: 2, transition: "width 0.8s ease", boxShadow: isTop3 ? `0 0 8px ${col}` : "none" }} />
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+
+          {/* ── Constructors' Championship ── */}
+          <div>
+            <div className="section-title" style={{ fontSize: "clamp(13px,3vw,20px)", marginBottom: 8 }}>Constructors' <span>Championship</span></div>
+            <div className="section-line" />
+            <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+              {constructorStandings.map(row => {
+                const col = ergastColor(row.constructorId);
+                const pct = ((row.pts / maxCtorPts) * 100).toFixed(1);
+                const isTop3 = row.pos <= 3;
+                return (
+                  <div key={row.name} className="card" style={{
+                    padding: "14px 16px",
+                    borderLeft: `3px solid ${isTop3 ? podiumColors[row.pos-1] : col}`,
+                    transition: "all 0.2s",
+                  }}>
+                    <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 8 }}>
+                      <span style={{
+                        fontFamily: "Orbitron", fontWeight: 900, fontSize: 20,
+                        color: isTop3 ? podiumColors[row.pos-1] : "var(--text3)",
+                        minWidth: 28, textAlign: "center",
+                      }}>{row.pos}</span>
+                      <div style={{ flex: 1, minWidth: 0 }}>
+                        <div style={{ fontWeight: 700, fontSize: 15, color: col, fontFamily: "Orbitron", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{row.name}</div>
+                        {row.wins > 0 && <div style={{ fontSize: 9, color: "#FFD700", fontFamily: "Orbitron", marginTop: 2 }}>🏆 {row.wins} win{row.wins !== 1 ? "s" : ""}</div>}
+                      </div>
+                      <div style={{ fontFamily: "Orbitron", fontWeight: 900, fontSize: 24, color: isTop3 ? "#e10600" : "var(--text2)", minWidth: 52, textAlign: "right" }}>{row.pts}</div>
+                    </div>
+                    <div style={{ height: 5, background: "var(--border)", borderRadius: 3, overflow: "hidden" }}>
+                      <div style={{ height: "100%", width: `${pct}%`, background: `linear-gradient(90deg, ${col}, ${col}bb)`, borderRadius: 3, transition: "width 0.8s ease", boxShadow: `0 0 8px ${col}44` }} />
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+            <div style={{ fontSize: 10, color: "var(--text4)", textAlign: "center", marginTop: 16 }}>
+              Data via Jolpica F1 API · {lastUpdated ? `Updated ${lastUpdated.toLocaleTimeString()}` : ""}
+            </div>
+          </div>
+
+        </div>
       )}
     </div>
   );
@@ -3425,6 +3553,7 @@ const SEARCH_INDEX = [
   { type: "Section", title: "Race Predictor", sub: "Build & share your predicted top 10 grid", section: "predictor", icon: "🔮", color: "#e10600" },
   { type: "Section", title: "F1 Quiz", sub: "15 questions to test your knowledge", section: "quiz", icon: "🧠", color: "#27F4D2" },
   { type: "Section", title: "Live Results", sub: "Race results, driver & constructor standings", section: "results", icon: "🏆", color: "#FFD700" },
+  { type: "Section", title: "Live Standings", sub: "Current 2026 driver & constructor championship standings", section: "standings", icon: "📊", color: "#e10600" },
   { type: "Section", title: "All-Time Records", sub: "Most wins, poles, titles & fastest laps in history", section: "records", icon: "🎖️", color: "#cd7f32" },
   { type: "Section", title: "2026 Season Preview", sub: "Power rankings, race previews & rookie spotlights", section: "preview", icon: "🔭", color: "#e10600" },
   { type: "Section", title: "F1 News", sub: "Latest headlines from Motorsport.com", section: "news", icon: "📰", color: "#00dc78" },
@@ -4516,7 +4645,7 @@ function BookmarksSection({ bookmarks, onNavigate, onRemove }) {
     { id: "how", icon: "🏁", label: "How It Works" }, { id: "points", icon: "📊", label: "Points System" },
     { id: "drivers", icon: "🏎️", label: "Drivers" }, { id: "teams", icon: "🔧", label: "Teams" },
     { id: "history", icon: "📅", label: "Driver Changes" }, { id: "circuits", icon: "🗺️", label: "Circuits" },
-    { id: "results", icon: "🏆", label: "Live Results" }, { id: "glossary", icon: "📖", label: "Glossary" },
+    { id: "results", icon: "🏆", label: "Live Results" }, { id: "standings", icon: "📊", label: "Live Standings" }, { id: "glossary", icon: "📖", label: "Glossary" },
     { id: "rules", icon: "📋", label: "Rules" }, { id: "compare", icon: "⚡", label: "Car Compare" },
     { id: "records", icon: "🎖️", label: "Records" }, { id: "quiz", icon: "🧠", label: "F1 Quiz" },
     { id: "predictor", icon: "🔮", label: "Race Predictor" }, { id: "news", icon: "📰", label: "F1 News" },
@@ -4706,7 +4835,7 @@ function HomeSection({ onNavigate }) {
   const QUICK_LINKS = [
     { id: "drivers",      icon: "🏎️", label: "Drivers",           sub: "All 22 on the 2026 grid" },
     { id: "circuits",     icon: "🗺️", label: "Circuits",          sub: "24 races, maps & times" },
-    { id: "results",      icon: "🏆", label: "Live Results",       sub: "Powered by OpenF1 API" },
+    { id: "results",      icon: "🏆", label: "Live Results",       sub: "Powered by Jolpica F1 API" },
     { id: "preview",      icon: "🔭", label: "Season Preview",     sub: "Power rankings & picks" },
     { id: "drivercompare",icon: "🆚", label: "Driver Compare",     sub: "Head-to-head radar chart" },
     { id: "championship", icon: "📈", label: "Battle Tracker",     sub: "WDC drama round by round" },
@@ -4980,6 +5109,7 @@ const NAV_GROUPS = [
     sections: [
       { id: "circuits",     icon: "🗺️", label: "Circuit Guide",    desc: "All 24 circuits with maps, session times & calendar" },
       { id: "results",      icon: "🏆", label: "Live Results",      desc: "Race results, driver & constructor standings" },
+      { id: "standings",    icon: "📊", label: "Live Standings",     desc: "Current 2026 driver & constructor championship standings" },
       { id: "championship", icon: "📈", label: "Championship Tracker", desc: "Round-by-round WDC battle for 2021–2024" },
       { id: "h2h",          icon: "⚔️", label: "Teammate H2H",      desc: "2024 qualifying & race head-to-head records" },
       { id: "records",      icon: "🎖️", label: "All-Time Records",  desc: "Most wins, poles, titles & fastest laps in history" },
@@ -5210,6 +5340,7 @@ export default function F1Guide() {
               {active === "history"      && <HistorySection />}
               {active === "circuits"     && <CircuitsSection />}
               {active === "results"      && <ResultsSection />}
+              {active === "standings"    && <LiveStandingsSection />}
               {active === "glossary"     && <GlossarySection />}
               {active === "rules"        && <RulesSection />}
               {active === "compare"      && <CarCompareSection />}
