@@ -1695,12 +1695,12 @@ const TEAMS_2026 = [
   { id: "mercedes", name: "Mercedes-AMG Petronas", base: "Brackley, UK", color: "#27F4D2", engine: "Mercedes (new regs)", tp: "Toto Wolff", founded: 2010, championships: "8 Constructors (2014–2021)", drivers: ["George Russell", "Kimi Antonelli"], desc: "Mercedes dominated the last major regulation change in 2014. Wolff is hoping history repeats in 2026. Russell and the rapidly-developing Antonelli carry their hopes into a new era.", engineNote: "Mercedes 2026 PU — Completely redesigned. ~50% electric power requirement. Mercedes expected to be very strong." },
   { id: "ferrari", name: "Scuderia Ferrari", base: "Maranello, Italy", color: "#E8002D", engine: "Ferrari (new regs)", tp: "Frédéric Vasseur", founded: 1950, championships: "16 Constructors (last: 2008)", drivers: ["Charles Leclerc", "Lewis Hamilton"], desc: "Hamilton and Leclerc continue into the new era. Ferrari's Maranello factory has invested massively in the 2026 power unit. The dream: Hamilton finally wins his 8th title in red.", engineNote: "Ferrari 2026 PU — Redesigned from ground up. Also supplied to Haas. Sauber switches to Audi." },
   { id: "mclaren", name: "McLaren F1 Team", base: "Woking, UK", color: "#FF8000", engine: "Mercedes (new regs)", tp: "Andrea Stella", founded: 1966, championships: "8 Constructors (last: 1998)", drivers: ["Lando Norris", "Oscar Piastri"], desc: "McLaren enter 2026 as title favourites. Their chassis expertise plus Mercedes' expected strong 2026 unit makes them dangerous. Norris and Piastri continue — the best young pairing in F1.", engineNote: "Mercedes-supplied 2026 unit." },
-  { id: "astonmartin", name: "Aston Martin Aramco", base: "Silverstone, UK", color: "#229971", engine: "Honda (works)", tp: "Andy Cowell", founded: 2021, championships: "0", drivers: ["Fernando Alonso", "Lance Stroll"], desc: "A huge twist — Aston Martin signed a works deal with Honda for 2026 after Mercedes ended their supply agreement. Andy Cowell (ex-Mercedes HPP) now runs a Honda-powered team. Alonso's last shot at glory with a works engine.", engineNote: "Honda works PU — Honda ended their Red Bull partnership and signed with Aston Martin as their exclusive works team from 2026. A major coup." },
+  { id: "astonmartin", name: "Aston Martin Aramco", base: "Silverstone, UK", color: "#229971", engine: "Honda (works)", tp: "Adrian Newey*", founded: 2021, championships: "0", drivers: ["Fernando Alonso", "Lance Stroll"], desc: "The biggest story of early 2026 — and not in a good way. Zero points from two races. Honda missed their power targets, and the car vibrates so severely that Newey himself warned of 'permanent nerve damage' for drivers. Newey is widely reported to be stepping down as TP to focus purely on redesigning the AMR26. Jonathan Wheatley — who recently moved from Red Bull to Audi — is reportedly set to replace him as TP. Everything is in flux. Alonso's last shot at glory is in serious jeopardy.", engineNote: "Honda works PU — Honda's exclusive works partner from 2026. However Honda reportedly missed their power targets for the season opener. * Newey stepping down as TP is widely reported but officially unconfirmed as of March 2026. Aston Martin's official line: 'Adrian Newey continues to lead the team.'" },
   { id: "alpine", name: "Alpine F1 Team", base: "Enstone, UK", color: "#0093CC", engine: "Mercedes (new regs)", tp: "Oliver Oakes", founded: 2021, championships: "0", drivers: ["Pierre Gasly", "Franco Colapinto"], desc: "Alpine ditches their own Renault engine and becomes a Mercedes customer — effectively admitting the Renault unit wasn't good enough. Doohan was dropped mid-2025; Colapinto, who impressed at Williams in 2024, takes the seat. A huge strategic shift for the French manufacturer.", engineNote: "Switches to Mercedes power in 2026 — the biggest change in the team's history." },
   { id: "williams", name: "Williams Racing", base: "Grove, UK", color: "#64C4FF", engine: "Mercedes (new regs)", tp: "James Vowles", founded: 1977, championships: "9 Constructors (last: 1997)", drivers: ["Alexander Albon", "Carlos Sainz"], desc: "The regulation reset gives Williams a clean slate. If Mercedes hit the ground running in 2026, Williams could genuinely challenge the top teams. Vowles' rebuild enters its most exciting chapter yet.", engineNote: "Mercedes-supplied — continuing relationship into new regulations." },
   { id: "haas", name: "MoneyGram Haas F1 Team", base: "Kannapolis, USA", color: "#B6BABD", engine: "Ferrari (new regs)", tp: "Ayao Komatsu", founded: 2016, championships: "0", drivers: ["Esteban Ocon", "Oliver Bearman"], desc: "Continue as Ferrari customers into 2026. Bearman is Ferrari-backed — keeping the pipeline intact. New regulations give everyone a chance to surprise.", engineNote: "Ferrari-supplied 2026 unit." },
   { id: "rb", name: "Racing Bulls (VCARB)", base: "Faenza, Italy", color: "#6692FF", engine: "Ford RBPT (NEW)", tp: "Alan Permane", founded: 2006, championships: "0", drivers: ["Liam Lawson", "Arvid Lindblad"], desc: "Switches to the Ford RBPT unit alongside Red Bull. Lawson returns to Racing Bulls after his difficult stint at Red Bull, and leads the team alongside 18-year-old rookie Arvid Lindblad. Mekies' promotion to Red Bull brings Alan Permane in as new TP.", engineNote: "Ford RBPT — same new unit as Red Bull Racing." },
-  { id: "audi", name: "Audi F1 Team (née Sauber)", base: "Hinwil, Switzerland", color: "#BB0A21", engine: "Audi (works, BRAND NEW)", tp: "Mattia Binotto", founded: 1993, championships: "0", drivers: ["Nico Hülkenberg", "Gabriel Bortoleto"], desc: "THE story of 2026. Audi officially becomes an F1 constructor — the first new works manufacturer in over a decade. The Sauber team is rebranded as Audi F1. Binotto leads. Expectations managed but excitement enormous.", engineNote: "Audi works PU — built from scratch for 2026 regulations. Audi have huge resources but zero F1 engine experience. Unknown quantity, enormous potential." },
+  { id: "audi", name: "Audi F1 Team (née Sauber)", base: "Hinwil, Switzerland", color: "#BB0A21", engine: "Audi (works, BRAND NEW)", tp: "Mattia Binotto", founded: 1993, championships: "0", drivers: ["Nico Hülkenberg", "Gabriel Bortoleto"], desc: "THE story of 2026. Audi officially becomes an F1 constructor — the first new works manufacturer in over a decade. The Sauber team is rebranded as Audi F1. Binotto leads. Jonathan Wheatley — who joined from Red Bull last May as sporting director — is reportedly departing 'for personal reasons', with Aston Martin said to be his destination. Despite the early turbulence, the long-term Audi project remains enormous.", engineNote: "Audi works PU — built from scratch for 2026 regulations. Audi have huge resources but zero F1 engine experience. Unknown quantity, enormous potential." },
   { id: "cadillac", name: "Cadillac F1 Team", base: "Fishers, Indiana, USA / Silverstone, UK", color: "#CC0000", engine: "Ferrari (→ GM/Cadillac 2029)", tp: "Graeme Lowdon", founded: 2026, championships: "0", drivers: ["Valtteri Bottas", "Sergio Perez"], desc: "The American dream arrives. F1's 11th team — the first brand new constructor since Haas in 2016. Backed by General Motors and TWG Motorsports. Both drivers sat out 2025: Bottas after leaving Sauber, Perez after Red Bull. Combined experience of 500+ grands prix. Realistic goal for 2026 is simply reliability and staying inside the 107% rule. Zhou Guanyu is reserve driver, Colton Herta is test driver while racing in F2.", engineNote: "Ferrari-supplied until 2029, when GM begins manufacturing their own F1 power unit in Charlotte, North Carolina. Cadillac will then become a full works manufacturer — a huge long-term commitment from General Motors." },
 ];
 
@@ -1837,7 +1837,7 @@ function EmptyState({ icon = "🔍", title = "NOTHING FOUND", sub = "Try a diffe
 
 function FeaturedRaceCard() {
   const [timeLeft, setTimeLeft] = useState({ d: 0, h: 0, m: 0, s: 0 });
-  const nextRace = RACE_CALENDAR_2026.find(r => new Date(r.date) > new Date()) || RACE_CALENDAR_2026[RACE_CALENDAR_2026.length - 1];
+  const nextRace = RACE_CALENDAR_2026.find(r => !r.cancelled && new Date(r.date) > new Date()) || RACE_CALENDAR_2026[RACE_CALENDAR_2026.length - 1];
 
   useEffect(() => {
     function tick() {
@@ -2025,12 +2025,12 @@ function HowItWorks() {
 
       <div className="how-grid">
         {[
-          { title: "What is F1?", text: "Formula 1 is the pinnacle of motorsport — the fastest, most technologically advanced racing series on Earth. 10 teams, 20 drivers, ~24 races a year across the globe. Each team builds their own car around a common set of rules." },
+          { title: "What is F1?", text: "Formula 1 is the pinnacle of motorsport — the fastest, most technologically advanced racing series on Earth. 11 teams, 22 drivers, 22 races in 2026 across the globe. Each team builds their own car around a common set of rules." },
           { title: "The Race Weekend", text: "Thursday: Media day. Friday: Two practice sessions (FP1 & FP2). Saturday: FP3 then Qualifying (Q1→Q2→Q3). Sunday: The Race. Sprint weekends add a mini-race on Saturday." },
           { title: "Qualifying", text: "Three knockout rounds. Q1 eliminates the 5 slowest. Q2 eliminates 5 more. Q3 (top 10) fights for pole position — the front of the grid. Single flying laps under enormous pressure." },
           { title: "The Race", text: "Typically 305km (190 miles). Cars must use at least 2 different tyre compounds. Strategy — when to pit, which tyres — is often as important as outright speed." },
           { title: "Tyres", text: "Pirelli supply all teams. Soft (red) = fastest but least durable. Medium (yellow). Hard (white) = lasts longest. Intermediate (green) and Full Wet (blue) for rain. Tyre strategy can completely change a race outcome." },
-          { title: "DRS", text: "Drag Reduction System — opens the rear wing on straights for extra speed. Only usable within 1 second of the car ahead in designated zones. Being removed in 2026 in favour of active aerodynamics." },
+          { title: "DRS", text: "Drag Reduction System — opens the rear wing on straights for extra speed. Only usable within 1 second of the car ahead in designated zones. Replaced by active aerodynamics in 2026." },
           { title: "Two Championships", text: "The Drivers' Championship rewards the fastest individual. The Constructors' Championship rewards the team (both drivers' points combined). Teams fight for both simultaneously all season." },
           { title: "Safety Car & Red Flag", text: "Virtual Safety Car (VSC) slows everyone. Full Safety Car bunches the pack. Red Flag stops the race entirely. All three create drama and can completely flip race outcomes." },
           { title: "2026 New Rules", text: "The biggest regulation reset since 2014. New power units with ~50% electric power. Active aerodynamics replaces DRS. Audi joins as a works manufacturer. Red Bull switches to Ford. A brand new chapter." },
@@ -2567,7 +2567,7 @@ function ResultsSection() {
                 </table>
               </div>
               <div style={{ fontSize: 10, color: "var(--text4)", textAlign: "center", marginBottom: 4 }}>
-                After {races.length} of 24 rounds · Data via Jolpica F1 API
+                After {races.length} of 22 rounds · Data via Jolpica F1 API
               </div>
             </>
           )}
@@ -2760,7 +2760,7 @@ const GLOSSARY = [
   { term: "VSC", cat: "Safety", catColor: "#ffc800", def: "Virtual Safety Car. All drivers must slow to a mandated speed. Used for minor incidents. Unlike a full Safety Car, the gaps between cars are frozen — making it less race-changing but still strategically important." },
   { term: "Safety Car", cat: "Safety", catColor: "#ffc800", def: "A physical car deployed on track after serious incidents. All cars bunch up behind it, gaps are erased, and the pit lane becomes a strategic battleground as teams time their stops." },
   { term: "Parc Fermé", cat: "Regulations", catColor: "#e10600", def: "French for 'closed park.' After qualifying, cars are placed in parc fermé where only limited work is allowed. Teams cannot make major setup changes. The car you qualify with is essentially the car you race." },
-  { term: "DRS", cat: "Tech", catColor: "#00dc78", def: "Drag Reduction System. Drivers within 1 second of the car ahead can open a flap in the rear wing on designated straights, reducing drag and adding ~10-15 km/h. Being replaced by active aero in 2026." },
+  { term: "DRS", cat: "Tech", catColor: "#00dc78", def: "Drag Reduction System. Drivers within 1 second of the car ahead could open a flap in the rear wing on designated straights, reducing drag and adding ~10-15 km/h. Replaced by active aero in 2026 — the rear wing now adjusts automatically." },
   { term: "Tyre Compound", cat: "Tyres", catColor: "#FF8000", def: "The type of Pirelli tyre. Soft (red) = fastest but wears quickest. Medium (yellow) = balanced. Hard (white) = lasts longest but slowest. Teams must use at least two different compounds per race." },
   { term: "Degradation", cat: "Tyres", catColor: "#FF8000", def: "How quickly a tyre's performance drops as it wears. High-deg circuits destroy tyres faster, forcing more pit stops and creating strategic variety. Low-deg races tend to be processional." },
   { term: "Graining", cat: "Tyres", catColor: "#FF8000", def: "A tyre condition where thin strips of rubber peel off and stick back to the surface, causing heavy vibration and slower lap times. Often temporary — drivers sometimes 'cure' it by pushing harder." },
@@ -3084,10 +3084,10 @@ function RecordsSection() {
 // ─── 2026 Race Calendar ──────────────────────────────────────────────────────
 const RACE_CALENDAR_2026 = [
   { round: 1,  flag: "🇦🇺", name: "Australian GP",       circuit: "Albert Park", date: "2026-03-08T05:00:00Z",  laps: 58, length: "5.278 km", lapRecord: "1:20.235 (Bottas, 2023)",          drs: 3, tags: ["Street-adjacent","Fast","Overtaking"],          desc: "The season opener in Melbourne. A fast, flowing street-adjacent circuit that rewards car balance. The Albert Park lake provides a stunning backdrop." },
-  { round: 2,  flag: "🇨🇳", name: "Chinese GP",           circuit: "Shanghai", date: "2026-03-15T07:00:00Z",  laps: 56, length: "5.451 km", lapRecord: "1:32.238 (M.Schumacher, 2004)",    drs: 2, tags: ["High-deg","Technical","Sprint"],                  desc: "Shanghai's long back straight enables DRS battles. Tyres take a heavy hit through the sweeping final sector. A Sprint weekend." },
+  { round: 2,  flag: "🇨🇳", name: "Chinese GP",           circuit: "Shanghai", date: "2026-03-15T07:00:00Z",  laps: 56, length: "5.451 km", lapRecord: "1:32.238 (M.Schumacher, 2004)",    drs: 2, tags: ["High-deg","Technical","Sprint"],                  desc: "Shanghai's long back straight rewards straight-line speed with 2026's active aero. Tyres take a heavy hit through the sweeping final sector. A Sprint weekend." },
   { round: 3,  flag: "🇯🇵", name: "Japanese GP",          circuit: "Suzuka", date: "2026-03-29T05:00:00Z",  laps: 53, length: "5.807 km", lapRecord: "1:30.983 (Verstappen, 2023)",      drs: 2, tags: ["Driver Favourite","Figure-8","High Speed"],       desc: "One of the most beloved circuits in the world. Suzuka's figure-of-eight layout and legendary corners like 130R and the Esses make it a true driver's circuit." },
-  { round: 4,  flag: "🇧🇭", name: "Bahrain GP",           circuit: "Bahrain International", date: "2026-04-12T15:00:00Z",  laps: 57, length: "5.412 km", lapRecord: "1:31.447 (De La Rosa, 2005)",      drs: 3, tags: ["Night Race","High Deg","Dusty"],                  desc: "Run under floodlights, Bahrain is famous for heavy tyre degradation and sandy, abrasive asphalt. Sector 2's flowing middle section rewards mechanical grip." },
-  { round: 5,  flag: "🇸🇦", name: "Saudi Arabian GP",     circuit: "Jeddah Corniche", date: "2026-04-19T17:00:00Z",  laps: 50, length: "6.174 km", lapRecord: "1:30.734 (Verstappen, 2021)",      drs: 3, tags: ["Fastest Street","Night Race","Walls"],             desc: "The fastest street circuit on the calendar. Walls are millimetres away at 300+ km/h. Safety cars are virtually guaranteed. Terrifying and spectacular in equal measure." },
+  { round: 4,  flag: "🇧🇭", name: "Bahrain GP",           circuit: "Bahrain International", date: "2026-04-12T15:00:00Z",  laps: 57, length: "5.412 km", lapRecord: "1:31.447 (De La Rosa, 2005)",      drs: 3, tags: ["Night Race","High Deg","Dusty","CANCELLED"],      cancelled: true, desc: "CANCELLED — Bahrain GP has been dropped from the 2026 calendar due to ongoing regional conflict. The race will not be rescheduled." },
+  { round: 5,  flag: "🇸🇦", name: "Saudi Arabian GP",     circuit: "Jeddah Corniche", date: "2026-04-19T17:00:00Z",  laps: 50, length: "6.174 km", lapRecord: "1:30.734 (Verstappen, 2021)",      drs: 3, tags: ["Fastest Street","Night Race","Walls","CANCELLED"],  cancelled: true, desc: "CANCELLED — Saudi Arabian GP has been dropped from the 2026 calendar due to ongoing regional conflict. The 2026 season runs 22 races." },
   { round: 6,  flag: "🇺🇸", name: "Miami GP",             circuit: "Miami International", date: "2026-05-03T19:00:00Z",  laps: 57, length: "5.412 km", lapRecord: "1:29.708 (Verstappen, 2023)",      drs: 3, tags: ["Street","Spectacle","Sprint"],                   desc: "F1's glamorous American showcase. Built around the Hard Rock Stadium. The fake marina is iconic. A Sprint weekend." },
   { round: 7,  flag: "🇨🇦", name: "Canadian GP",          circuit: "Gilles Villeneuve", date: "2026-05-24T18:00:00Z",  laps: 70, length: "4.361 km", lapRecord: "1:13.078 (Bottas, 2019)",          drs: 3, tags: ["Wall of Champions","Braking","Sprint"],            desc: "The legendary Wall of Champions has claimed countless cars. Heavy braking zones and long straights create genuine overtaking. A Sprint weekend." },
   { round: 8,  flag: "🇲🇨", name: "Monaco GP",            circuit: "Circuit de Monaco", date: "2026-06-07T13:00:00Z",  laps: 78, length: "3.337 km", lapRecord: "1:12.909 (Leclerc, 2024)",         drs: 1, tags: ["Iconic","No Overtaking","Prestige"],               desc: "The jewel of the F1 calendar. Impossibly narrow streets, yachts in the harbour, zero overtaking. Monaco is about qualifying — P1 Saturday usually means P1 Sunday." },
@@ -3247,7 +3247,7 @@ function RacePredictorSection() {
   const [picks, setPicks] = useState(Array(10).fill(null));
   const [submitted, setSubmitted] = useState(false);
 
-  const nextRace = RACE_CALENDAR_2026.find(r => new Date(r.date) > new Date()) || RACE_CALENDAR_2026[RACE_CALENDAR_2026.length - 1];
+  const nextRace = RACE_CALENDAR_2026.find(r => !r.cancelled && new Date(r.date) > new Date()) || RACE_CALENDAR_2026[RACE_CALENDAR_2026.length - 1];
   const selectedIds = picks.filter(Boolean).map(d => d.name);
   const downloadShareCard = useShareCard(picks, nextRace);
 
@@ -3419,7 +3419,7 @@ function NewsSection() {
 // ─── SESSION TIMES SECTION ────────────────────────────────────────────────────
 function SessionTimesSection() {
   const now = new Date();
-  const nextRace = RACE_CALENDAR_2026.find(r => new Date(r.date) > now);
+  const nextRace = RACE_CALENDAR_2026.find(r => !r.cancelled && new Date(r.date) > now);
   if (!nextRace) return null;
 
   const raceDate = new Date(nextRace.date);
@@ -3711,7 +3711,7 @@ function RaceCountdown() {
 
   useEffect(() => {
     const upcoming = RACE_CALENDAR_2026
-      .filter(r => new Date(r.date) > new Date())
+      .filter(r => !r.cancelled && new Date(r.date) > new Date())
       .sort((a, b) => new Date(a.date) - new Date(b.date));
     if (!upcoming.length) return;
     setNextRace(upcoming[0]);
@@ -3786,7 +3786,7 @@ function CircuitsSection() {
       <div className="section-line" />
       <SessionTimesSection />
       <p style={{ fontSize: 13, color: "var(--text3)", lineHeight: 1.7, marginBottom: 16 }}>
-        All 24 circuits on the 2026 calendar — lap records, key facts, and what makes each one unique.
+        All 22 circuits on the 2026 calendar — lap records, key facts, and what makes each one unique.
       </p>
 
       <div className="search-wrap" style={{ marginBottom: 20 }}>
@@ -3829,11 +3829,15 @@ function CircuitsSection() {
 
       <div className="circuit-grid">
         {filtered.map(c => (
-          <div key={c.round} className="circuit-card" onClick={() => setSelected(c)}>
+          <div key={c.round} className="circuit-card" onClick={() => setSelected(c)}
+            style={{ opacity: c.cancelled ? 0.55 : 1, position: "relative" }}>
+            {c.cancelled && (
+              <div style={{ position: "absolute", top: 10, right: 10, zIndex: 2, background: "#e10600", color: "#fff", fontFamily: "Orbitron", fontSize: 8, letterSpacing: 2, padding: "3px 8px", borderRadius: 3 }}>CANCELLED</div>
+            )}
             <div className="circuit-card-header">
               <div className="circuit-flag">{c.flag}</div>
               <div style={{ flex: 1, minWidth: 0 }}>
-                <div className="circuit-name">{c.name}</div>
+                <div className="circuit-name" style={{ textDecoration: c.cancelled ? "line-through" : "none" }}>{c.name}</div>
                 <div className="circuit-country">{c.circuit}</div>
               </div>
               <div className="circuit-round">R{c.round}</div>
@@ -3842,8 +3846,8 @@ function CircuitsSection() {
               {/* Styled circuit placeholder — consistent across all platforms */}
               <div style={{
                 width: "100%", height: 110, borderRadius: 8, marginBottom: 10,
-                background: `linear-gradient(135deg, var(--bg3) 0%, var(--bg2) 100%)`,
-                border: "1px solid var(--border)",
+                background: c.cancelled ? "linear-gradient(135deg, rgba(225,6,0,0.05) 0%, var(--bg3) 100%)" : `linear-gradient(135deg, var(--bg3) 0%, var(--bg2) 100%)`,
+                border: c.cancelled ? "1px solid rgba(225,6,0,0.2)" : "1px solid var(--border)",
                 display: "flex", alignItems: "center", justifyContent: "space-between",
                 padding: "0 18px", overflow: "hidden", position: "relative",
               }}>
@@ -3853,14 +3857,16 @@ function CircuitsSection() {
                 </div>
                 {/* Left: round + name */}
                 <div>
-                  <div style={{ fontFamily: "Orbitron", fontSize: 9, color: "#e10600", letterSpacing: 3, marginBottom: 4 }}>ROUND {c.round}</div>
+                  <div style={{ fontFamily: "Orbitron", fontSize: 9, color: c.cancelled ? "#e10600" : "#e10600", letterSpacing: 3, marginBottom: 4 }}>{c.cancelled ? "CANCELLED" : `ROUND ${c.round}`}</div>
                   <div style={{ fontFamily: "Orbitron", fontSize: 16, fontWeight: 900, color: "var(--text)", lineHeight: 1.2, maxWidth: 160 }}>{c.circuit.toUpperCase()}</div>
                 </div>
-                {/* Right: DRS + length pill */}
+                {/* Right: Active Aero zones + length pill */}
                 <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-end", gap: 6 }}>
-                  <div style={{ background: "rgba(225,6,0,0.12)", border: "1px solid rgba(225,6,0,0.25)", borderRadius: 20, padding: "3px 10px", fontSize: 9, fontFamily: "Orbitron", color: "#e10600", letterSpacing: 1 }}>
-                    DRS ×{c.drs}
-                  </div>
+                  {!c.cancelled && (
+                    <div style={{ background: "rgba(39,244,210,0.1)", border: "1px solid rgba(39,244,210,0.25)", borderRadius: 20, padding: "3px 10px", fontSize: 9, fontFamily: "Orbitron", color: "#27F4D2", letterSpacing: 1 }}>
+                      AERO ZONES ×{c.drs}
+                    </div>
+                  )}
                   <div style={{ fontSize: 11, color: "var(--text3)", fontFamily: "Orbitron" }}>{c.length}</div>
                 </div>
               </div>
@@ -3871,11 +3877,11 @@ function CircuitsSection() {
                 </div>
                 <div className="circuit-stat-item">
                   <span className="circuit-stat-lbl">Laps</span>
-                  <span className="circuit-stat-val">{c.laps}</span>
+                  <span className="circuit-stat-val">{c.cancelled ? "—" : c.laps}</span>
                 </div>
                 <div className="circuit-stat-item">
-                  <span className="circuit-stat-lbl">DRS Zones</span>
-                  <span className="circuit-stat-val">{c.drs}</span>
+                  <span className="circuit-stat-lbl">Active Aero Zones</span>
+                  <span className="circuit-stat-val">{c.cancelled ? "—" : c.drs}</span>
                 </div>
                 <div className="circuit-stat-item">
                   <span className="circuit-stat-lbl">Race Date</span>
@@ -4797,25 +4803,25 @@ function useShareCard(picks, race) {
 
 // ─── 2026 SEASON PREVIEW DATA ────────────────────────────────────────────────
 const POWER_RANKINGS_2026 = [
-  { pos: 1, team: "McLaren", color: "#FF8000", drivers: "Norris / Piastri", power: 96, verdict: "Title favourites. Best driver pairing on the grid, Mercedes power expected to be strong, and they're coming off the back of 2024's fastest car. Norris is the man to beat.", tag: "🏆 FAVOURITES" },
-  { pos: 2, team: "Mercedes", color: "#27F4D2", drivers: "Russell / Antonelli", power: 91, verdict: "Own-engine team — huge advantage if their 2026 unit fires. Russell leads with maturity, Antonelli is raw but thrillingly fast. Could dominate if they nail the new regs.", tag: "⚡ DARK HORSE" },
-  { pos: 3, team: "Ferrari", color: "#E8002D", drivers: "Hamilton / Leclerc", power: 90, verdict: "Hamilton's final chapter. Ferrari's Maranello PU lab worked for years on 2026. Leclerc's raw speed plus Hamilton's championship brain makes them a massive threat.", tag: "🔥 CONTENDERS" },
-  { pos: 4, team: "Red Bull", color: "#3671C6", drivers: "Verstappen / Hadjar", power: 88, verdict: "Verstappen makes any car a title threat. Question marks over the new Ford RBPT unit in its debut year. Hadjar is exciting but unproven. VER will drag them into fights they shouldn't win.", tag: "💪 CONTENDERS" },
-  { pos: 5, team: "Aston Martin", color: "#229971", drivers: "Alonso / Stroll", power: 82, verdict: "The wild card. Honda works PU is a massive coup — Honda nearly won the title in 2021. If the engine is strong and the chassis follows, Alonso at 44 could have one last shot at glory.", tag: "🎲 WILDCARD" },
-  { pos: 6, team: "Williams", color: "#64C4FF", drivers: "Sainz / Albon", power: 74, verdict: "Best midfield lineup. Mercedes customer with a reborn chassis programme. Sainz is too good for midfield forever. Watch for big upsets at the right circuits.", tag: "📈 ON THE RISE" },
-  { pos: 7, team: "Alpine", color: "#0093CC", drivers: "Gasly / Colapinto", power: 70, verdict: "Now on Mercedes power — a massive upgrade from Renault. New PU takes time to optimise but ceiling is much higher. Colapinto is a fan favourite from his Williams cameo in 2024.", tag: "🔄 REBUILDING" },
-  { pos: 8, team: "Haas", color: "#B6BABD", drivers: "Ocon / Bearman", power: 66, verdict: "Ferrari customer keeps them relevant. Bearman is a future star, Ocon is solid. They'll punch above their weight when Ferrari's PU advantage kicks in.", tag: "🎯 SOLID MID" },
-  { pos: 9, team: "Audi F1", color: "#BB0A21", drivers: "Hülkenberg / Bortoleto", power: 60, verdict: "The most fascinating wildcard in years. A brand new manufacturer with zero F1 engine experience. Could be surprisingly competitive or genuinely off the pace — nobody knows. Bortoleto is electrifying.", tag: "❓ UNKNOWN" },
-  { pos: 10, team: "Racing Bulls", color: "#6692FF", drivers: "Lawson / Lindblad", power: 58, verdict: "Ford RBPT customer inherits Red Bull's tech but usually a step behind. Lawson rebuilding after his RB demotion. Lindblad is the youngest on the grid — thrilling potential.", tag: "🌱 REBUILDING" },
-  { pos: 11, team: "Cadillac", color: "#CC0000", drivers: "Bottas / Pérez", power: 44, verdict: "Rookie team with veteran drivers — perfect symmetry. Ferrari customer engine gives them a competitive baseline. Realistic target: finish races, stay inside 107%, and shock everyone once. That's Year 1.", tag: "🇺🇸 NEW ENTRANT" },
+  { pos: 1, team: "Mercedes", color: "#27F4D2", drivers: "Russell / Antonelli", power: 98, verdict: "Utterly dominant. Won all 3 races — Russell in Australia, Antonelli in China and Japan. Antonelli is the youngest championship leader in F1 history. Their own-engine advantage is real, massive, and showing no signs of fading.", tag: "🏆 DOMINANT" },
+  { pos: 2, team: "Ferrari", color: "#E8002D", drivers: "Hamilton / Leclerc", power: 87, verdict: "Consistent and on the podium every race. Leclerc P3 in Japan, Hamilton P4 in China. They're the closest thing to a threat to Mercedes but are 45 points behind in the constructors' already. Power deficit vs Mercedes is the main concern.", tag: "🔥 CONTENDERS" },
+  { pos: 3, team: "McLaren", color: "#FF8000", drivers: "Norris / Piastri", power: 84, verdict: "The bounce-back is real. Piastri nearly won in Japan on his first race start of 2026! He's now P6 in the championship. Norris P5. The pace is clearly there — they just need both cars running reliably. Huge recovery incoming.", tag: "📈 RECOVERING" },
+  { pos: 4, team: "Red Bull", color: "#3671C6", drivers: "Verstappen / Hadjar", power: 80, verdict: "Verstappen P8 in Japan — four-time champion sitting 9th in the standings. Ford RBPT unit is a clear step behind. He's vocal about his frustration with 2026's regulations. Hadjar is showing flashes but Red Bull need a serious upgrade.", tag: "⚠️ STRUGGLING" },
+  { pos: 5, team: "Alpine", color: "#0093CC", drivers: "Gasly / Colapinto", power: 67, verdict: "Quietly picking up points. Gasly P7 in Japan — he's been one of the more consistent midfielders. Mercedes power is clearly a step up from Renault. Colapinto is growing into the car. Best of the non-top-3 manufacturers.", tag: "📈 ON THE RISE" },
+  { pos: 6, team: "Williams", color: "#64C4FF", drivers: "Sainz / Albon", power: 65, verdict: "Mercedes customer with real pace. Sainz is too good for midfield forever. Early season points have been limited but the car looks more competitive every race. Watch for big results at power-sensitive tracks.", tag: "⏳ PATIENT" },
+  { pos: 7, team: "Haas", color: "#B6BABD", drivers: "Ocon / Bearman", power: 63, verdict: "Bearman crashed heavily in Japan — a Safety Car-inducing 50g impact — but has been cleared medically. Despite the DNF he's still P7 in the championship. He was the best of the rest in Australia and China. Massive talent. Ocon is solid.", tag: "🎯 SOLID" },
+  { pos: 8, team: "Racing Bulls", color: "#6692FF", drivers: "Lawson / Lindblad", power: 60, verdict: "Lawson scored points in Japan — a good result for the team. Lindblad is adapting fast for an 18-year-old. Ford RBPT customer inherits Red Bull tech but lags the works car. Building momentum.", tag: "🌱 GROWING" },
+  { pos: 9, team: "Audi F1", color: "#BB0A21", drivers: "Hülkenberg / Bortoleto", power: 53, verdict: "Year 1 teething pains. The new Audi PU is showing unreliability issues. Both drivers are doing a solid job extracting what's there. Jonathan Wheatley's reported departure to Aston Martin adds leadership uncertainty.", tag: "❓ DEVELOPING" },
+  { pos: 10, team: "Cadillac", color: "#CC0000", drivers: "Bottas / Pérez", power: 44, verdict: "The rookie team is learning race by race. Finishing races is priority one and they're getting better at it. Ferrari customer engine gives them a foundation. Baku could be the chaos result they need to announce themselves.", tag: "🇺🇸 NEW ENTRANT" },
+  { pos: 11, team: "Aston Martin", color: "#229971", drivers: "Alonso / Stroll", power: 36, verdict: "Finally finished a race! Alonso P18, a lap down in Japan — Stroll retired again. Zero points from 3 races. Honda PU missed its power targets. Newey reportedly stepping down as TP, with Jonathan Wheatley (ex-Audi) set to replace him. A full team reset is underway.", tag: "🔴 REBUILDING" },
 ];
 
 const RACE_PREVIEWS_2026 = [
-  { round: 1, flag: "🇦🇺", name: "Australian GP", circuit: "Albert Park", date: "Mar 8", pick: "Norris", pickColor: "#FF8000", prediction: "McLaren won 3 of the last 4 Australian GPs. Norris loves flowing circuits. Verstappen will hunt him down but lacks the race pace to overtake.", rating: "⭐⭐⭐⭐", watchFor: "First glimpse of 2026 power unit pecking order" },
-  { round: 2, flag: "🇨🇳", name: "Chinese GP", circuit: "Shanghai", date: "Mar 15", pick: "Russell", pickColor: "#27F4D2", prediction: "If Mercedes nail the new PU, Shanghai is exactly where they'll announce themselves. Long straights, engine-sensitive. Russell's clean racecraft suits a high-tyre-deg opener.", rating: "⭐⭐⭐⭐⭐", watchFor: "Mercedes home PU advantage on debut" },
-  { round: 3, flag: "🇯🇵", name: "Japanese GP", circuit: "Suzuka", date: "Mar 29", pick: "Verstappen", pickColor: "#3671C6", prediction: "Verstappen has won 3 of the last 3 at Suzuka. His feel for high-speed corners is unmatched. Even if Red Bull are a step back, this is his track. Practically guaranteed.", rating: "⭐⭐⭐⭐⭐", watchFor: "Can any 2026 car match the Red Bull at Suzuka?" },
+  { round: 1, flag: "🇦🇺", name: "Australian GP", circuit: "Albert Park", date: "Mar 8", pick: "Russell ✓", pickColor: "#27F4D2", prediction: "RESULT: Mercedes 1-2. Russell led from start to finish, Antonelli 2nd, Leclerc 3rd, Hamilton 4th. Piastri crashed before the formation lap — McLaren's nightmare began immediately. Mercedes announced themselves as the dominant force.", rating: "⭐⭐⭐⭐", watchFor: "Mercedes power unit dominance confirmed immediately", result: true },
+  { round: 2, flag: "🇨🇳", name: "Chinese GP", circuit: "Shanghai", date: "Mar 15", pick: "Antonelli ✓", pickColor: "#27F4D2", prediction: "RESULT: Antonelli won his maiden F1 race from pole — one of the youngest winners ever. Russell 2nd, Hamilton 3rd, Leclerc 4th, Bearman P5. Both McLarens retired with electrical failures. Verstappen, Alonso and Stroll all also retired.", rating: "⭐⭐⭐⭐⭐", watchFor: "Antonelli's maiden win — a superstar is born", result: true },
+  { round: 3, flag: "🇯🇵", name: "Japanese GP", circuit: "Suzuka", date: "Mar 29", pick: "Antonelli ✓", pickColor: "#27F4D2", prediction: "RESULT: Antonelli won his 2nd race in a row from pole — despite dropping to P6 off the start! A Bearman crash brought the Safety Car on lap 22, gifting Antonelli a free pit stop and the lead. He pulled 13s clear of Piastri (McLaren's first podium of 2026) and Leclerc P3. Russell P4. Antonelli is now the youngest championship leader in F1 history at 19.", rating: "⭐⭐⭐⭐⭐", watchFor: "Antonelli: the youngest ever F1 championship leader", result: true },
   { round: 8, flag: "🇲🇨", name: "Monaco GP", circuit: "Monte Carlo", date: "Jun 7", pick: "Leclerc", pickColor: "#E8002D", prediction: "Leclerc dominated Monaco qualifying in 2024 and 2022. His local circuit mastery is unreal. Hamilton is hunting his first Monaco win — the one gap in his record. Ferrari infight incoming.", rating: "⭐⭐⭐⭐⭐", watchFor: "Hamilton's one missing trophy. Leclerc defending his home turf." },
-  { round: 12, flag: "🇧🇪", name: "Belgian GP", circuit: "Spa-Francorchamps", date: "Jul 19", pick: "Alonso", pickColor: "#229971", prediction: "If the Honda PU is as strong as hoped, Spa's Kemmel Straight is where it shows up. Alonso won here in 2013 in what many call the greatest single wet-weather drive of the modern era.", rating: "⭐⭐⭐⭐⭐", watchFor: "Honda vs Mercedes vs Ferrari power — the engine war verdict" },
+  { round: 12, flag: "🇧🇪", name: "Belgian GP", circuit: "Spa-Francorchamps", date: "Jul 19", pick: "Alonso", pickColor: "#229971", prediction: "If the Honda PU can be rescued, Spa's Kemmel Straight is where it would show. But after a nightmare start to 2026, Aston Martin need a fundamental fix first. Watch for Mercedes to continue their dominance.", rating: "⭐⭐⭐⭐⭐", watchFor: "Honda vs Mercedes vs Ferrari power — will Aston Martin have turned it around?" },
   { round: 17, flag: "🇦🇿", name: "Azerbaijan GP", circuit: "Baku", date: "Sep 26", pick: "Safety Car", pickColor: "#ffc800", prediction: "Baku produces carnage every single year. The longest straight + tightest walls + battle-hungry midfield = guaranteed drama. Winner could be anyone. Cadillac's best shot at a shock result.", rating: "⭐⭐⭐⭐⭐", watchFor: "Pure anarchy. Cadillac's debut upset potential." },
 ];
 
@@ -4823,18 +4829,18 @@ const ROOKIES_2026 = [
   { name: "Isack Hadjar", flag: "🇫🇷🇩🇿", team: "Red Bull Racing", color: "#3671C6", number: 6, age: 20, background: "French-Algerian. Red Bull junior. Won F2 2024. Promoted to Red Bull after impressing at Racing Bulls in 2025. The seat Tsunoda was controversially overlooked for.", potential: 95, watchFor: "Being Verstappen's teammate is the hardest job in F1. How close can he get?" },
   { name: "Arvid Lindblad", flag: "🇬🇧🇸🇪", team: "Racing Bulls", color: "#6692FF", number: 8, age: 18, background: "British-Swedish. Red Bull junior. Youngest on the 2026 grid. Won Formula 3 at 17. Skipped most of F2 — Red Bull believe he's ready now. Born in 2007.", potential: 90, watchFor: "The youngest driver since Max Verstappen in 2015. Raw talent vs steep learning curve." },
   { name: "Gabriel Bortoleto", flag: "🇧🇷", team: "Audi F1", color: "#BB0A21", number: 5, age: 21, background: "Brazilian. McLaren junior before Audi. Won F2 and F3 consecutively. Compelling personality. Stepping into the hardest team situation on the grid — brand new manufacturer.", potential: 88, watchFor: "How does he handle a brand new car, brand new manufacturer, and massive expectations?" },
-  { name: "Oliver Bearman", flag: "🇬🇧", team: "Haas", color: "#B6BABD", number: 87, age: 20, background: "British. Ferrari junior. Scored points on two F1 substitute appearances in 2024. Full debut in 2025 with Haas. Now in his second season — the step where you find out if someone is truly quick.", potential: 85, watchFor: "His second year is the real test. First impressions were stellar." },
+  { name: "Oliver Bearman", flag: "🇬🇧", team: "Haas", color: "#B6BABD", number: 87, age: 20, background: "British. Ferrari junior. Scored points on two F1 substitute appearances in 2024. Full debut in 2025 with Haas. In 2026 he's been one of the best midfield drivers — P5 in China, P7 in Australia. Crashed heavily in Japan (50g impact, Safety Car triggered) but cleared medically.", potential: 85, watchFor: "Already proven his pace. Staying healthy and consistent is now the mission." },
   { name: "Franco Colapinto", flag: "🇦🇷", team: "Alpine", color: "#0093CC", number: 43, age: 22, background: "Argentine. Burst onto the scene in 8 races at Williams in 2024 after Sargeant dropped. Argentina went wild. Alpine signed him for 2026 after Doohan was dropped mid-2025.", potential: 83, watchFor: "Wild card. Proved himself in 8 races. Now gets a full season to show it wasn't a fluke." },
 ];
 
 // ─── HOMEPAGE SECTION ────────────────────────────────────────────────────────
 function HomeSection({ onNavigate }) {
-  const nextRace = RACE_CALENDAR_2026.find(r => new Date(r.date) > new Date()) || RACE_CALENDAR_2026[RACE_CALENDAR_2026.length - 1];
-  const upcomingRaces = RACE_CALENDAR_2026.filter(r => new Date(r.date) > new Date()).slice(0, 3);
+  const nextRace = RACE_CALENDAR_2026.find(r => !r.cancelled && new Date(r.date) > new Date()) || RACE_CALENDAR_2026[RACE_CALENDAR_2026.length - 1];
+  const upcomingRaces = RACE_CALENDAR_2026.filter(r => !r.cancelled && new Date(r.date) > new Date()).slice(0, 3);
 
   const QUICK_LINKS = [
     { id: "drivers",      icon: "🏎️", label: "Drivers",           sub: "All 22 on the 2026 grid" },
-    { id: "circuits",     icon: "🗺️", label: "Circuits",          sub: "24 races, maps & times" },
+    { id: "circuits",     icon: "🗺️", label: "Circuits",          sub: "22 races, maps & times" },
     { id: "results",      icon: "🏆", label: "Live Results",       sub: "Powered by Jolpica F1 API" },
     { id: "preview",      icon: "🔭", label: "Season Preview",     sub: "Power rankings & picks" },
     { id: "drivercompare",icon: "🆚", label: "Driver Compare",     sub: "Head-to-head radar chart" },
@@ -4967,7 +4973,7 @@ function SeasonPreviewSection({ onNavigate }) {
       <div className="section-title">2026 <span>Season Preview</span></div>
       <div className="section-line" />
       <p style={{ fontSize: 13, color: "var(--text3)", lineHeight: 1.75, marginBottom: 20 }}>
-        The 2026 season is the biggest regulation reset in F1 history. New power units, new aerodynamics, a new team, and the most competitive driver market in years. Here's the full picture.
+        The 2026 season is the biggest regulation reset in F1 history. Three races in, Mercedes are dominant, Antonelli is the youngest championship leader ever, and Aston Martin haven't scored a point. Here's the full picture after 3 of 22 rounds.
       </p>
 
       <div style={{ display: "flex", gap: 8, marginBottom: 24, flexWrap: "wrap" }}>
@@ -4980,7 +4986,7 @@ function SeasonPreviewSection({ onNavigate }) {
         <div>
           <div className="card" style={{ marginBottom: 20, borderLeft: "3px solid #e10600" }}>
             <p style={{ fontSize: 12, color: "var(--text2)", lineHeight: 1.75 }}>
-              <strong style={{ color: "#e10600" }}>Rankings methodology:</strong> Based on 2024/2025 chassis performance, expected 2026 power unit competitiveness, driver lineup quality, and regulation change adaptability. The new PU rules create enormous uncertainty — these rankings reflect best estimates before testing.
+              <strong style={{ color: "#e10600" }}>Updated after 3 rounds (Japan):</strong> Rankings now reflect actual 2026 race results. Standings: Mercedes 135pts, Ferrari 90, McLaren 56, Red Bull 16. Antonelli leads the Drivers' Championship on 72pts — the youngest leader in F1 history.
             </p>
           </div>
           {POWER_RANKINGS_2026.map(r => (
@@ -5020,22 +5026,25 @@ function SeasonPreviewSection({ onNavigate }) {
             </p>
           </div>
           {RACE_PREVIEWS_2026.map(r => (
-            <div key={r.round} className="preview-race-card">
+            <div key={r.round} className="preview-race-card" style={{ borderLeft: r.result ? "3px solid #27F4D2" : undefined }}>
               <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 10 }}>
                 <span style={{ fontSize: 28 }}>{r.flag}</span>
                 <div style={{ flex: 1 }}>
                   <div style={{ fontFamily: "Orbitron", fontSize: 12, fontWeight: 900, color: "var(--text)" }}>{r.name}</div>
                   <div style={{ fontSize: 10, color: "var(--text3)" }}>R{r.round} · {r.circuit} · {r.date}</div>
                 </div>
-                <div style={{ fontSize: 10, color: "var(--text4)" }}>{r.rating}</div>
+                <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-end", gap: 4 }}>
+                  {r.result && <span style={{ fontSize: 9, color: "#27F4D2", fontFamily: "Orbitron", letterSpacing: 1, background: "rgba(39,244,210,0.1)", border: "1px solid rgba(39,244,210,0.3)", borderRadius: 4, padding: "2px 6px" }}>RACE RESULT</span>}
+                  <div style={{ fontSize: 10, color: "var(--text4)" }}>{r.rating}</div>
+                </div>
               </div>
               <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 8 }}>
-                <span style={{ fontSize: 9, color: "var(--text4)", fontFamily: "Orbitron", letterSpacing: 1 }}>OUR PICK:</span>
+                <span style={{ fontSize: 9, color: "var(--text4)", fontFamily: "Orbitron", letterSpacing: 1 }}>{r.result ? "WINNER:" : "OUR PICK:"}</span>
                 <span style={{ fontFamily: "Orbitron", fontSize: 11, fontWeight: 900, color: r.pickColor, textShadow: `0 0 10px ${r.pickColor}60` }}>{r.pick}</span>
               </div>
               <p style={{ fontSize: 12, color: "var(--text3)", lineHeight: 1.75, marginBottom: 8 }}>{r.prediction}</p>
-              <div style={{ fontSize: 10, color: "#00dc78", background: "rgba(0,220,120,0.08)", border: "1px solid rgba(0,220,120,0.2)", borderRadius: 6, padding: "4px 10px", display: "inline-block" }}>
-                👀 {r.watchFor}
+              <div style={{ fontSize: 10, color: r.result ? "#27F4D2" : "#00dc78", background: r.result ? "rgba(39,244,210,0.08)" : "rgba(0,220,120,0.08)", border: `1px solid ${r.result ? "rgba(39,244,210,0.2)" : "rgba(0,220,120,0.2)"}`, borderRadius: 6, padding: "4px 10px", display: "inline-block" }}>
+                {r.result ? "🏁" : "👀"} {r.watchFor}
               </div>
             </div>
           ))}
@@ -5107,7 +5116,7 @@ const NAV_GROUPS = [
   {
     label: "Race & Stats",
     sections: [
-      { id: "circuits",     icon: "🗺️", label: "Circuit Guide",    desc: "All 24 circuits with maps, session times & calendar" },
+      { id: "circuits",     icon: "🗺️", label: "Circuit Guide",    desc: "All 22 circuits with maps, session times & calendar" },
       { id: "results",      icon: "🏆", label: "Live Results",      desc: "Race results, driver & constructor standings" },
       { id: "standings",    icon: "📊", label: "Live Standings",     desc: "Current 2026 driver & constructor championship standings" },
       { id: "championship", icon: "📈", label: "Championship Tracker", desc: "Round-by-round WDC battle for 2021–2024" },
