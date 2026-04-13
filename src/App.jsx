@@ -469,7 +469,7 @@ const styles = `
   /* ── Section entrance animation ── */
   @keyframes sectionIn {
     from { opacity: 0; transform: translateY(8px); }
-    to { opacity: 1; transform: translateY(0); }
+    to { opacity: 1; transform: none; }
   }
   .section-enter {
     animation: sectionIn 0.45s cubic-bezier(0.22, 1, 0.36, 1) both;
