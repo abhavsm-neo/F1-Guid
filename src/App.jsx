@@ -1,9 +1,10 @@
-import { useState, useEffect, useRef, useMemo, useCallback, memo } from "react";
+import { useState, useEffect, useRef, useMemo, useCallback, memo, Component } from "react";
 
 const styles = `
   @import url('https://fonts.googleapis.com/css2?family=Exo+2:wght@300;400;600;700;900&family=Orbitron:wght@400;700;900&display=swap');
 
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 4px; }
 
   :root {
     --bg: #060608;
@@ -1887,7 +1888,7 @@ function FeaturedRaceCard() {
     tick();
     const id = setInterval(tick, 1000);
     return () => clearInterval(id);
-  }, []);
+  }, [nextRace.date]);
 
   const pad = n => String(n).padStart(2, "0");
   const raceDate = new Date(nextRace.date).toLocaleDateString("en-GB", { weekday: "short", day: "numeric", month: "long" });
@@ -1928,7 +1929,7 @@ const DriverCard = memo(function DriverCard({ driver }) {
   const [expanded, setExpanded] = useState(false);
   const cardRef = useRef(null);
 
-  const handleMouseMove = (e) => {
+  const handleMouseMove = useCallback((e) => {
     const card = cardRef.current;
     if (!card) return;
     const rect = card.getBoundingClientRect();
@@ -1940,13 +1941,13 @@ const DriverCard = memo(function DriverCard({ driver }) {
     const rotY = ((x - cx) / cx) * 6;
     card.style.transform = `perspective(800px) rotateX(${rotX}deg) rotateY(${rotY}deg) translateY(-4px)`;
     card.style.boxShadow = `0 20px 60px rgba(0,0,0,0.8), ${rotY * -1}px ${rotX}px 30px rgba(225,6,0,0.1)`;
-  };
-  const handleMouseLeave = () => {
+  }, []);
+  const handleMouseLeave = useCallback(() => {
     const card = cardRef.current;
     if (!card) return;
     card.style.transform = "perspective(800px) rotateX(0deg) rotateY(0deg) translateY(0)";
     card.style.boxShadow = "";
-  };
+  }, []);
 
   return (
     <div className="driver-card" ref={cardRef} onMouseMove={handleMouseMove} onMouseLeave={handleMouseLeave}>
@@ -2221,8 +2222,8 @@ function HistorySection() {
               <strong style={{ color: "var(--text)", fontSize: 14 }}>{era.title}</strong>
               <p style={{ marginTop: 6 }}>{era.context}</p>
               <div style={{ marginTop: 10 }}>
-                {era.changes.map((c, i) => (
-                  <div className="timeline-change" key={i}>
+                {era.changes.map((c) => (
+                  <div className="timeline-change" key={`${c.team}-${c.out}`}>
                     <div style={{ marginBottom: 5, fontWeight: 700, color: "var(--text)", fontSize: 12 }}>{c.team}</div>
                     <span className="change-tag tag-out">OUT: {c.out}</span>
                     <span className="change-tag tag-in">IN: {c.in}</span>
@@ -2298,6 +2299,8 @@ function ergastColor(constructorId) {
   return MAP[constructorId] || "#aaa";
 }
 
+const thStyleDark = { background: "var(--bg3)", color: "#e10600", padding: "8px 12px", fontFamily: "Orbitron", fontSize: 10, letterSpacing: 2, textTransform: "uppercase", textAlign: "left" };
+
 function ResultsSection() {
   const [races, setRaces] = useState([]);
   const [selectedIdx, setSelectedIdx] = useState(0);
@@ -2366,7 +2369,6 @@ function ResultsSection() {
   const finishers = raceResults.filter(r => r.status === "Finished" || r.status?.startsWith("+"));
   const dnfs = raceResults.filter(r => r.status !== "Finished" && !r.status?.startsWith("+"));
 
-  const thStyleDark = { background: "var(--bg3)", color: "#e10600", padding: "8px 12px", fontFamily: "Orbitron", fontSize: 10, letterSpacing: 2, textTransform: "uppercase", textAlign: "left" };
   const maxDriverPts = driverStandings[0]?.pts || 1;
   const maxCtorPts = constructorStandings[0]?.pts || 1;
 
@@ -3013,7 +3015,7 @@ function RulesSection() {
       <SectionHeader title="Explain" accent="The Rules" group="Learn the Basics" icon="📋"
         intro="F1's rulebook is enormous. Here are the most confusing rules explained the way a knowledgeable friend would — with real examples from actual races." />
       {F1_RULES.map((rule, i) => (
-        <div key={i} className="rule-card">
+        <div key={rule.title} className="rule-card">
           <div className="rule-header" onClick={() => setOpen(open === i ? null : i)}>
             <span className="rule-icon">{rule.icon}</span>
             <span className="rule-title">{rule.title}</span>
@@ -3096,8 +3098,8 @@ function RecordsSection() {
               <span className="record-title">{cat.title}</span>
             </div>
             <div className="record-body">
-              {cat.rows.map((row, i) => (
-                <div key={i} className="record-row">
+              {cat.rows.map((row) => (
+                <div key={row.rank} className="record-row">
                   <span className="record-rank" style={{ color: row.rank === 1 ? "#ffd700" : row.rank === 2 ? "#c0c0c0" : row.rank === 3 ? "#cd7f32" : "#444" }}>
                     {row.rank === 1 ? "🥇" : row.rank === 2 ? "🥈" : row.rank === 3 ? "🥉" : `#${row.rank}`}
                   </span>
@@ -3235,7 +3237,7 @@ function QuizSection() {
         <div style={{ fontFamily: "Orbitron", fontSize: 9, color: "#e10600", letterSpacing: 2, marginBottom: 12 }}>QUESTION {current + 1}</div>
         <div style={{ fontSize: 16, fontWeight: 700, color: "var(--text)", lineHeight: 1.5, marginBottom: 24 }}>{q.q}</div>
         {q.options.map((opt, i) => (
-          <button key={i} disabled={selected !== null} onClick={() => pick(i)}
+          <button key={opt} disabled={selected !== null} onClick={() => pick(i)}
             className={`quiz-option${selected !== null ? (i === q.answer ? " correct" : i === selected ? " wrong" : "") : ""}`}>
             <span style={{ fontFamily: "Orbitron", fontSize: 10, minWidth: 20, color: "inherit" }}>{String.fromCharCode(65 + i)}</span>
             {opt}
@@ -3396,9 +3398,9 @@ function NewsSection() {
 
   const loadNews = useCallback(() => {
     fetch("/api/news")
-      .then(r => r.json())
+      .then(r => { if (!r.ok) throw new Error(`HTTP ${r.status}`); return r.json(); })
       .then(data => { setNews(data.items || []); setLoading(false); setError(null); })
-      .catch(() => { setError("Could not load news — please try again later."); setLoading(false); });
+      .catch(err => { console.error("News fetch failed:", err); setError("Could not load news — please try again later."); setLoading(false); });
   }, []);
 
   useEffect(() => { loadNews(); }, [loadNews]);
@@ -3444,9 +3446,9 @@ function NewsSection() {
       {!loading && !error && news.length === 0 && <EmptyState icon="📰" title="NO NEWS FOUND" sub="Could not load articles. Check back later." />}
       {!loading && !error && news.length > 0 && (
         <div className="news-grid">
-          {news.map((item, i) => (
-            <a key={i} href={item.link} target="_blank" rel="noopener noreferrer" className="news-card" style={{ textDecoration: "none" }}>
-              {item.image && <img src={item.image} alt="" className="news-img" onError={e => e.target.style.display = "none"} />}
+          {news.map((item) => (
+            <a key={item.link} href={item.link} target="_blank" rel="noopener noreferrer" className="news-card" style={{ textDecoration: "none" }}>
+              {item.image && <img src={item.image} alt={item.title ? `Thumbnail for: ${item.title}` : "F1 news thumbnail"} className="news-img" onError={e => e.target.style.display = "none"} />}
               <div className="news-source">Motorsport.com</div>
               <div className="news-title">{item.title}</div>
               <div className="news-date">{timeAgo(item.pubDate)}</div>
@@ -3660,7 +3662,9 @@ function GlobalSearch({ onNavigate }) {
         backdropFilter: "blur(12px)",
       }}>
         <span style={{ fontSize: 14, color: "var(--text3)", flexShrink: 0 }}>🔍</span>
+        <label htmlFor="global-search" style={{ display: "none" }}>Search sections</label>
         <input ref={inputRef}
+          id="global-search"
           value={query}
           onChange={e => { setQuery(e.target.value); setOpen(true); setFocused(-1); }}
           onFocus={() => setOpen(true)}
@@ -3689,7 +3693,7 @@ function GlobalSearch({ onNavigate }) {
           {results.length > 0 ? (
             <>
               {results.map((r, i) => (
-                <button key={i}
+                <button key={r.section}
                   onClick={() => { onNavigate(r.section); setQuery(""); setOpen(false); setFocused(-1); }}
                   style={{
                     display: "flex", alignItems: "center", gap: 12, width: "100%",
@@ -4399,7 +4403,7 @@ function ChampionshipTrackerSection() {
           })}
           {/* Round labels */}
           {rounds.map((r, i) => (
-            <text key={i} x={ptToX(i)} y={svgH - 8} textAnchor="middle" style={{ fontSize: 9, fill: "var(--text4)", fontFamily: "Orbitron" }}>{r.label}</text>
+            <text key={r.label} x={ptToX(i)} y={svgH - 8} textAnchor="middle" style={{ fontSize: 9, fill: "var(--text4)", fontFamily: "Orbitron" }}>{r.label}</text>
           ))}
           {/* Lines per driver */}
           {season.drivers.map((d, di) => {
@@ -4492,7 +4496,7 @@ function TeamQuizSection() {
             <p style={{ fontSize: 16, fontWeight: 700, color: "var(--text)", lineHeight: 1.5 }}>{q.q}</p>
           </div>
           {q.options.map((opt, i) => (
-            <button key={i} className="quiz-option" onClick={() => answer(opt.scores)}>
+            <button key={opt.text} className="quiz-option" onClick={() => answer(opt.scores)}>
               <span style={{ fontFamily: "Orbitron", fontSize: 10, color: "#e10600", minWidth: 20 }}>{String.fromCharCode(65 + i)}</span>
               {opt.text}
             </button>
@@ -4519,7 +4523,7 @@ function TyreStrategySection() {
 
       <div style={{ display: "flex", gap: 8, marginBottom: 20, flexWrap: "wrap" }}>
         {TYRE_STRATEGIES.map((r, i) => (
-          <button key={i} className={`year-btn${raceIdx === i ? " active" : ""}`} onClick={() => setRaceIdx(i)} style={{ fontSize: 10 }}>
+          <button key={r.race} className={`year-btn${raceIdx === i ? " active" : ""}`} onClick={() => setRaceIdx(i)} style={{ fontSize: 10 }}>
             {r.race}
           </button>
         ))}
@@ -4619,7 +4623,7 @@ function HeadToHeadSection() {
         ))}
       </div>
 
-      {H2H_DATA_2024.map((row, i) => {
+      {H2H_DATA_2024.map((row) => {
         const d1Count = metric === "quali" ? row.qualiD1 : row.raceD1;
         const d2Count = metric === "quali" ? row.qualiD2 : row.raceD2;
         const total = d1Count + d2Count;
@@ -4628,7 +4632,7 @@ function HeadToHeadSection() {
         const winner = d1Count > d2Count ? row.d1 : d2Count > d1Count ? row.d2 : null;
 
         return (
-          <div key={i} className="h2h-card" style={{ borderTop: `2px solid ${row.color}` }}>
+          <div key={row.team} className="h2h-card" style={{ borderTop: `2px solid ${row.color}` }}>
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 8, flexWrap: "wrap", gap: 8 }}>
               <div style={{ fontFamily: "Orbitron", fontSize: 10, color: row.color, letterSpacing: 1, textShadow: `0 0 8px ${row.color}60` }}>{row.team}</div>
               {winner && (
@@ -4741,7 +4745,7 @@ function BookmarksSection({ bookmarks, onNavigate, onRemove }) {
                 <div style={{ flex: 1 }}>
                   <div style={{ fontSize: 11, fontWeight: 700, color: "var(--text)" }}>{s.label}</div>
                 </div>
-                <button className="bookmark-btn" onClick={e => { e.stopPropagation(); isBookmarked ? onRemove(s.id) : null; }}
+                <button className="bookmark-btn" onClick={e => { e.stopPropagation(); if (isBookmarked) onRemove(s.id); }}
                   style={{ color: isBookmarked ? "#FFD700" : "var(--text4)" }}>
                   {isBookmarked ? "★" : "☆"}
                 </button>
@@ -4994,8 +4998,8 @@ function HomeSection({ onNavigate }) {
       <div style={{ marginBottom: 16 }}>
         <div className="home-section-title">WHAT'S NEW</div>
         <div className="card" style={{ padding: "14px 18px" }}>
-          {CHANGELOG.map((item, i) => (
-            <div key={i} className="changelog-item">
+          {CHANGELOG.map((item) => (
+            <div key={item.text} className="changelog-item">
               <div className="changelog-dot" style={{ background: item.color, boxShadow: `0 0 6px ${item.color}60` }} />
               <div style={{ fontSize: 12, color: "var(--text2)", lineHeight: 1.6 }}>{item.text}</div>
             </div>
@@ -5291,6 +5295,26 @@ function useAutoRefresh(fn, intervalMs, enabled = true) {
   }, [intervalMs, enabled]);
 }
 
+export class ErrorBoundary extends Component {
+  state = { error: null };
+  static getDerivedStateFromError(e) { return { error: e }; }
+  render() {
+    if (this.state.error) {
+      return (
+        <div style={{ padding: 40, textAlign: "center", fontFamily: "Orbitron, sans-serif" }}>
+          <div style={{ fontSize: 32, marginBottom: 16 }}>⚠️</div>
+          <div style={{ color: "#e10600", fontSize: 14, letterSpacing: 2, marginBottom: 12 }}>SOMETHING WENT WRONG</div>
+          <button onClick={() => this.setState({ error: null })}
+            style={{ padding: "8px 20px", background: "#e10600", border: "none", color: "#fff", cursor: "pointer", borderRadius: 4, fontFamily: "Orbitron", fontSize: 11 }}>
+            RETRY
+          </button>
+        </div>
+      );
+    }
+    return this.props.children;
+  }
+}
+
 export default function F1Guide() {
   const [active, setActive] = useState("home");
   const [openGroup, setOpenGroup] = useState(null);
@@ -5384,10 +5408,10 @@ export default function F1Guide() {
                 );
               })}
               {/* Bookmarks button */}
-              <button className="theme-toggle" onClick={() => selectSection("bookmarks")} title="My Bookmarks" style={{ fontSize: 16 }}>
+              <button className="theme-toggle" onClick={() => selectSection("bookmarks")} title="My Bookmarks" aria-label="My Bookmarks" style={{ fontSize: 16 }}>
                 🔖
               </button>
-              <button className="theme-toggle" onClick={() => setDarkMode(d => !d)} title="Toggle light/dark mode">
+              <button className="theme-toggle" onClick={() => setDarkMode(d => !d)} title="Toggle light/dark mode" aria-label={darkMode ? "Switch to light mode" : "Switch to dark mode"}>
                 {darkMode ? "☀️" : "🌙"}
               </button>
             </div>
@@ -5405,6 +5429,7 @@ export default function F1Guide() {
                 <div style={{ display: "flex", justifyContent: "flex-end", marginBottom: -8 }}>
                   <button className="bookmark-btn" onClick={() => toggleBookmark(active)}
                     title={bookmarks.includes(active) ? "Remove bookmark" : "Bookmark this section"}
+                    aria-label={bookmarks.includes(active) ? "Remove bookmark" : "Bookmark this section"}
                     style={{ fontSize: 18, color: bookmarks.includes(active) ? "#FFD700" : "var(--text4)" }}>
                     {bookmarks.includes(active) ? "★" : "☆"}
                   </button>

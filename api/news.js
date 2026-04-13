@@ -48,6 +48,7 @@ export default async function handler(req, res) {
         return res.status(200).json({ items, source: url });
       }
     } catch (e) {
+      console.error(`RSS source failed (${url}): ${e.message}`);
       // try next source
     }
   }
