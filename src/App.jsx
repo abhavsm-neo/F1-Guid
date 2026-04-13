@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useMemo, useCallback, memo } from "react";
 
 const styles = `
   @import url('https://fonts.googleapis.com/css2?family=Exo+2:wght@300;400;600;700;900&family=Orbitron:wght@400;700;900&display=swap');
@@ -467,11 +467,30 @@ const styles = `
 
   /* ── Section entrance animation ── */
   @keyframes sectionIn {
-    from { opacity: 0; }
-    to { opacity: 1; }
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
   }
   .section-enter {
-    animation: sectionIn 0.4s cubic-bezier(0.22, 1, 0.36, 1) both;
+    animation: sectionIn 0.45s cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+
+  /* Global button press feedback */
+  button { transition: transform 0.12s ease, filter 0.15s ease; }
+  button:active:not(:disabled) { transform: scale(0.96); filter: brightness(0.9); }
+
+  /* Spinning refresh icon */
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .spin { display: inline-block; animation: spin 0.9s linear infinite; }
+
+  /* Respect reduced motion */
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+    .orb { animation: none !important; }
   }
 
   /* ── Staggered card animation ── */
@@ -605,6 +624,21 @@ const styles = `
   /* ── Predictor ── */
   .predictor-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
   @media (max-width: 600px) { .predictor-grid { grid-template-columns: 1fr; } }
+
+  /* ── Mobile responsive helpers (added) ── */
+  @media (max-width: 600px) {
+    .nav-group-label { padding: 12px 6px; font-size: 11px; letter-spacing: 0.5px; }
+    .nav-dropdown { min-width: 200px; }
+    .countdown-tiles { gap: 6px; }
+    .countdown-num { padding: 6px 10px; min-width: 44px; }
+    .driver-stat-row { gap: 6px; }
+    .circuit-grid, .news-grid, .card-grid { gap: 12px; }
+    button, .nav-dropdown-item, .mobile-sheet-item { min-height: 40px; }
+  }
+  @media (max-width: 480px) {
+    .hero { padding: 24px 12px 20px; }
+    .countdown-tiles { gap: 4px; }
+  }
   .predictor-driver-btn {
     display: flex; align-items: center; gap: 10px; width: 100%;
     padding: 9px 12px; background: var(--card-bg); border: 1px solid var(--glass-border);
@@ -1890,7 +1924,7 @@ function RatingBar({ label, value }) {
 }
 
 
-function DriverCard({ driver }) {
+const DriverCard = memo(function DriverCard({ driver }) {
   const [expanded, setExpanded] = useState(false);
   const cardRef = useRef(null);
 
@@ -1950,9 +1984,9 @@ function DriverCard({ driver }) {
       </div>
     </div>
   );
-}
+});
 
-function TeamCard({ team }) {
+const TeamCard = memo(function TeamCard({ team }) {
   const [expanded, setExpanded] = useState(false);
   const cardRef = useRef(null);
 
@@ -2014,7 +2048,7 @@ function TeamCard({ team }) {
       </div>
     </div>
   );
-}
+});
 
 function HowItWorks() {
   return (
@@ -2324,6 +2358,8 @@ function ResultsSection() {
 
   // Load on mount
   useEffect(() => { loadAll(); }, []);
+  // Auto-refresh every 90s while tab is visible
+  useAutoRefresh(loadAll, 90_000);
 
   const selectedRace = races[selectedIdx];
   const raceResults = selectedRace?.Results || [];
@@ -2345,10 +2381,10 @@ function ResultsSection() {
           <span style={{ fontSize: 10, color: "#00dc78", fontFamily: "Orbitron", letterSpacing: 1 }}>LIVE · Jolpica F1 API</span>
         </div>
         {lastUpdated && <span style={{ fontSize: 10, color: "var(--text4)" }}>Updated {lastUpdated.toLocaleTimeString()}</span>}
-        <button onClick={loadAll} style={{ marginLeft: "auto", padding: "6px 14px", background: "transparent", border: "1px solid var(--border2)", color: "var(--text3)", fontFamily: "Orbitron", fontSize: 9, letterSpacing: 2, cursor: "pointer", borderRadius: 20, transition: "all 0.2s" }}
-          onMouseEnter={e => { e.target.style.borderColor="#e10600"; e.target.style.color="var(--text)"; }}
-          onMouseLeave={e => { e.target.style.borderColor=""; e.target.style.color=""; }}>
-          ↻ Refresh
+        <button onClick={loadAll} disabled={loading} style={{ marginLeft: "auto", padding: "6px 14px", background: "transparent", border: "1px solid var(--border2)", color: "var(--text3)", fontFamily: "Orbitron", fontSize: 9, letterSpacing: 2, cursor: loading ? "wait" : "pointer", borderRadius: 20, transition: "all 0.2s" }}
+          onMouseEnter={e => { e.currentTarget.style.borderColor="#e10600"; e.currentTarget.style.color="var(--text)"; }}
+          onMouseLeave={e => { e.currentTarget.style.borderColor=""; e.currentTarget.style.color=""; }}>
+          <span className={loading ? "spin" : ""}>↻</span> Refresh
         </button>
       </div>
 
@@ -2621,9 +2657,11 @@ function LiveStandingsSection() {
   }
 
   useEffect(() => { loadStandings(); }, []);
+  // Auto-refresh every 60s while tab is visible
+  useAutoRefresh(loadStandings, 60_000);
 
-  const maxDriverPts = driverStandings[0]?.pts || 1;
-  const maxCtorPts = constructorStandings[0]?.pts || 1;
+  const maxDriverPts = useMemo(() => driverStandings[0]?.pts || 1, [driverStandings]);
+  const maxCtorPts = useMemo(() => constructorStandings[0]?.pts || 1, [constructorStandings]);
 
   const podiumColors = ["#FFD700","#C0C0C0","#CD7F32"];
 
@@ -2638,7 +2676,7 @@ function LiveStandingsSection() {
           <span style={{ fontSize: 10, color: "#00dc78", fontFamily: "Orbitron", letterSpacing: 1 }}>LIVE · Jolpica F1 API</span>
         </div>
         {lastUpdated && <span style={{ fontSize: 10, color: "var(--text4)" }}>Updated {lastUpdated.toLocaleTimeString()}</span>}
-        <button onClick={loadStandings} style={{ marginLeft: "auto", padding: "6px 14px", background: "transparent", border: "1px solid var(--border2)", color: "var(--text3)", fontFamily: "Orbitron", fontSize: 9, letterSpacing: 2, cursor: "pointer", borderRadius: 20 }}>↻ Refresh</button>
+        <button onClick={loadStandings} disabled={loading} style={{ marginLeft: "auto", padding: "6px 14px", background: "transparent", border: "1px solid var(--border2)", color: "var(--text3)", fontFamily: "Orbitron", fontSize: 9, letterSpacing: 2, cursor: loading ? "wait" : "pointer", borderRadius: 20 }}><span className={loading ? "spin" : ""}>↻</span> Refresh</button>
       </div>
 
       {loading && (
@@ -3356,12 +3394,16 @@ function NewsSection() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  useEffect(() => {
+  const loadNews = useCallback(() => {
     fetch("/api/news")
       .then(r => r.json())
-      .then(data => { setNews(data.items || []); setLoading(false); })
+      .then(data => { setNews(data.items || []); setLoading(false); setError(null); })
       .catch(() => { setError("Could not load news — please try again later."); setLoading(false); });
   }, []);
+
+  useEffect(() => { loadNews(); }, [loadNews]);
+  // Auto-refresh news every 5 minutes
+  useAutoRefresh(loadNews, 5 * 60_000);
 
   function timeAgo(dateStr) {
     const diff = (Date.now() - new Date(dateStr)) / 1000;
@@ -5220,6 +5262,33 @@ function useToast() {
     setTimeout(() => setToast(null), 2200);
   }
   return [toast, showToast];
+}
+
+// ─── AUTO-REFRESH HOOK ───────────────────────────────────────────────────────
+// Calls `fn` on an interval, but pauses when the tab is hidden so we don't
+// hammer APIs in background tabs. Uses a ref so callers can pass an inline
+// function without resetting the interval on every render.
+function useAutoRefresh(fn, intervalMs, enabled = true) {
+  const fnRef = useRef(fn);
+  useEffect(() => { fnRef.current = fn; }, [fn]);
+
+  useEffect(() => {
+    if (!enabled) return;
+    let id = null;
+    const start = () => {
+      if (id == null) id = setInterval(() => fnRef.current?.(), intervalMs);
+    };
+    const stop = () => {
+      if (id != null) { clearInterval(id); id = null; }
+    };
+    const onVisibility = () => {
+      if (document.hidden) stop();
+      else start();
+    };
+    if (!document.hidden) start();
+    document.addEventListener("visibilitychange", onVisibility);
+    return () => { stop(); document.removeEventListener("visibilitychange", onVisibility); };
+  }, [intervalMs, enabled]);
 }
 
 export default function F1Guide() {
