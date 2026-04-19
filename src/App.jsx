@@ -1709,6 +1709,639 @@ const styles = `
     font-size: 9px; font-family: 'Orbitron', sans-serif;
     letter-spacing: 1px; text-transform: uppercase;
   }
+
+  /* ─── PIT WALL SECTION — scoped under .pitwall-root ─────────────────────── */
+  @keyframes pw-maskRevealUp {
+    0%   { clip-path: inset(100% 0 0 0); transform: translateY(20px); }
+    100% { clip-path: inset(0 0 0 0); transform: none; }
+  }
+  @keyframes pw-fadeSlow { from { opacity:0; } to { opacity:1; } }
+  @keyframes pw-fadeUpSlow {
+    from { opacity:0; transform:translateY(18px); }
+    to   { opacity:1; transform:none; }
+  }
+  @keyframes pw-underlineDraw {
+    0%   { transform: scaleX(0); transform-origin: left; }
+    100% { transform: scaleX(1); transform-origin: left; }
+  }
+  @keyframes pw-ticker {
+    0%   { transform:translateX(0); }
+    100% { transform:translateX(-50%); }
+  }
+  @keyframes pw-pulseDot {
+    0%,100% { opacity:0.5; transform:scale(1); }
+    50%     { opacity:1; transform:scale(1.2); }
+  }
+  @keyframes pw-blink {
+    0%,100% { opacity:1; }
+    50%     { opacity:0.25; }
+  }
+  @keyframes pw-flagWave {
+    0%,100% { transform:rotate(0); }
+    50%     { transform:rotate(5deg); }
+  }
+  @keyframes pw-speedLine {
+    0%   { transform:translateX(-200px); opacity:0; }
+    20%  { opacity:0.5; }
+    100% { transform:translateX(calc(100% + 200px)); opacity:0; }
+  }
+  @keyframes pw-barGrow {
+    0%   { transform:scaleX(0); transform-origin:left; }
+    100% { transform:scaleX(1); transform-origin:left; }
+  }
+  @keyframes pw-rowSlide {
+    from { opacity:0; transform:translateX(-24px); }
+    to   { opacity:1; transform:none; }
+  }
+  @keyframes pw-numCountUp {
+    from { opacity:0; transform:translateY(14px); }
+    to   { opacity:1; transform:none; }
+  }
+  @keyframes pw-checkerFadeIn {
+    from { opacity:0; transform:scale(0.8); }
+    to   { opacity:1; transform:scale(1); }
+  }
+
+  .pitwall-root {
+    --pw-carbon:   #0a0a0a; --pw-carbon-2: #131313; --pw-carbon-3: #1d1d1d;
+    --pw-paper:    #f2ece0; --pw-paper-2:  #e8e1d2; --pw-paper-3:  #d8d0bf;
+    --pw-ink:      #0a0a0a; --pw-ink-2:    #4a4438; --pw-ink-3:    #8a8172;
+    --pw-racing:   #e10600; --pw-racing-h: #ff2010; --pw-gold: #d4a017;
+    --pw-rule:     #d4cec4;
+    --pw-mercedes: #27F4D2; --pw-ferrari:  #E8002D; --pw-mclaren:     #FF8000;
+    --pw-redbull:  #3671C6; --pw-williams: #64C4FF; --pw-haas:        #B6BABD;
+    --pw-alpine:   #0093CC; --pw-audi:     #00877C; --pw-racingbulls: #6692FF;
+    --pw-aston:    #229971; --pw-cadillac: #8A9099;
+    background: var(--pw-paper);
+    color: var(--pw-ink);
+    font-family: 'Inter', sans-serif;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+    border-radius: 8px;
+  }
+
+  /* Ticker */
+  .pitwall-root .pw-ticker-wrap {
+    background: var(--pw-carbon); height: 44px; overflow: hidden;
+    display: flex; align-items: center;
+    border-bottom: 2px solid var(--pw-racing); position: relative;
+    animation: pw-fadeSlow 0.9s ease both;
+  }
+  .pitwall-root .pw-ticker-wrap::before, .pitwall-root .pw-ticker-wrap::after {
+    content:''; position:absolute; top:0; bottom:0; width:80px; z-index:2; pointer-events:none;
+  }
+  .pitwall-root .pw-ticker-wrap::before { left:0; background:linear-gradient(90deg, var(--pw-carbon), transparent); }
+  .pitwall-root .pw-ticker-wrap::after  { right:0; background:linear-gradient(270deg, var(--pw-carbon), transparent); }
+  .pitwall-root .pw-ticker-track {
+    display:flex; white-space:nowrap;
+    animation: pw-ticker 48s linear infinite; will-change:transform;
+  }
+  .pitwall-root .pw-ticker-track:hover { animation-play-state:paused; }
+  .pitwall-root .pw-tick {
+    display:inline-flex; align-items:center; gap:8px; padding:0 26px;
+    font-family:'JetBrains Mono',monospace; font-size:11px; font-weight:500;
+    letter-spacing:.08em; text-transform:uppercase; color:rgba(255,255,255,0.55);
+  }
+  .pitwall-root .pw-tick .sym { color:var(--pw-racing-h); font-weight:600; letter-spacing:.14em; }
+  .pitwall-root .pw-tick .val { color:#fff; font-weight:600; }
+  .pitwall-root .pw-tick .pts { color:var(--pw-gold); font-weight:500; }
+  .pitwall-root .pw-tick-dot { color:rgba(255,255,255,.2); padding:0 4px; font-size:9px; }
+
+  /* Hero */
+  .pitwall-root .pw-hero {
+    background:var(--pw-paper); padding:40px 36px 28px;
+    position:relative; overflow:hidden;
+    animation: pw-fadeUpSlow 1s ease both 0.2s;
+  }
+  .pitwall-root .pw-speed-line {
+    position:absolute; top:0; left:0; height:1px;
+    background:linear-gradient(90deg,transparent 0%,var(--pw-racing) 50%,transparent 100%);
+    animation: pw-speedLine 5.5s ease-out infinite; pointer-events:none;
+  }
+  .pitwall-root .pw-speed-line:nth-child(1){top:18%;width:160px;animation-delay:1.8s;}
+  .pitwall-root .pw-speed-line:nth-child(2){top:42%;width:220px;animation-delay:3.2s;}
+  .pitwall-root .pw-speed-line:nth-child(3){top:68%;width:120px;animation-delay:2.4s;}
+  .pitwall-root .pw-hero-top {
+    display:flex; justify-content:space-between; align-items:flex-start;
+    margin-bottom:24px; animation: pw-fadeUpSlow 1s ease both 0.2s;
+  }
+  .pitwall-root .pw-brand-eyebrow {
+    display:inline-flex; align-items:center; gap:16px;
+    font-family:'JetBrains Mono',monospace; font-size:11px; font-weight:600;
+    letter-spacing:.24em; text-transform:uppercase; color:var(--pw-ink);
+    animation: pw-checkerFadeIn 0.9s cubic-bezier(.2,.8,.2,1) both 0.5s;
+  }
+  .pitwall-root .pw-checker {
+    display:inline-block; width:42px; height:26px;
+    background: linear-gradient(45deg,#fff 25%,transparent 25%,transparent 75%,#fff 75%),
+                linear-gradient(45deg,#fff 25%,transparent 25%,transparent 75%,#fff 75%);
+    background-size:10px 10px; background-position:0 0,5px 5px; background-color:#000;
+    animation: pw-flagWave 3s ease-in-out infinite; transform-origin:left center; flex-shrink:0;
+  }
+  .pitwall-root .pw-brand-right { text-align:right; animation: pw-fadeUpSlow 1s ease both 0.7s; }
+  .pitwall-root .pw-greeting {
+    font-family:'Playfair Display',serif; font-style:italic; font-size:15px;
+    color:var(--pw-ink-2); margin-bottom:4px;
+  }
+  .pitwall-root .pw-dateline {
+    font-family:'JetBrains Mono',monospace; font-size:10px;
+    letter-spacing:.16em; text-transform:uppercase; color:var(--pw-ink-3);
+  }
+  .pitwall-root .pw-title-wrap { position:relative; margin-bottom:24px; padding-bottom:20px; }
+  .pitwall-root .pw-hero-title {
+    font-family:'Playfair Display',serif; font-weight:800;
+    line-height:0.95; letter-spacing:-0.03em; color:var(--pw-ink);
+  }
+  .pitwall-root .pw-hero-title .line1 {
+    display:block; font-size:clamp(48px,8vw,112px); line-height:1.1; overflow:hidden; padding-bottom:0.05em;
+  }
+  .pitwall-root .pw-hero-title .line1 span {
+    display:inline-block; animation: pw-maskRevealUp 1.1s cubic-bezier(.2,.9,.25,1) both 0.9s;
+  }
+  .pitwall-root .pw-hero-title .line2 {
+    display:block; font-size:clamp(48px,8vw,112px); font-style:italic; color:var(--pw-racing);
+    line-height:1.1; overflow:hidden; margin-top:-0.05em; padding-bottom:0.05em;
+  }
+  .pitwall-root .pw-hero-title .line2 span {
+    display:inline-block; animation: pw-maskRevealUp 1.1s cubic-bezier(.2,.9,.25,1) both 1.4s;
+  }
+  .pitwall-root .pw-title-underline {
+    position:absolute; left:0; bottom:0; height:5px; width:100%;
+    background:var(--pw-racing); transform:scaleX(0); transform-origin:left;
+    animation: pw-underlineDraw 1.2s cubic-bezier(.3,.9,.3,1) both 2.2s;
+  }
+  .pitwall-root .pw-hero-sub {
+    font-family:'JetBrains Mono',monospace; font-size:11px; letter-spacing:.18em;
+    text-transform:uppercase; color:var(--pw-ink-2); padding-top:18px;
+    border-top:1px solid var(--pw-ink);
+    display:flex; justify-content:space-between; align-items:center;
+    animation: pw-fadeUpSlow 1s ease both 2.8s; flex-wrap:wrap; gap:10px;
+  }
+  .pitwall-root .pw-live-badge {
+    display:inline-flex; align-items:center; gap:10px; padding:8px 14px;
+    background:var(--pw-racing); color:#fff; font-weight:700; letter-spacing:.2em;
+  }
+  .pitwall-root .pw-live-badge::before {
+    content:''; display:inline-block; width:7px; height:7px;
+    background:#fff; border-radius:50%; animation: pw-blink 1.6s ease infinite;
+  }
+
+  /* Race hero block */
+  .pitwall-root .pw-race-block {
+    background:var(--pw-carbon); color:#fff; padding:40px 44px 42px;
+    margin:0 0 0 0; position:relative; overflow:hidden;
+    border-top:5px solid var(--pw-racing);
+    animation: pw-fadeUpSlow 1.1s ease both 3.2s;
+  }
+  .pitwall-root .pw-race-block::before {
+    content:''; position:absolute; inset:0;
+    background: repeating-linear-gradient(135deg,rgba(255,255,255,0.022) 0 2px,transparent 2px 16px);
+    pointer-events:none; z-index:0;
+  }
+  .pitwall-root .pw-race-block::after {
+    content:''; position:absolute; top:0; right:0; width:240px; height:48px;
+    background: linear-gradient(45deg,#fff 25%,transparent 25%,transparent 75%,#fff 75%),
+                linear-gradient(45deg,#fff 25%,transparent 25%,transparent 75%,#fff 75%);
+    background-size:14px 14px; background-position:0 0,7px 7px; background-color:#000;
+    opacity:0.12; z-index:0;
+  }
+  .pitwall-root .pw-race-grid {
+    display:grid; grid-template-columns:1.3fr 1fr; gap:48px; position:relative; z-index:1;
+  }
+  .pitwall-root .pw-race-meta-row { display:flex; align-items:center; gap:14px; margin-bottom:16px; }
+  .pitwall-root .pw-race-round {
+    font-family:'JetBrains Mono',monospace; font-size:11px; font-weight:600;
+    letter-spacing:.22em; text-transform:uppercase; color:var(--pw-racing-h);
+    padding:7px 13px; border:1px solid var(--pw-racing); background:rgba(225,6,0,0.12);
+  }
+  .pitwall-root .pw-race-flag-big { font-size:32px; animation: pw-flagWave 2.8s ease-in-out infinite; }
+  .pitwall-root .pw-race-name {
+    font-family:'Playfair Display',serif; font-size:clamp(36px,5vw,68px); font-weight:700;
+    line-height:0.92; letter-spacing:-0.025em; color:#fff; margin-bottom:14px;
+  }
+  .pitwall-root .pw-race-name em { font-style:italic; color:var(--pw-racing-h); font-weight:500; }
+  .pitwall-root .pw-race-circuit { font-size:13px; color:rgba(255,255,255,0.68); margin-bottom:5px; }
+  .pitwall-root .pw-race-circuit strong { color:#fff; font-weight:500; }
+  .pitwall-root .pw-race-stats {
+    display:flex; gap:32px; margin-top:22px; padding-top:20px;
+    border-top:1px solid rgba(255,255,255,0.15);
+  }
+  .pitwall-root .pw-race-stat { display:flex; flex-direction:column; }
+  .pitwall-root .pw-race-stat-label {
+    font-family:'JetBrains Mono',monospace; font-size:9px; letter-spacing:.18em;
+    text-transform:uppercase; color:rgba(255,255,255,0.5); margin-bottom:6px;
+  }
+  .pitwall-root .pw-race-stat-val {
+    font-family:'JetBrains Mono',monospace; font-size:14px; font-weight:500; color:#fff;
+  }
+  .pitwall-root .pw-race-right { display:flex; flex-direction:column; justify-content:center; }
+  .pitwall-root .pw-cd-label {
+    font-family:'JetBrains Mono',monospace; font-size:10px; letter-spacing:.26em;
+    text-transform:uppercase; color:rgba(255,255,255,0.55); margin-bottom:18px;
+    display:flex; align-items:center; gap:10px;
+  }
+  .pitwall-root .pw-cd-label::before {
+    content:''; width:7px; height:7px; background:var(--pw-racing);
+    border-radius:50%; animation: pw-pulseDot 1.8s ease infinite;
+  }
+  .pitwall-root .pw-countdown { display:grid; grid-template-columns:repeat(4,1fr); gap:8px; }
+  .pitwall-root .pw-cd-cell {
+    background:var(--pw-carbon-3); padding:18px 6px 14px; text-align:center;
+    border:1px solid rgba(255,255,255,0.08);
+  }
+  .pitwall-root .pw-cd-num {
+    font-family:'JetBrains Mono',monospace; font-size:clamp(30px,3.6vw,44px);
+    font-weight:700; color:#fff; line-height:1; letter-spacing:-0.03em;
+    font-variant-numeric:tabular-nums; animation: pw-numCountUp 0.8s ease both 3.8s;
+  }
+  .pitwall-root .pw-cd-label-sub {
+    font-family:'JetBrains Mono',monospace; font-size:9px; letter-spacing:.22em;
+    text-transform:uppercase; color:rgba(255,255,255,0.55); margin-top:10px;
+  }
+
+  /* Calendar strip */
+  .pitwall-root .pw-cal-section { padding:44px 36px 0; animation: pw-fadeUpSlow 1s ease both 3.5s; }
+  .pitwall-root .pw-cal-head {
+    display:flex; align-items:baseline; justify-content:space-between; margin-bottom:18px;
+  }
+  .pitwall-root .pw-cal-title {
+    font-family:'Playfair Display',serif; font-size:26px; font-weight:500;
+    letter-spacing:-0.015em; color:var(--pw-ink);
+  }
+  .pitwall-root .pw-cal-title em { font-style:italic; color:var(--pw-racing); font-weight:700; }
+  .pitwall-root .pw-cal-meta {
+    font-family:'JetBrains Mono',monospace; font-size:10px; letter-spacing:.18em;
+    text-transform:uppercase; color:var(--pw-ink-3); font-weight:500;
+  }
+  .pitwall-root .pw-cal-strip-wrap {
+    position:relative; overflow:hidden;
+    border:2px solid var(--pw-ink); background:var(--pw-paper-2);
+  }
+  .pitwall-root .pw-cal-progress {
+    position:absolute; top:0; left:0; right:0; height:3px;
+    background:rgba(0,0,0,0.08); z-index:3;
+  }
+  .pitwall-root .pw-cal-progress-fill {
+    height:100%; background:var(--pw-racing);
+    transform:scaleX(0); transform-origin:left;
+    animation: pw-barGrow 1.6s cubic-bezier(.3,.9,.3,1) both 4.2s;
+  }
+  .pitwall-root .pw-cal-strip {
+    display:grid; grid-auto-flow:column; grid-auto-columns:minmax(128px,1fr);
+    overflow-x:auto; scrollbar-width:thin;
+  }
+  .pitwall-root .pw-cal-strip::-webkit-scrollbar { height:4px; }
+  .pitwall-root .pw-cal-strip::-webkit-scrollbar-thumb { background:var(--pw-ink); }
+  .pitwall-root .pw-cal-round {
+    padding:18px 14px 16px; border-right:1px solid var(--pw-rule);
+    background:var(--pw-paper); transition:background 0.25s;
+    min-height:144px; display:flex; flex-direction:column; cursor:default;
+  }
+  .pitwall-root .pw-cal-round:hover { background:var(--pw-paper-3); }
+  .pitwall-root .pw-cal-round:last-child { border-right:none; }
+  .pitwall-root .pw-cal-round.done { background:var(--pw-paper-2); }
+  .pitwall-root .pw-cal-round.next { background:var(--pw-carbon); color:#fff; }
+  .pitwall-root .pw-cal-round.next .pw-cal-flag-name { color:#fff; }
+  .pitwall-root .pw-cal-round.next .pw-cal-date { color:rgba(255,255,255,0.75); }
+  .pitwall-root .pw-cal-round.next .pw-cal-country { color:rgba(255,255,255,0.55); }
+  .pitwall-root .pw-cal-rnum {
+    font-family:'JetBrains Mono',monospace; font-size:10px; letter-spacing:.14em;
+    color:var(--pw-ink-3); margin-bottom:10px; font-weight:600;
+    display:flex; align-items:center; justify-content:space-between;
+  }
+  .pitwall-root .pw-cal-round.next .pw-cal-rnum { color:var(--pw-racing-h); }
+  .pitwall-root .pw-cal-dot {
+    width:8px; height:8px; border-radius:50%; background:var(--pw-gold); display:inline-block;
+  }
+  .pitwall-root .pw-cal-round:not(.done):not(.next) .pw-cal-dot { display:none; }
+  .pitwall-root .pw-cal-round.next .pw-cal-dot { background:var(--pw-racing); animation: pw-pulseDot 1.6s ease infinite; }
+  .pitwall-root .pw-cal-flag-emoji { font-size:22px; line-height:1; margin-bottom:7px; }
+  .pitwall-root .pw-cal-country {
+    font-family:'JetBrains Mono',monospace; font-size:9px; color:var(--pw-ink-3);
+    letter-spacing:.14em; text-transform:uppercase; margin-bottom:3px; font-weight:500;
+  }
+  .pitwall-root .pw-cal-flag-name {
+    font-family:'Playfair Display',serif; font-size:16px; font-weight:500;
+    color:var(--pw-ink); letter-spacing:-.01em; line-height:1.1; margin-bottom:auto;
+  }
+  .pitwall-root .pw-cal-date {
+    font-family:'JetBrains Mono',monospace; font-size:11px; color:var(--pw-ink-2);
+    letter-spacing:.04em; margin-top:12px; font-weight:500;
+  }
+  .pitwall-root .pw-cal-winner {
+    font-family:'JetBrains Mono',monospace; font-size:10px; color:var(--pw-gold);
+    margin-top:5px; font-weight:600; letter-spacing:.02em;
+    display:flex; align-items:center; gap:5px;
+  }
+  .pitwall-root .pw-cal-winner::before {
+    content:''; display:inline-block; width:9px; height:9px; background:var(--pw-gold);
+    clip-path:polygon(50% 0%,61% 35%,98% 35%,68% 57%,79% 91%,50% 70%,21% 91%,32% 57%,2% 35%,39% 35%);
+  }
+
+  /* Main grid */
+  .pitwall-root .pw-main-section { padding:44px 36px 0; }
+  .pitwall-root .pw-main-grid {
+    display:grid; grid-template-columns:1.1fr 1fr 1fr;
+    border:2px solid var(--pw-ink); background:var(--pw-paper);
+  }
+  .pitwall-root .pw-col { border-right:1px solid var(--pw-rule); display:flex; flex-direction:column; }
+  .pitwall-root .pw-col:last-child { border-right:none; }
+  .pitwall-root .pw-col-head {
+    padding:20px 22px 18px; border-bottom:2px solid var(--pw-ink);
+    background:var(--pw-paper); position:sticky; top:0; z-index:5;
+  }
+  .pitwall-root .pw-col-num {
+    font-family:'JetBrains Mono',monospace; font-size:9px; color:var(--pw-ink-3);
+    letter-spacing:.18em; margin-bottom:6px; font-weight:500;
+  }
+  .pitwall-root .pw-col-name {
+    font-family:'Playfair Display',serif; font-size:22px; font-weight:700;
+    letter-spacing:-0.015em; color:var(--pw-ink); line-height:1;
+  }
+  .pitwall-root .pw-col-name em { font-style:italic; color:var(--pw-racing); font-weight:500; }
+  .pitwall-root .pw-col-sub {
+    font-family:'JetBrains Mono',monospace; font-size:9px; letter-spacing:.16em;
+    text-transform:uppercase; color:var(--pw-ink-3); margin-top:8px;
+  }
+
+  /* Driver rows */
+  .pitwall-root .pw-driver-row {
+    display:grid; grid-template-columns:30px 1fr auto; align-items:center;
+    gap:12px; padding:12px 22px; border-bottom:1px solid var(--pw-rule);
+    position:relative; transition:background 0.2s,transform 0.2s;
+    opacity:0; animation: pw-rowSlide 0.6s cubic-bezier(.25,.9,.3,1) both;
+  }
+  .pitwall-root .pw-driver-row::before {
+    content:''; position:absolute; left:0; top:0; bottom:0;
+    width:4px; background:var(--pw-team-color,var(--pw-ink-3));
+  }
+  .pitwall-root .pw-driver-row:hover { background:var(--pw-paper-2); transform:translateX(3px); }
+  .pitwall-root .pw-driver-row.leader {
+    background:linear-gradient(90deg,rgba(212,160,23,0.12) 0%,transparent 60%);
+  }
+  .pitwall-root .pw-driver-pos {
+    font-family:'JetBrains Mono',monospace; font-size:12px;
+    font-weight:700; color:var(--pw-ink-2); font-variant-numeric:tabular-nums;
+  }
+  .pitwall-root .pw-driver-info { display:flex; flex-direction:column; }
+  .pitwall-root .pw-driver-line { display:flex; align-items:center; gap:7px; }
+  .pitwall-root .pw-driver-name {
+    font-family:'Playfair Display',serif; font-size:15px; font-weight:500;
+    color:var(--pw-ink); letter-spacing:-0.01em;
+  }
+  .pitwall-root .pw-driver-code {
+    font-family:'JetBrains Mono',monospace; font-size:9px; font-weight:700;
+    color:#fff; background:var(--pw-team-color,var(--pw-ink-3));
+    padding:2px 5px; letter-spacing:.06em;
+  }
+  .pitwall-root .pw-driver-team { font-size:10px; color:var(--pw-ink-3); margin-top:2px; }
+  .pitwall-root .pw-driver-gap {
+    color:var(--pw-ink-2); font-family:'JetBrains Mono',monospace; font-size:10px; font-weight:500;
+  }
+  .pitwall-root .pw-pts-wrap { text-align:right; }
+  .pitwall-root .pw-pts {
+    font-family:'JetBrains Mono',monospace; font-size:18px; font-weight:700;
+    color:var(--pw-ink); font-variant-numeric:tabular-nums; line-height:1;
+  }
+  .pitwall-root .pw-pts-sub {
+    font-family:'JetBrains Mono',monospace; font-size:8px; color:var(--pw-ink-3);
+    letter-spacing:.12em; text-transform:uppercase; margin-top:2px;
+  }
+
+  /* Constructor rows */
+  .pitwall-root .pw-con-row {
+    padding:14px 22px; border-bottom:1px solid var(--pw-rule);
+    position:relative; transition:background 0.2s;
+    opacity:0; animation: pw-rowSlide 0.6s cubic-bezier(.25,.9,.3,1) both;
+  }
+  .pitwall-root .pw-con-row:hover { background:var(--pw-paper-2); }
+  .pitwall-root .pw-con-row::before {
+    content:''; position:absolute; left:0; top:0; bottom:0;
+    width:4px; background:var(--pw-team-color);
+  }
+  .pitwall-root .pw-con-top {
+    display:grid; grid-template-columns:24px 1fr auto; align-items:center;
+    gap:12px; margin-bottom:8px;
+  }
+  .pitwall-root .pw-con-pos { font-family:'JetBrains Mono',monospace; font-size:11px; font-weight:700; color:var(--pw-ink-2); font-variant-numeric:tabular-nums; }
+  .pitwall-root .pw-con-name { font-family:'Playfair Display',serif; font-size:14px; font-weight:500; color:var(--pw-ink); letter-spacing:-0.01em; }
+  .pitwall-root .pw-con-engine { font-size:10px; color:var(--pw-ink-3); margin-top:1px; }
+  .pitwall-root .pw-con-pts { font-family:'JetBrains Mono',monospace; font-size:16px; font-weight:700; color:var(--pw-ink); font-variant-numeric:tabular-nums; }
+  .pitwall-root .pw-con-bar { height:4px; background:var(--pw-paper-3); position:relative; overflow:hidden; }
+  .pitwall-root .pw-con-bar-fill {
+    height:100%; background:var(--pw-team-color);
+    transform:scaleX(0); transform-origin:left;
+    animation: pw-barGrow 1.4s cubic-bezier(.3,.9,.3,1) both;
+  }
+
+  /* Paddock intel: podium + news */
+  .pitwall-root .pw-podium-block { padding:20px 22px; border-bottom:1px solid var(--pw-rule); }
+  .pitwall-root .pw-podium-head {
+    font-family:'JetBrains Mono',monospace; font-size:10px; letter-spacing:.16em;
+    text-transform:uppercase; color:var(--pw-ink-3); margin-bottom:12px; font-weight:500;
+  }
+  .pitwall-root .pw-podium-list { display:flex; flex-direction:column; gap:5px; }
+  .pitwall-root .pw-pod-row {
+    display:grid; grid-template-columns:30px 1fr auto; align-items:center;
+    gap:10px; padding:9px 10px; transition:transform 0.2s;
+  }
+  .pitwall-root .pw-pod-row:hover { transform:translateX(3px); }
+  .pitwall-root .pw-pod-row.p1 { background:linear-gradient(90deg,rgba(212,160,23,0.15),transparent); }
+  .pitwall-root .pw-pod-row.p2 { background:linear-gradient(90deg,rgba(160,160,160,0.12),transparent); }
+  .pitwall-root .pw-pod-row.p3 { background:linear-gradient(90deg,rgba(176,108,48,0.12),transparent); }
+  .pitwall-root .pw-pod-badge {
+    font-family:'JetBrains Mono',monospace; font-size:10px; font-weight:700;
+    text-align:center; padding:5px 0; color:#fff; letter-spacing:.04em;
+  }
+  .pitwall-root .pw-pod-row.p1 .pw-pod-badge { background:#d4a017; }
+  .pitwall-root .pw-pod-row.p2 .pw-pod-badge { background:#a0a0a0; }
+  .pitwall-root .pw-pod-row.p3 .pw-pod-badge { background:#b06c30; }
+  .pitwall-root .pw-pod-driver-name { font-family:'Playfair Display',serif; font-size:14px; font-weight:500; color:var(--pw-ink); letter-spacing:-0.01em; line-height:1; }
+  .pitwall-root .pw-pod-driver-team { font-size:10px; color:var(--pw-ink-3); margin-top:2px; }
+  .pitwall-root .pw-pod-time { font-family:'JetBrains Mono',monospace; font-size:10px; color:var(--pw-ink-2); font-weight:500; }
+
+  /* News */
+  .pitwall-root .pw-news-item {
+    padding:14px 22px; border-bottom:1px solid var(--pw-rule);
+    position:relative; transition:background 0.2s,padding-left 0.2s;
+  }
+  .pitwall-root .pw-news-item::before { content:''; position:absolute; left:0; top:0; bottom:0; width:0; background:var(--pw-racing); transition:width 0.25s; }
+  .pitwall-root .pw-news-item:hover { background:var(--pw-paper-2); padding-left:26px; }
+  .pitwall-root .pw-news-item:hover::before { width:4px; }
+  .pitwall-root .pw-news-meta { display:flex; align-items:center; justify-content:space-between; margin-bottom:7px; }
+  .pitwall-root .pw-news-kicker {
+    font-family:'JetBrains Mono',monospace; font-size:8px; letter-spacing:.18em;
+    text-transform:uppercase; padding:2px 6px; background:var(--pw-racing); color:#fff; font-weight:600;
+  }
+  .pitwall-root .pw-news-num { font-family:'JetBrains Mono',monospace; font-size:9px; color:var(--pw-ink-3); font-weight:500; }
+  .pitwall-root .pw-news-headline {
+    font-family:'Playfair Display',serif; font-size:14px; font-weight:500;
+    line-height:1.35; color:var(--pw-ink); letter-spacing:-0.01em; margin-bottom:5px;
+  }
+  .pitwall-root .pw-news-body { font-size:11px; line-height:1.6; color:var(--pw-ink-2); }
+
+  /* Stats ribbon */
+  .pitwall-root .pw-stats-section { padding:36px 36px 0; }
+  .pitwall-root .pw-stats-grid {
+    display:grid; grid-template-columns:repeat(4,1fr);
+    border:2px solid var(--pw-ink); background:var(--pw-carbon);
+  }
+  .pitwall-root .pw-stat {
+    padding:26px 22px 22px; border-right:1px solid rgba(255,255,255,0.1);
+    color:#fff; position:relative; overflow:hidden; transition:background 0.3s;
+  }
+  .pitwall-root .pw-stat:last-child { border-right:none; }
+  .pitwall-root .pw-stat:hover { background:var(--pw-carbon-2); }
+  .pitwall-root .pw-stat::after { content:''; position:absolute; bottom:0; left:0; height:3px; width:0; background:var(--pw-racing); transition:width 0.5s ease; }
+  .pitwall-root .pw-stat:hover::after { width:100%; }
+  .pitwall-root .pw-stat-label { font-family:'JetBrains Mono',monospace; font-size:9px; letter-spacing:.22em; text-transform:uppercase; color:rgba(255,255,255,0.55); margin-bottom:12px; }
+  .pitwall-root .pw-stat-big { font-family:'Playfair Display',serif; font-size:clamp(26px,2.8vw,36px); font-weight:700; color:#fff; line-height:1; letter-spacing:-0.02em; margin-bottom:8px; }
+  .pitwall-root .pw-stat-big em { font-style:italic; color:var(--pw-racing-h); font-weight:500; }
+  .pitwall-root .pw-stat-sub { font-size:11px; color:rgba(255,255,255,0.58); }
+
+  /* Footer */
+  .pitwall-root .pw-footer-wrap { padding:28px 36px 36px; }
+  .pitwall-root .pw-footer { border-top:1px solid var(--pw-ink); padding-top:20px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; }
+  .pitwall-root .pw-f-note { font-family:'JetBrains Mono',monospace; font-size:9px; color:var(--pw-ink-3); letter-spacing:.18em; text-transform:uppercase; }
+  .pitwall-root .pw-f-dot { display:inline-block; width:4px; height:4px; background:var(--pw-racing); vertical-align:middle; margin:0 8px; border-radius:50%; position:relative; top:-2px; }
+  .pitwall-root .pw-f-brand { font-family:'Playfair Display',serif; font-size:14px; font-style:italic; color:var(--pw-ink-2); }
+  .pitwall-root .pw-f-brand em { color:var(--pw-racing); font-weight:500; }
+
+  /* Loading skeleton for pitwall */
+  .pitwall-root .pw-skel { background:var(--pw-paper-3); border-radius:3px; animation:skeletonPulse 1.4s ease infinite; }
+
+  /* Responsive */
+  @media (max-width:980px) {
+    .pitwall-root .pw-hero { padding:28px 20px 22px; }
+    .pitwall-root .pw-hero-top { flex-direction:column; gap:14px; }
+    .pitwall-root .pw-brand-right { text-align:left; }
+    .pitwall-root .pw-race-block { padding:28px 20px 30px; }
+    .pitwall-root .pw-race-grid { grid-template-columns:1fr; gap:28px; }
+    .pitwall-root .pw-cal-section, .pitwall-root .pw-main-section, .pitwall-root .pw-stats-section, .pitwall-root .pw-footer-wrap { padding-left:20px; padding-right:20px; }
+    .pitwall-root .pw-main-grid { grid-template-columns:1fr; }
+    .pitwall-root .pw-col { border-right:none; border-bottom:1px solid var(--pw-rule); }
+    .pitwall-root .pw-col:last-child { border-bottom:none; }
+    .pitwall-root .pw-col-head { position:relative; top:auto; }
+    .pitwall-root .pw-stats-grid { grid-template-columns:1fr 1fr; }
+    .pitwall-root .pw-stat:nth-child(2) { border-right:none; }
+    .pitwall-root .pw-stat:nth-child(3),.pitwall-root .pw-stat:nth-child(4) { border-top:1px solid rgba(255,255,255,0.1); }
+  }
+  @media (max-width:540px) {
+    .pitwall-root .pw-cd-num { font-size:28px; }
+    .pitwall-root .pw-countdown { gap:5px; }
+    .pitwall-root .pw-cd-cell { padding:14px 4px 10px; }
+    .pitwall-root .pw-driver-name { font-size:13px; }
+    .pitwall-root .pw-pts { font-size:16px; }
+  }
+
+  /* ── JSX component class names (matched to PitWallSection render) ── */
+  .pitwall-root .pw-ticker-label { background:var(--pw-racing); color:#fff; font-family:'JetBrains Mono',monospace; font-size:9px; font-weight:700; letter-spacing:.2em; padding:0 10px; display:flex; align-items:center; flex-shrink:0; }
+  .pitwall-root .pw-ticker-item { display:inline-flex; align-items:center; gap:8px; padding:0 18px; }
+  .pitwall-root .pw-ticker-sym { font-family:'JetBrains Mono',monospace; font-size:9px; font-weight:700; letter-spacing:.2em; color:var(--pw-gold); }
+  .pitwall-root .pw-ticker-val { font-family:'JetBrains Mono',monospace; font-size:10px; font-weight:600; color:#fff; }
+  .pitwall-root .pw-ticker-pts { font-family:'JetBrains Mono',monospace; font-size:9px; color:rgba(255,255,255,.6); }
+  .pitwall-root .pw-ticker-sep { color:rgba(255,255,255,.2); font-size:8px; padding:0 6px; }
+
+  .pitwall-root .pw-hero-inner { padding:44px 36px 36px; position:relative; z-index:1; }
+  .pitwall-root .pw-hero-meta { display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:8px; margin-bottom:20px; }
+  .pitwall-root .pw-edition { font-family:'JetBrains Mono',monospace; font-size:9px; letter-spacing:.24em; color:var(--pw-ink-3); text-transform:uppercase; }
+  .pitwall-root .pw-hero-updated { display:flex; align-items:center; gap:6px; font-family:'JetBrains Mono',monospace; font-size:10px; color:var(--pw-ink-3); margin-top:12px; }
+  .pitwall-root .pw-live-dot { width:6px; height:6px; border-radius:50%; background:var(--pw-racing); display:inline-block; animation:pw-pulseDot 1.4s ease infinite; flex-shrink:0; }
+
+  .pitwall-root .pw-race-inner { display:grid; grid-template-columns:1fr 1fr; gap:32px; padding:32px 36px; background:var(--pw-carbon); color:#fff; }
+  .pitwall-root .pw-race-left { display:flex; flex-direction:column; justify-content:center; gap:6px; }
+  .pitwall-root .pw-race-right { display:flex; flex-direction:column; justify-content:center; gap:16px; }
+  .pitwall-root .pw-race-tag { font-family:'JetBrains Mono',monospace; font-size:9px; letter-spacing:.24em; color:var(--pw-racing); text-transform:uppercase; margin-bottom:4px; }
+  .pitwall-root .pw-race-flag { font-size:40px; line-height:1; animation:pw-flagWave 2.8s ease-in-out infinite; }
+  .pitwall-root .pw-race-date { font-size:13px; color:rgba(255,255,255,.7); }
+  .pitwall-root .pw-countdown-label { font-family:'JetBrains Mono',monospace; font-size:9px; letter-spacing:.24em; color:rgba(255,255,255,.5); text-transform:uppercase; margin-bottom:8px; }
+  .pitwall-root .pw-cd-unit { display:flex; flex-direction:column; align-items:center; background:rgba(255,255,255,.07); border:1px solid rgba(255,255,255,.12); border-radius:6px; padding:12px 8px 8px; min-width:52px; }
+  .pitwall-root .pw-cd-lbl { font-family:'JetBrains Mono',monospace; font-size:8px; letter-spacing:.18em; color:rgba(255,255,255,.45); margin-top:4px; }
+  .pitwall-root .pw-season-progress { display:flex; flex-direction:column; gap:4px; }
+  .pitwall-root .pw-sp-label { font-family:'JetBrains Mono',monospace; font-size:9px; letter-spacing:.2em; color:rgba(255,255,255,.5); }
+  .pitwall-root .pw-sp-bar { height:4px; background:rgba(255,255,255,.15); border-radius:2px; overflow:hidden; }
+  .pitwall-root .pw-sp-fill { height:100%; background:var(--pw-racing); border-radius:2px; transition:width 1s ease; }
+  .pitwall-root .pw-sp-text { font-family:'JetBrains Mono',monospace; font-size:9px; color:rgba(255,255,255,.4); }
+
+  .pitwall-root .pw-cal-section { padding:36px 36px 0; }
+  .pitwall-root .pw-cal-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:14px; }
+  .pitwall-root .pw-cal-done-tick { font-family:'JetBrains Mono',monospace; font-size:9px; color:var(--pw-ink-3); margin-top:4px; }
+  .pitwall-root .pw-cal-next-badge { font-family:'JetBrains Mono',monospace; font-size:8px; font-weight:700; letter-spacing:.2em; color:var(--pw-racing); text-transform:uppercase; margin-top:4px; animation:pw-blink 1.2s step-end infinite; }
+
+  .pitwall-root .pw-section-label { font-family:'JetBrains Mono',monospace; font-size:9px; letter-spacing:.24em; text-transform:uppercase; color:var(--pw-ink-3); margin-bottom:14px; padding-bottom:8px; border-bottom:1px solid var(--pw-rule); }
+
+  .pitwall-root .pw-main-grid { display:grid; grid-template-columns:1fr 1.5fr 1fr; gap:0; padding:36px 36px 0; border-top:2px solid var(--pw-ink); margin-top:32px; }
+  .pitwall-root .pw-col-left { padding-right:28px; }
+  .pitwall-root .pw-col-center { padding:0 28px; }
+  .pitwall-root .pw-col-right { padding-left:28px; }
+
+  .pitwall-root .pw-last-race-name { font-family:'Playfair Display',serif; font-size:18px; font-weight:700; color:var(--pw-ink); margin-bottom:4px; }
+  .pitwall-root .pw-last-race-date { font-family:'JetBrains Mono',monospace; font-size:10px; color:var(--pw-ink-3); margin-bottom:16px; }
+  .pitwall-root .pw-skeleton { background:var(--pw-paper-3); border-radius:4px; animation:pw-pulseDot 1.4s ease infinite; opacity:.7; }
+  .pitwall-root .pw-no-data { font-family:'JetBrains Mono',monospace; font-size:10px; color:var(--pw-ink-3); padding:16px 0; }
+
+  .pitwall-root .pw-podium { display:flex; flex-direction:column; gap:6px; margin-top:4px; }
+  .pitwall-root .pw-podium-row { display:flex; align-items:center; gap:10px; padding:10px 12px; background:var(--pw-paper-2); border-radius:4px; border-left:3px solid var(--team-color,var(--pw-racing)); transition:transform .2s; }
+  .pitwall-root .pw-podium-row:hover { transform:translateX(3px); }
+  .pitwall-root .pw-podium-medal { font-size:18px; flex-shrink:0; }
+  .pitwall-root .pw-podium-info { flex:1; }
+  .pitwall-root .pw-podium-driver { font-family:'Playfair Display',serif; font-size:13px; font-weight:600; color:var(--pw-ink); }
+  .pitwall-root .pw-podium-team { font-size:10px; color:var(--pw-ink-3); margin-top:2px; }
+  .pitwall-root .pw-podium-time { font-family:'JetBrains Mono',monospace; font-size:10px; color:var(--pw-ink-2); }
+
+  .pitwall-root .pw-news-list { display:flex; flex-direction:column; gap:0; }
+  .pitwall-root .pw-news-item { display:flex; align-items:flex-start; gap:10px; padding:12px 0; border-bottom:1px solid var(--pw-rule); text-decoration:none; color:inherit; transition:background .2s; }
+  .pitwall-root .pw-news-item:last-child { border-bottom:none; }
+  .pitwall-root .pw-news-item:hover { background:var(--pw-paper-2); margin:0 -8px; padding:12px 8px; border-radius:4px; }
+  .pitwall-root .pw-news-thumb { width:60px; height:44px; object-fit:cover; border-radius:3px; flex-shrink:0; }
+  .pitwall-root .pw-news-body { flex:1; }
+  .pitwall-root .pw-news-title { font-family:'Playfair Display',serif; font-size:13px; font-weight:600; color:var(--pw-ink); line-height:1.4; margin-bottom:4px; }
+  .pitwall-root .pw-news-date { font-family:'JetBrains Mono',monospace; font-size:9px; color:var(--pw-ink-3); }
+
+  .pitwall-root .pw-standings-table { width:100%; border-collapse:collapse; }
+  .pitwall-root .pw-standings-table th { font-family:'JetBrains Mono',monospace; font-size:8px; letter-spacing:.2em; color:var(--pw-ink-3); text-transform:uppercase; padding:6px 4px; border-bottom:2px solid var(--pw-rule); text-align:left; }
+  .pitwall-root .pw-standings-table td { padding:8px 4px; border-bottom:1px solid var(--pw-rule); vertical-align:middle; }
+  .pitwall-root .pw-driver-row { transition:background .15s; }
+  .pitwall-root .pw-driver-row:hover { background:var(--pw-paper-2); }
+  .pitwall-root .pw-pos { font-family:'JetBrains Mono',monospace; font-size:11px; font-weight:700; color:var(--pw-ink-2); width:28px; }
+  .pitwall-root .pw-driver-cell { display:flex; align-items:center; gap:8px; }
+  .pitwall-root .pw-team-stripe { width:3px; height:28px; border-radius:2px; flex-shrink:0; }
+  .pitwall-root .pw-driver-code { font-family:'JetBrains Mono',monospace; font-size:11px; font-weight:700; color:var(--pw-ink); min-width:32px; }
+  .pitwall-root .pw-driver-name { font-family:'Playfair Display',serif; font-size:13px; color:var(--pw-ink); }
+  .pitwall-root .pw-pts { font-family:'JetBrains Mono',monospace; font-size:13px; font-weight:700; color:var(--pw-ink); text-align:right; }
+  .pitwall-root .pw-gap { font-family:'JetBrains Mono',monospace; font-size:10px; color:var(--pw-ink-3); text-align:right; white-space:nowrap; }
+
+  .pitwall-root .pw-ctor-list { display:flex; flex-direction:column; gap:12px; }
+  .pitwall-root .pw-ctor-row { display:flex; flex-direction:column; gap:5px; }
+  .pitwall-root .pw-ctor-header { display:flex; align-items:center; gap:8px; }
+  .pitwall-root .pw-ctor-pos { font-family:'JetBrains Mono',monospace; font-size:10px; font-weight:700; color:var(--pw-ink-3); min-width:20px; }
+  .pitwall-root .pw-ctor-name { font-family:'Playfair Display',serif; font-size:14px; font-weight:500; color:var(--pw-ink); flex:1; }
+  .pitwall-root .pw-ctor-pts { font-family:'JetBrains Mono',monospace; font-size:12px; font-weight:700; color:var(--pw-ink); }
+  .pitwall-root .pw-ctor-bar-bg { height:4px; background:var(--pw-paper-3); border-radius:2px; overflow:hidden; }
+  .pitwall-root .pw-ctor-bar-fill { height:100%; border-radius:2px; transition:width 1.2s ease; }
+
+  .pitwall-root .pw-stats-ribbon { display:flex; flex-wrap:wrap; background:var(--pw-carbon); margin-top:32px; border-top:1px solid rgba(255,255,255,.08); }
+  .pitwall-root .pw-stat-item { flex:1; min-width:140px; padding:20px 24px; border-right:1px solid rgba(255,255,255,.08); }
+  .pitwall-root .pw-stat-item:last-child { border-right:none; }
+  .pitwall-root .pw-stat-label { font-family:'JetBrains Mono',monospace; font-size:8px; letter-spacing:.22em; text-transform:uppercase; color:rgba(255,255,255,.45); margin-bottom:8px; }
+  .pitwall-root .pw-stat-value { font-family:'Playfair Display',serif; font-size:clamp(18px,2vw,26px); font-weight:700; color:#fff; line-height:1.1; }
+
+  .pitwall-root .pw-footer { background:var(--pw-paper); border-top:2px solid var(--pw-ink); padding:24px 36px; }
+  .pitwall-root .pw-footer-inner { display:flex; flex-direction:column; gap:4px; }
+  .pitwall-root .pw-footer-brand { font-family:'Playfair Display',serif; font-size:18px; font-weight:700; font-style:italic; color:var(--pw-ink); }
+  .pitwall-root .pw-footer-sub { font-family:'JetBrains Mono',monospace; font-size:10px; color:var(--pw-ink-3); letter-spacing:.14em; }
+  .pitwall-root .pw-footer-time { font-family:'JetBrains Mono',monospace; font-size:9px; color:var(--pw-ink-3); }
+
+  @media (max-width:900px) {
+    .pitwall-root .pw-race-inner { grid-template-columns:1fr; gap:20px; }
+    .pitwall-root .pw-main-grid { grid-template-columns:1fr; padding:24px 20px 0; }
+    .pitwall-root .pw-col-left,.pitwall-root .pw-col-center,.pitwall-root .pw-col-right { padding:0 0 24px; border-right:none; border-bottom:1px solid var(--pw-rule); }
+    .pitwall-root .pw-col-right { border-bottom:none; }
+    .pitwall-root .pw-hero-inner { padding:28px 20px 24px; }
+    .pitwall-root .pw-cal-section,.pitwall-root .pw-footer { padding-left:20px; padding-right:20px; }
+    .pitwall-root .pw-stats-ribbon { flex-direction:column; }
+    .pitwall-root .pw-stat-item { border-right:none; border-bottom:1px solid rgba(255,255,255,.08); }
+  }
 `;
 
 
@@ -3601,6 +4234,7 @@ const SEARCH_INDEX = [
   { type: "Section", title: "All-Time Records", sub: "Most wins, poles, titles & fastest laps in history", section: "records", icon: "🎖️", color: "#cd7f32" },
   { type: "Section", title: "2026 Season Preview", sub: "Power rankings, race previews & rookie spotlights", section: "preview", icon: "🔭", color: "#e10600" },
   { type: "Section", title: "F1 News", sub: "Latest headlines from Motorsport.com", section: "news", icon: "📰", color: "#00dc78" },
+  { type: "Section", title: "Pit Wall", sub: "Live driver & constructor standings, calendar & paddock news", section: "pitwall", icon: "📡", color: "#d4a017" },
   { type: "Section", title: "Driver Changes", sub: "Every major move 2018–2026 explained", section: "history", icon: "📅", color: "#606080" },
   { type: "Section", title: "Car Compare 2025 vs 2026", sub: "Technical regulation changes side by side", section: "compare", icon: "⚡", color: "#e10600" },
 ];
@@ -5169,6 +5803,7 @@ const NAV_GROUPS = [
       { id: "h2h",          icon: "⚔️", label: "Teammate H2H",      desc: "2024 qualifying & race head-to-head records" },
       { id: "records",      icon: "🎖️", label: "All-Time Records",  desc: "Most wins, poles, titles & fastest laps in history" },
       { id: "news",         icon: "📰", label: "F1 News",           desc: "Latest headlines from Motorsport.com" },
+      { id: "pitwall",      icon: "📡", label: "Pit Wall",           desc: "Live standings, calendar & paddock intel" },
     ]
   },
 ];
@@ -5293,6 +5928,407 @@ function useAutoRefresh(fn, intervalMs, enabled = true) {
     document.addEventListener("visibilitychange", onVisibility);
     return () => { stop(); document.removeEventListener("visibilitychange", onVisibility); };
   }, [intervalMs, enabled]);
+}
+
+// ─── PIT WALL SECTION ────────────────────────────────────────────────────────
+const PW_TEAM_COLORS = {
+  mercedes: "var(--pw-mercedes)", ferrari: "var(--pw-ferrari)",
+  mclaren: "var(--pw-mclaren)", red_bull: "var(--pw-redbull)",
+  williams: "var(--pw-williams)", haas: "var(--pw-haas)",
+  alpine: "var(--pw-alpine)", sauber: "var(--pw-audi)",
+  rb: "var(--pw-racingbulls)", aston_martin: "var(--pw-aston)",
+  cadillac: "var(--pw-cadillac)",
+};
+
+function PitWallSection() {
+  const YEAR = new Date().getFullYear();
+
+  const [driverStandings, setDriverStandings] = useState([]);
+  const [ctorStandings, setCtorStandings] = useState([]);
+  const [lastRace, setLastRace] = useState(null);
+  const [news, setNews] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [lastUpdated, setLastUpdated] = useState(null);
+  const [countdown, setCountdown] = useState({ d: "00", h: "00", m: "00", s: "00" });
+  const [greeting, setGreeting] = useState("");
+  const [dateline, setDateline] = useState("");
+  const calRef = useRef(null);
+
+  const nextRace = RACE_CALENDAR_2026.find(r => !r.cancelled && new Date(r.date) > new Date())
+    || RACE_CALENDAR_2026[RACE_CALENDAR_2026.length - 1];
+
+  const loadData = useCallback(async () => {
+    try {
+      const [drvData, ctorData, racesData] = await Promise.all([
+        jolpicaGet(`/${YEAR}/driverStandings.json`),
+        jolpicaGet(`/${YEAR}/constructorStandings.json`),
+        jolpicaGet(`/${YEAR}/results.json?limit=50`),
+      ]);
+      const drvList = drvData?.MRData?.StandingsTable?.StandingsLists?.[0]?.DriverStandings || [];
+      const ctorList = ctorData?.MRData?.StandingsTable?.StandingsLists?.[0]?.ConstructorStandings || [];
+      const races = racesData?.MRData?.RaceTable?.Races || [];
+
+      setDriverStandings(drvList.map((d, i) => ({
+        pos: i + 1,
+        name: `${d.Driver.givenName} ${d.Driver.familyName}`,
+        code: d.Driver.code || d.Driver.familyName.slice(0, 3).toUpperCase(),
+        team: d.Constructors?.[0]?.name || "—",
+        constructorId: d.Constructors?.[0]?.constructorId || "",
+        pts: parseFloat(d.points),
+        wins: parseInt(d.wins),
+        gap: i === 0 ? null : parseFloat(drvList[0].points) - parseFloat(d.points),
+      })));
+
+      setCtorStandings(ctorList.map((c, i) => ({
+        pos: i + 1,
+        name: c.Constructor.name,
+        constructorId: c.Constructor.constructorId,
+        pts: parseFloat(c.points),
+        wins: parseInt(c.wins),
+      })));
+
+      if (races.length > 0) setLastRace(races[races.length - 1]);
+      setLastUpdated(new Date());
+    } catch { /* keep existing state */ }
+    finally { setLoading(false); }
+  }, [YEAR]);
+
+  useEffect(() => { loadData(); }, [loadData]);
+  useAutoRefresh(loadData, 60_000);
+
+  const loadNews = useCallback(() => {
+    fetch("/api/news")
+      .then(r => { if (!r.ok) throw new Error(`HTTP ${r.status}`); return r.json(); })
+      .then(data => setNews(data.items?.slice(0, 4) || []))
+      .catch(() => {});
+  }, []);
+  useEffect(() => { loadNews(); }, [loadNews]);
+  useAutoRefresh(loadNews, 5 * 60_000);
+
+  useEffect(() => {
+    const now = new Date();
+    const h = now.getHours();
+    setGreeting(h < 12 ? "Good morning" : h < 17 ? "Good afternoon" : "Good evening");
+    const D = ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"];
+    const M = ["JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"];
+    setDateline(`${D[now.getDay()]} · ${String(now.getDate()).padStart(2, "0")} ${M[now.getMonth()]} · ${now.getFullYear()}`);
+  }, []);
+
+  useEffect(() => {
+    if (!nextRace) return;
+    const target = new Date(nextRace.date).getTime();
+    const pad = n => String(n).padStart(2, "0");
+    function tick() {
+      const diff = target - Date.now();
+      if (diff <= 0) { setCountdown({ d: "00", h: "00", m: "00", s: "00" }); return; }
+      setCountdown({
+        d: pad(Math.floor(diff / 86400000)),
+        h: pad(Math.floor((diff % 86400000) / 3600000)),
+        m: pad(Math.floor((diff % 3600000) / 60000)),
+        s: pad(Math.floor((diff % 60000) / 1000)),
+      });
+    }
+    tick();
+    const id = setInterval(tick, 1000);
+    return () => clearInterval(id);
+  }, [nextRace?.date]);
+
+  useEffect(() => {
+    const t = setTimeout(() => {
+      const next = calRef.current?.querySelector(".pw-cal-round.next");
+      if (next) calRef.current.scrollTo({ left: next.offsetLeft - 60, behavior: "smooth" });
+    }, 1200);
+    return () => clearTimeout(t);
+  }, []);
+
+  const tickerItems = useMemo(() => {
+    const leader = driverStandings[0];
+    const second = driverStandings[1];
+    const ctorLeader = ctorStandings[0];
+    return [
+      leader ? { sym: "WDC", val: leader.code, pts: `${leader.pts} pts` } : null,
+      ctorLeader ? { sym: "WCC", val: ctorLeader.name.toUpperCase(), pts: `${ctorLeader.pts} pts` } : null,
+      nextRace ? { sym: "NEXT", val: nextRace.name.toUpperCase(), pts: new Date(nextRace.date).toLocaleDateString("en-GB", { day: "numeric", month: "short" }) } : null,
+      leader && second ? { sym: "LEAD", val: `+${(leader.pts - second.pts).toFixed(1)}`, pts: "PTS GAP" } : null,
+    ].filter(Boolean);
+  }, [driverStandings, ctorStandings, nextRace]);
+
+  const racesCompleted = RACE_CALENDAR_2026.filter(r => !r.cancelled && new Date(r.date) < new Date()).length;
+  const podium = lastRace?.Results?.slice(0, 3) || [];
+
+  return (
+    <div className="pitwall-root">
+      {/* ── Ticker ── */}
+      {tickerItems.length > 0 && (
+        <div className="pw-ticker-wrap">
+          <div className="pw-ticker-label">LIVE</div>
+          <div className="pw-ticker-track">
+            {[...tickerItems, ...tickerItems].map((item, i) => (
+              <span key={i} className="pw-ticker-item">
+                <span className="pw-ticker-sym">{item.sym}</span>
+                <span className="pw-ticker-val">{item.val}</span>
+                <span className="pw-ticker-pts">{item.pts}</span>
+                <span className="pw-ticker-sep">◆</span>
+              </span>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* ── Hero ── */}
+      <header className="pw-hero">
+        <div className="pw-hero-inner">
+          <div className="pw-hero-meta">
+            <div className="pw-dateline">{dateline}</div>
+            <div className="pw-edition">RACE INTELLIGENCE · {YEAR} SEASON</div>
+          </div>
+          <h1 className="pw-hero-title">The Pit Wall.</h1>
+          <p className="pw-hero-sub">{greeting}. Here's everything happening in Formula 1 right now.</p>
+          {lastUpdated && (
+            <div className="pw-hero-updated">
+              <span className="pw-live-dot" /> Live data · Updated {lastUpdated.toLocaleTimeString("en-GB", { hour: "2-digit", minute: "2-digit" })}
+            </div>
+          )}
+        </div>
+      </header>
+
+      {/* ── Race Block ── */}
+      {nextRace && (
+        <section className="pw-race-block">
+          <div className="pw-race-inner">
+            <div className="pw-race-left">
+              <div className="pw-race-tag">NEXT RACE</div>
+              <div className="pw-race-flag">{nextRace.flag}</div>
+              <div className="pw-race-name">{nextRace.name}</div>
+              <div className="pw-race-circuit">{nextRace.circuit}</div>
+              <div className="pw-race-date">
+                {new Date(nextRace.date).toLocaleDateString("en-GB", { weekday: "long", day: "numeric", month: "long", year: "numeric" })}
+              </div>
+              <div className="pw-race-round">Round {nextRace.round} of {RACE_CALENDAR_2026.filter(r => !r.cancelled).length}</div>
+            </div>
+            <div className="pw-race-right">
+              <div className="pw-countdown-label">RACE STARTS IN</div>
+              <div className="pw-countdown">
+                {[["d", "DAYS"], ["h", "HRS"], ["m", "MIN"], ["s", "SEC"]].map(([k, lbl]) => (
+                  <div key={k} className="pw-cd-unit">
+                    <div className="pw-cd-num">{countdown[k]}</div>
+                    <div className="pw-cd-lbl">{lbl}</div>
+                  </div>
+                ))}
+              </div>
+              <div className="pw-season-progress">
+                <div className="pw-sp-label">SEASON PROGRESS</div>
+                <div className="pw-sp-bar">
+                  <div className="pw-sp-fill" style={{ width: `${(racesCompleted / RACE_CALENDAR_2026.filter(r => !r.cancelled).length) * 100}%` }} />
+                </div>
+                <div className="pw-sp-text">{racesCompleted} of {RACE_CALENDAR_2026.filter(r => !r.cancelled).length} races complete</div>
+              </div>
+            </div>
+          </div>
+        </section>
+      )}
+
+      {/* ── Calendar Strip ── */}
+      <section className="pw-cal-section">
+        <div className="pw-cal-header">
+          <div className="pw-section-label">SEASON CALENDAR</div>
+        </div>
+        <div className="pw-cal-strip" ref={calRef}>
+          {RACE_CALENDAR_2026.filter(r => !r.cancelled).map(r => {
+            const isPast = new Date(r.date) < new Date();
+            const isNext = r.round === nextRace?.round;
+            return (
+              <div key={r.round} className={`pw-cal-round${isPast ? " done" : ""}${isNext ? " next" : ""}`}>
+                <div className="pw-cal-flag">{r.flag}</div>
+                <div className="pw-cal-rnum">R{r.round}</div>
+                <div className="pw-cal-rname">{r.name.replace(" Grand Prix", "").replace(" GP", "")}</div>
+                <div className="pw-cal-rdate">
+                  {new Date(r.date).toLocaleDateString("en-GB", { day: "numeric", month: "short" })}
+                </div>
+                {isPast && <div className="pw-cal-done-tick">✓</div>}
+                {isNext && <div className="pw-cal-next-badge">NEXT</div>}
+              </div>
+            );
+          })}
+        </div>
+      </section>
+
+      {/* ── Main Grid (3 cols) ── */}
+      <section className="pw-main-grid">
+        {/* ── Left: Last Race Podium ── */}
+        <div className="pw-col pw-col-left">
+          <div className="pw-section-label">LAST RACE</div>
+          {lastRace ? (
+            <>
+              <div className="pw-last-race-name">{lastRace.raceName}</div>
+              <div className="pw-last-race-date">
+                {new Date(lastRace.date).toLocaleDateString("en-GB", { day: "numeric", month: "long", year: "numeric" })}
+              </div>
+              {loading && podium.length === 0 ? (
+                <div className="pw-skeleton" style={{ height: 120, marginTop: 16 }} />
+              ) : podium.length > 0 ? (
+                <div className="pw-podium">
+                  {podium.map((r, i) => {
+                    const medals = ["🥇", "🥈", "🥉"];
+                    const cid = r.Constructor?.constructorId || "";
+                    const teamColor = PW_TEAM_COLORS[cid] || "var(--pw-racing)";
+                    return (
+                      <div key={r.position} className="pw-podium-row" style={{ "--team-color": teamColor }}>
+                        <span className="pw-podium-medal">{medals[i]}</span>
+                        <div className="pw-podium-info">
+                          <div className="pw-podium-driver">
+                            {r.Driver.givenName} {r.Driver.familyName}
+                          </div>
+                          <div className="pw-podium-team">{r.Constructor?.name}</div>
+                        </div>
+                        <div className="pw-podium-time">
+                          {r.Time?.time || (i === 0 ? "WINNER" : r.status)}
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              ) : (
+                <div className="pw-no-data">No result data yet</div>
+              )}
+            </>
+          ) : loading ? (
+            <>
+              <div className="pw-skeleton" style={{ height: 20, width: "70%", marginBottom: 8 }} />
+              <div className="pw-skeleton" style={{ height: 120 }} />
+            </>
+          ) : (
+            <div className="pw-no-data">No race results available yet</div>
+          )}
+
+          {/* Paddock News */}
+          <div className="pw-section-label" style={{ marginTop: 32 }}>PADDOCK NEWS</div>
+          {loading && news.length === 0 ? (
+            [1, 2, 3].map(n => <div key={n} className="pw-skeleton" style={{ height: 64, marginBottom: 8 }} />)
+          ) : news.length > 0 ? (
+            <div className="pw-news-list">
+              {news.map((item, i) => (
+                <a key={item.link || i} href={item.link} target="_blank" rel="noopener noreferrer" className="pw-news-item">
+                  {item.image && <img src={item.image} alt="" className="pw-news-thumb" loading="lazy" />}
+                  <div className="pw-news-body">
+                    <div className="pw-news-title">{item.title}</div>
+                    {item.pubDate && (
+                      <div className="pw-news-date">
+                        {new Date(item.pubDate).toLocaleDateString("en-GB", { day: "numeric", month: "short" })}
+                      </div>
+                    )}
+                  </div>
+                </a>
+              ))}
+            </div>
+          ) : (
+            <div className="pw-no-data">News temporarily unavailable</div>
+          )}
+        </div>
+
+        {/* ── Center: Driver Standings ── */}
+        <div className="pw-col pw-col-center">
+          <div className="pw-section-label">DRIVERS' CHAMPIONSHIP</div>
+          {loading && driverStandings.length === 0 ? (
+            Array.from({ length: 10 }).map((_, i) => (
+              <div key={i} className="pw-skeleton" style={{ height: 36, marginBottom: 4 }} />
+            ))
+          ) : driverStandings.length > 0 ? (
+            <table className="pw-standings-table">
+              <thead>
+                <tr>
+                  <th>POS</th>
+                  <th>DRIVER</th>
+                  <th>PTS</th>
+                  <th>GAP</th>
+                </tr>
+              </thead>
+              <tbody>
+                {driverStandings.map(d => {
+                  const teamColor = PW_TEAM_COLORS[d.constructorId] || "var(--pw-racing)";
+                  return (
+                    <tr key={d.code} className="pw-driver-row" style={{ "--team-color": teamColor }}>
+                      <td className="pw-pos">{d.pos}</td>
+                      <td className="pw-driver-cell">
+                        <span className="pw-team-stripe" style={{ background: teamColor }} />
+                        <span className="pw-driver-code">{d.code}</span>
+                        <span className="pw-driver-name">{d.name}</span>
+                      </td>
+                      <td className="pw-pts">{d.pts}</td>
+                      <td className="pw-gap">{d.gap != null ? `−${d.gap.toFixed(1)}` : "—"}</td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          ) : (
+            <div className="pw-no-data">Standings data unavailable</div>
+          )}
+        </div>
+
+        {/* ── Right: Constructor Standings ── */}
+        <div className="pw-col pw-col-right">
+          <div className="pw-section-label">CONSTRUCTORS' CHAMPIONSHIP</div>
+          {loading && ctorStandings.length === 0 ? (
+            Array.from({ length: 10 }).map((_, i) => (
+              <div key={i} className="pw-skeleton" style={{ height: 52, marginBottom: 8 }} />
+            ))
+          ) : ctorStandings.length > 0 ? (
+            <div className="pw-ctor-list">
+              {ctorStandings.map(c => {
+                const teamColor = PW_TEAM_COLORS[c.constructorId] || "var(--pw-racing)";
+                const barPct = ctorStandings[0].pts > 0 ? (c.pts / ctorStandings[0].pts) * 100 : 0;
+                return (
+                  <div key={c.constructorId} className="pw-ctor-row">
+                    <div className="pw-ctor-header">
+                      <span className="pw-ctor-pos">{c.pos}</span>
+                      <span className="pw-ctor-name">{c.name}</span>
+                      <span className="pw-ctor-pts">{c.pts} pts</span>
+                    </div>
+                    <div className="pw-ctor-bar-bg">
+                      <div className="pw-ctor-bar-fill" style={{ width: `${barPct}%`, background: teamColor }} />
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          ) : (
+            <div className="pw-no-data">Standings data unavailable</div>
+          )}
+        </div>
+      </section>
+
+      {/* ── Stats Ribbon ── */}
+      {driverStandings.length > 0 && (
+        <section className="pw-stats-ribbon">
+          {[
+            { label: "CHAMPIONSHIP LEADER", value: driverStandings[0]?.code || "—" },
+            { label: "LEADER POINTS", value: driverStandings[0]?.pts?.toString() || "—" },
+            { label: "POINTS GAP (P1–P2)", value: driverStandings[1] ? `${(driverStandings[0].pts - driverStandings[1].pts).toFixed(1)}` : "—" },
+            { label: "RACES DONE", value: racesCompleted.toString() },
+            { label: "RACES LEFT", value: (RACE_CALENDAR_2026.filter(r => !r.cancelled).length - racesCompleted).toString() },
+            { label: "CONSTRUCTOR LEADER", value: ctorStandings[0]?.name?.split(" ")[0] || "—" },
+          ].map(stat => (
+            <div key={stat.label} className="pw-stat-item">
+              <div className="pw-stat-label">{stat.label}</div>
+              <div className="pw-stat-value">{stat.value}</div>
+            </div>
+          ))}
+        </section>
+      )}
+
+      {/* ── Footer ── */}
+      <footer className="pw-footer">
+        <div className="pw-footer-inner">
+          <div className="pw-footer-brand">THE PIT WALL</div>
+          <div className="pw-footer-sub">Live F1 data powered by Jolpica · {YEAR} Season</div>
+          {lastUpdated && (
+            <div className="pw-footer-time">Last updated: {lastUpdated.toLocaleTimeString("en-GB")}</div>
+          )}
+        </div>
+      </footer>
+    </div>
+  );
 }
 
 export class ErrorBoundary extends Component {
@@ -5461,6 +6497,7 @@ export default function F1Guide() {
               {active === "h2h"          && <HeadToHeadSection />}
               {active === "preview"      && <SeasonPreviewSection onNavigate={selectSection} />}
               {active === "bookmarks"    && <BookmarksSection bookmarks={bookmarks} onNavigate={selectSection} onRemove={id => toggleBookmark(id)} />}
+              {active === "pitwall"      && <PitWallSection />}
             </div>
           </main>
           <MobileNav active={active} onSelect={selectSection} />
