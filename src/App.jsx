@@ -5346,16 +5346,19 @@ export default function F1Guide() {
   }, []);
 
   function toggleGroup(label) { setOpenGroup(g => g === label ? null : label); }
+  function handleOnboardingClose() {
+    setShowOnboarding(false);
+    localStorage.setItem("f1guide_visited", "1");
+  }
+
   function selectSection(id) {
     setActive(id);
     setOpenGroup(null);
     window.scrollTo(0, 0);
-    localStorage.setItem("f1guide_visited", "1");
-  }
-
-  function handleOnboardingClose() {
-    setShowOnboarding(false);
-    localStorage.setItem("f1guide_visited", "1");
+    // If the onboarding modal is open, close it and mark as visited —
+    // navigating away is an implicit dismissal. Don't stamp localStorage
+    // on every nav click, or the modal never shows again after the first click.
+    if (showOnboarding) handleOnboardingClose();
   }
 
   return (
