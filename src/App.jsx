@@ -2942,6 +2942,7 @@ function ResultsSection() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [lastUpdated, setLastUpdated] = useState(null);
+  const [standingsRound, setStandingsRound] = useState(null);
 
   const YEAR = new Date().getFullYear();
 
@@ -2950,8 +2951,10 @@ function ResultsSection() {
     setError(null);
     try {
       // Fetch races, driver standings, and constructor standings in parallel
+      // limit=1000 because Ergast paginates by individual result rows (~20/race),
+      // so limit=50 only returns ~2–3 races worth of data.
       const [racesData, drvData, ctorData] = await Promise.all([
-        jolpicaGet(`/${YEAR}/results.json?limit=50`),
+        jolpicaGet(`/${YEAR}/results.json?limit=1000`),
         jolpicaGet(`/${YEAR}/driverStandings.json`),
         jolpicaGet(`/${YEAR}/constructorStandings.json`),
       ]);
@@ -2964,6 +2967,8 @@ function ResultsSection() {
 
       // Driver standings
       const drvList = drvData?.MRData?.StandingsTable?.StandingsLists?.[0]?.DriverStandings || [];
+      const round = drvData?.MRData?.StandingsTable?.StandingsLists?.[0]?.round;
+      if (round) setStandingsRound(round);
       setDriverStandings(drvList.map((d, i) => ({
         pos: i + 1,
         name: `${d.Driver.givenName} ${d.Driver.familyName}`,
@@ -3167,6 +3172,11 @@ function ResultsSection() {
             <>
               <div className="section-title" style={{ fontSize: "clamp(13px,3vw,18px)", marginBottom: 8 }}>Drivers' <span>Championship</span></div>
               <div className="section-line" />
+              {standingsRound && (
+                <div style={{ fontSize: 10, color: "var(--text4)", fontFamily: "Orbitron", letterSpacing: 1, marginBottom: 10, display: "flex", alignItems: "center", gap: 6 }}>
+                  <span>📡</span> DATA AS OF ROUND {standingsRound} · JOLPICA/ERGAST
+                </div>
+              )}
               <div style={{ overflowX: "auto", marginBottom: 24 }}>
                 <table style={{ width: "100%", borderCollapse: "collapse", minWidth: 360 }}>
                   <thead>
@@ -3255,6 +3265,7 @@ function LiveStandingsSection() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [lastUpdated, setLastUpdated] = useState(null);
+  const [standingsRound, setStandingsRound] = useState(null);
   const YEAR = new Date().getFullYear();
 
   async function loadStandings() {
@@ -3266,6 +3277,8 @@ function LiveStandingsSection() {
         jolpicaGet(`/${YEAR}/constructorStandings.json`),
       ]);
       const drvList = drvData?.MRData?.StandingsTable?.StandingsLists?.[0]?.DriverStandings || [];
+      const round = drvData?.MRData?.StandingsTable?.StandingsLists?.[0]?.round;
+      if (round) setStandingsRound(round);
       setDriverStandings(drvList.map((d, i) => ({
         pos: i + 1,
         name: `${d.Driver.givenName} ${d.Driver.familyName}`,
@@ -3345,6 +3358,11 @@ function LiveStandingsSection() {
           <div>
             <div className="section-title" style={{ fontSize: "clamp(13px,3vw,20px)", marginBottom: 8 }}>Drivers' <span>Championship</span></div>
             <div className="section-line" />
+            {standingsRound && (
+              <div style={{ fontSize: 10, color: "var(--text4)", fontFamily: "Orbitron", letterSpacing: 1, marginBottom: 12, display: "flex", alignItems: "center", gap: 6 }}>
+                <span>📡</span> DATA AS OF ROUND {standingsRound} · JOLPICA/ERGAST
+              </div>
+            )}
             <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
               {driverStandings.map(row => {
                 const col = ergastColor(row.constructorId);
@@ -5949,6 +5967,7 @@ function PitWallSection() {
   const [news, setNews] = useState([]);
   const [loading, setLoading] = useState(true);
   const [lastUpdated, setLastUpdated] = useState(null);
+  const [standingsRound, setStandingsRound] = useState(null);
   const [countdown, setCountdown] = useState({ d: "00", h: "00", m: "00", s: "00" });
   const [greeting, setGreeting] = useState("");
   const [dateline, setDateline] = useState("");
@@ -5959,14 +5978,17 @@ function PitWallSection() {
 
   const loadData = useCallback(async () => {
     try {
-      const [drvData, ctorData, racesData] = await Promise.all([
+      // Use /last/results.json to always get the most recent race Jolpica has,
+      // avoiding the pagination issue of results.json (paginates by result row, not race)
+      const [drvData, ctorData, lastRaceData] = await Promise.all([
         jolpicaGet(`/${YEAR}/driverStandings.json`),
         jolpicaGet(`/${YEAR}/constructorStandings.json`),
-        jolpicaGet(`/${YEAR}/results.json?limit=50`),
+        jolpicaGet(`/${YEAR}/last/results.json`),
       ]);
       const drvList = drvData?.MRData?.StandingsTable?.StandingsLists?.[0]?.DriverStandings || [];
       const ctorList = ctorData?.MRData?.StandingsTable?.StandingsLists?.[0]?.ConstructorStandings || [];
-      const races = racesData?.MRData?.RaceTable?.Races || [];
+      const round = drvData?.MRData?.StandingsTable?.StandingsLists?.[0]?.round;
+      if (round) setStandingsRound(round);
 
       setDriverStandings(drvList.map((d, i) => ({
         pos: i + 1,
@@ -5987,7 +6009,9 @@ function PitWallSection() {
         wins: parseInt(c.wins),
       })));
 
-      if (races.length > 0) setLastRace(races[races.length - 1]);
+      // /last/results.json returns the single most recent race as Races[0]
+      const latestRace = lastRaceData?.MRData?.RaceTable?.Races?.[0] || null;
+      if (latestRace) setLastRace(latestRace);
       setLastUpdated(new Date());
     } catch { /* keep existing state */ }
     finally { setLoading(false); }
@@ -6087,6 +6111,11 @@ function PitWallSection() {
           {lastUpdated && (
             <div className="pw-hero-updated">
               <span className="pw-live-dot" /> Live data · Updated {lastUpdated.toLocaleTimeString("en-GB", { hour: "2-digit", minute: "2-digit" })}
+              {standingsRound && (
+                <span style={{ marginLeft: 12, fontFamily: "'JetBrains Mono',monospace", fontSize: 9, letterSpacing: ".18em", color: "var(--pw-ink-3)", textTransform: "uppercase" }}>
+                  · Standings reflect Round {standingsRound}
+                </span>
+              )}
             </div>
           )}
         </div>
