@@ -4908,12 +4908,12 @@ function DriverCompareSection() {
 
       <div className="compare-select-row">
         {[{ id: id1, setId: setId1, which: 1 }, { id: id2, setId: setId2, which: 2 }].map(({ id, setId, which }) => {
-          const d = DRIVERS.find(dr => dr.id === id) || DRIVERS[0];
+          const d = DRIVERS_2025.find(dr => dr.id === id) || DRIVERS_2025[0];
           return (
             <div key={which}>
               <div style={{ fontSize: 9, color: "#e10600", fontFamily: "Orbitron", letterSpacing: 2, marginBottom: 6 }}>DRIVER {which}</div>
               <select className="compare-driver-select" value={id} onChange={e => setId(e.target.value)}>
-                {DRIVERS.map(dr => <option key={dr.id} value={dr.id}>{dr.name} — {dr.team}</option>)}
+                {DRIVERS_2025.map(dr => <option key={dr.id} value={dr.id}>{dr.name} — {dr.team}</option>)}
               </select>
               {d && (
                 <div style={{ marginTop: 10, background: "var(--card-bg)", border: `1px solid ${d.teamColor}44`, borderRadius: 8, padding: "12px 14px", backdropFilter: "blur(8px)" }}>
