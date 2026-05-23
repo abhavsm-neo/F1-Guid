@@ -2558,7 +2558,7 @@ function RatingBar({ label, value }) {
 }
 
 
-const DriverCard = memo(function DriverCard({ driver }) {
+const DriverCard = memo(function DriverCard({ driver, onProfile }) {
   const [expanded, setExpanded] = useState(false);
   const cardRef = useRef(null);
 
@@ -2611,10 +2611,18 @@ const DriverCard = memo(function DriverCard({ driver }) {
             <div style={{ fontSize: 10, color: "var(--text3)", marginTop: 8 }}>Active: {driver.seasons}</div>
           </>
         )}
-        <button className="expand-btn" onClick={() => setExpanded(!expanded)}>
-          <span className={`expand-btn-arrow${expanded ? " open" : ""}`}>▼</span>
-          {expanded ? "Show Less" : "Ratings & Media"}
-        </button>
+        <div style={{ display: "flex", gap: 8, marginTop: 4 }}>
+          <button className="expand-btn" style={{ flex: 1 }} onClick={() => setExpanded(!expanded)}>
+            <span className={`expand-btn-arrow${expanded ? " open" : ""}`}>▼</span>
+            {expanded ? "Show Less" : "Ratings & Media"}
+          </button>
+          {onProfile && (
+            <button className="expand-btn" style={{ flex: "none", paddingLeft: 12, paddingRight: 12, color: driver.teamColor, borderColor: driver.teamColor + "44" }}
+              onClick={() => onProfile(driver)}>
+              Profile →
+            </button>
+          )}
+        </div>
       </div>
     </div>
   );
@@ -2759,7 +2767,7 @@ function PointsSystem() {
   );
 }
 
-function DriversSection() {
+function DriversSection({ onProfile }) {
   const [search, setSearch] = useState("");
   const [filter, setFilter] = useState("All");
   const [showDropped, setShowDropped] = useState(false);
@@ -2791,7 +2799,7 @@ function DriversSection() {
         ))}
       </div>
       <div className="card-grid">
-        {filtered.map(d => <DriverCard key={d.id} driver={d} />)}
+        {filtered.map(d => <DriverCard key={d.id} driver={d} onProfile={onProfile} />)}
       </div>
       {filtered.length === 0 && <EmptyState icon="🏎️" title="NO DRIVERS FOUND" sub={`No drivers match "${search || filter}" — try clearing your search or filter.`} />}
     </div>
@@ -3308,8 +3316,21 @@ function LiveStandingsSection() {
   // Auto-refresh every 60s while tab is visible
   useAutoRefresh(loadStandings, 60_000);
 
+  const [tab, setTab] = useState("drivers");
+
   const maxDriverPts = useMemo(() => driverStandings[0]?.pts || 1, [driverStandings]);
   const maxCtorPts = useMemo(() => constructorStandings[0]?.pts || 1, [constructorStandings]);
+
+  // Constructor Points Split — group driver standings by constructorId
+  const ctorSplit = useMemo(() => {
+    const map = {};
+    driverStandings.forEach(d => {
+      if (!map[d.constructorId]) map[d.constructorId] = { name: d.team, constructorId: d.constructorId, drivers: [], total: 0 };
+      map[d.constructorId].drivers.push({ name: d.name, code: d.code, pts: d.pts });
+      map[d.constructorId].total += d.pts;
+    });
+    return Object.values(map).sort((a, b) => b.total - a.total);
+  }, [driverStandings]);
 
   const podiumColors = ["#FFD700","#C0C0C0","#CD7F32"];
 
@@ -3325,6 +3346,19 @@ function LiveStandingsSection() {
         </div>
         {lastUpdated && <span style={{ fontSize: 10, color: "var(--text4)" }}>Updated {lastUpdated.toLocaleTimeString()}</span>}
         <button onClick={loadStandings} disabled={loading} style={{ marginLeft: "auto", padding: "6px 14px", background: "transparent", border: "1px solid var(--border2)", color: "var(--text3)", fontFamily: "Orbitron", fontSize: 9, letterSpacing: 2, cursor: loading ? "wait" : "pointer", borderRadius: 20 }}><span className={loading ? "spin" : ""}>↻</span> Refresh</button>
+      </div>
+
+      {/* ── Tabs ── */}
+      <div style={{ display: "flex", gap: 8, marginBottom: 20, flexWrap: "wrap" }}>
+        {[["drivers","🏎️ Drivers"],["constructors","🏗️ Constructors"],["split","🔢 Points Split"]].map(([id, label]) => (
+          <button key={id} onClick={() => setTab(id)} style={{
+            padding: "8px 18px", border: `1px solid ${tab === id ? "var(--accent)" : "var(--border2)"}`,
+            background: tab === id ? "rgba(225,6,0,0.12)" : "transparent",
+            color: tab === id ? "var(--accent)" : "var(--text3)",
+            fontFamily: "Orbitron", fontSize: 9, letterSpacing: 1.5, cursor: "pointer", borderRadius: 20,
+            transition: "all 0.2s",
+          }}>{label}</button>
+        ))}
       </div>
 
       {loading && (
@@ -3352,93 +3386,140 @@ function LiveStandingsSection() {
       )}
 
       {!loading && driverStandings.length > 0 && (
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(min(100%, 520px), 1fr))", gap: 24 }}>
-
-          {/* ── Drivers' Championship ── */}
-          <div>
-            <div className="section-title" style={{ fontSize: "clamp(13px,3vw,20px)", marginBottom: 8 }}>Drivers' <span>Championship</span></div>
-            <div className="section-line" />
-            {standingsRound && (
-              <div style={{ fontSize: 10, color: "var(--text4)", fontFamily: "Orbitron", letterSpacing: 1, marginBottom: 12, display: "flex", alignItems: "center", gap: 6 }}>
-                <span>📡</span> DATA AS OF ROUND {standingsRound} · JOLPICA/ERGAST
-              </div>
-            )}
-            <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
-              {driverStandings.map(row => {
-                const col = ergastColor(row.constructorId);
-                const pct = ((row.pts / maxDriverPts) * 100).toFixed(1);
-                const isTop3 = row.pos <= 3;
-                return (
-                  <div key={row.name} className="card" style={{
-                    padding: "12px 16px",
-                    borderLeft: `3px solid ${isTop3 ? podiumColors[row.pos-1] : col}`,
-                    transition: "all 0.2s",
-                  }}>
-                    <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 8 }}>
-                      <span style={{
-                        fontFamily: "Orbitron", fontWeight: 900, fontSize: 18,
-                        color: isTop3 ? podiumColors[row.pos-1] : "var(--text3)",
-                        minWidth: 28, textAlign: "center",
-                      }}>{row.pos}</span>
-                      <div style={{ flex: 1, minWidth: 0 }}>
-                        <div style={{ fontWeight: 700, fontSize: 14, color: "var(--text)", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{row.name}</div>
-                        <div style={{ display: "flex", alignItems: "center", gap: 6, marginTop: 2 }}>
-                          <span style={{ background: col + "22", color: col, border: `1px solid ${col}44`, padding: "1px 6px", borderRadius: 2, fontSize: 9, fontWeight: 700, fontFamily: "Orbitron" }}>{row.team}</span>
-                          {row.wins > 0 && <span style={{ fontSize: 9, color: "#FFD700", fontFamily: "Orbitron" }}>🏆 {row.wins}W</span>}
+        <>
+          {/* ── Drivers tab ── */}
+          {tab === "drivers" && (
+            <div style={{ maxWidth: 640 }}>
+              <div className="section-title" style={{ fontSize: "clamp(13px,3vw,20px)", marginBottom: 8 }}>Drivers' <span>Championship</span></div>
+              <div className="section-line" />
+              {standingsRound && (
+                <div style={{ fontSize: 10, color: "var(--text4)", fontFamily: "Orbitron", letterSpacing: 1, marginBottom: 12, display: "flex", alignItems: "center", gap: 6 }}>
+                  <span>📡</span> DATA AS OF ROUND {standingsRound} · JOLPICA/ERGAST
+                </div>
+              )}
+              <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+                {driverStandings.map(row => {
+                  const col = ergastColor(row.constructorId);
+                  const pct = ((row.pts / maxDriverPts) * 100).toFixed(1);
+                  const isTop3 = row.pos <= 3;
+                  return (
+                    <div key={row.name} className="card" style={{ padding: "12px 16px", borderLeft: `3px solid ${isTop3 ? podiumColors[row.pos-1] : col}`, transition: "all 0.2s" }}>
+                      <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 8 }}>
+                        <span style={{ fontFamily: "Orbitron", fontWeight: 900, fontSize: 18, color: isTop3 ? podiumColors[row.pos-1] : "var(--text3)", minWidth: 28, textAlign: "center" }}>{row.pos}</span>
+                        <div style={{ flex: 1, minWidth: 0 }}>
+                          <div style={{ fontWeight: 700, fontSize: 14, color: "var(--text)", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{row.name}</div>
+                          <div style={{ display: "flex", alignItems: "center", gap: 6, marginTop: 2 }}>
+                            <span style={{ background: col + "22", color: col, border: `1px solid ${col}44`, padding: "1px 6px", borderRadius: 2, fontSize: 9, fontWeight: 700, fontFamily: "Orbitron" }}>{row.team}</span>
+                            {row.wins > 0 && <span style={{ fontSize: 9, color: "#FFD700", fontFamily: "Orbitron" }}>🏆 {row.wins}W</span>}
+                          </div>
                         </div>
+                        <div style={{ fontFamily: "Orbitron", fontWeight: 900, fontSize: 22, color: isTop3 ? "#e10600" : "var(--text2)", minWidth: 48, textAlign: "right" }}>{row.pts}</div>
                       </div>
-                      <div style={{ fontFamily: "Orbitron", fontWeight: 900, fontSize: 22, color: isTop3 ? "#e10600" : "var(--text2)", minWidth: 48, textAlign: "right" }}>{row.pts}</div>
-                    </div>
-                    {/* Points bar */}
-                    <div style={{ height: 4, background: "var(--border)", borderRadius: 2, overflow: "hidden" }}>
-                      <div style={{ height: "100%", width: `${pct}%`, background: isTop3 ? `linear-gradient(90deg, ${podiumColors[row.pos-1]}, ${col})` : col, borderRadius: 2, transition: "width 0.8s ease", boxShadow: isTop3 ? `0 0 8px ${col}` : "none" }} />
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-          </div>
-
-          {/* ── Constructors' Championship ── */}
-          <div>
-            <div className="section-title" style={{ fontSize: "clamp(13px,3vw,20px)", marginBottom: 8 }}>Constructors' <span>Championship</span></div>
-            <div className="section-line" />
-            <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
-              {constructorStandings.map(row => {
-                const col = ergastColor(row.constructorId);
-                const pct = ((row.pts / maxCtorPts) * 100).toFixed(1);
-                const isTop3 = row.pos <= 3;
-                return (
-                  <div key={row.name} className="card" style={{
-                    padding: "14px 16px",
-                    borderLeft: `3px solid ${isTop3 ? podiumColors[row.pos-1] : col}`,
-                    transition: "all 0.2s",
-                  }}>
-                    <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 8 }}>
-                      <span style={{
-                        fontFamily: "Orbitron", fontWeight: 900, fontSize: 20,
-                        color: isTop3 ? podiumColors[row.pos-1] : "var(--text3)",
-                        minWidth: 28, textAlign: "center",
-                      }}>{row.pos}</span>
-                      <div style={{ flex: 1, minWidth: 0 }}>
-                        <div style={{ fontWeight: 700, fontSize: 15, color: col, fontFamily: "Orbitron", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{row.name}</div>
-                        {row.wins > 0 && <div style={{ fontSize: 9, color: "#FFD700", fontFamily: "Orbitron", marginTop: 2 }}>🏆 {row.wins} win{row.wins !== 1 ? "s" : ""}</div>}
+                      <div style={{ height: 4, background: "var(--border)", borderRadius: 2, overflow: "hidden" }}>
+                        <div style={{ height: "100%", width: `${pct}%`, background: isTop3 ? `linear-gradient(90deg, ${podiumColors[row.pos-1]}, ${col})` : col, borderRadius: 2, transition: "width 0.8s ease", boxShadow: isTop3 ? `0 0 8px ${col}` : "none" }} />
                       </div>
-                      <div style={{ fontFamily: "Orbitron", fontWeight: 900, fontSize: 24, color: isTop3 ? "#e10600" : "var(--text2)", minWidth: 52, textAlign: "right" }}>{row.pts}</div>
                     </div>
-                    <div style={{ height: 5, background: "var(--border)", borderRadius: 3, overflow: "hidden" }}>
-                      <div style={{ height: "100%", width: `${pct}%`, background: `linear-gradient(90deg, ${col}, ${col}bb)`, borderRadius: 3, transition: "width 0.8s ease", boxShadow: `0 0 8px ${col}44` }} />
-                    </div>
-                  </div>
-                );
-              })}
+                  );
+                })}
+              </div>
             </div>
-            <div style={{ fontSize: 10, color: "var(--text4)", textAlign: "center", marginTop: 16 }}>
-              Data via Jolpica F1 API · {lastUpdated ? `Updated ${lastUpdated.toLocaleTimeString()}` : ""}
-            </div>
-          </div>
+          )}
 
-        </div>
+          {/* ── Constructors tab ── */}
+          {tab === "constructors" && (
+            <div style={{ maxWidth: 640 }}>
+              <div className="section-title" style={{ fontSize: "clamp(13px,3vw,20px)", marginBottom: 8 }}>Constructors' <span>Championship</span></div>
+              <div className="section-line" />
+              {standingsRound && (
+                <div style={{ fontSize: 10, color: "var(--text4)", fontFamily: "Orbitron", letterSpacing: 1, marginBottom: 12, display: "flex", alignItems: "center", gap: 6 }}>
+                  <span>📡</span> DATA AS OF ROUND {standingsRound} · JOLPICA/ERGAST
+                </div>
+              )}
+              <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+                {constructorStandings.map(row => {
+                  const col = ergastColor(row.constructorId);
+                  const pct = ((row.pts / maxCtorPts) * 100).toFixed(1);
+                  const isTop3 = row.pos <= 3;
+                  return (
+                    <div key={row.name} className="card" style={{ padding: "14px 16px", borderLeft: `3px solid ${isTop3 ? podiumColors[row.pos-1] : col}`, transition: "all 0.2s" }}>
+                      <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 8 }}>
+                        <span style={{ fontFamily: "Orbitron", fontWeight: 900, fontSize: 20, color: isTop3 ? podiumColors[row.pos-1] : "var(--text3)", minWidth: 28, textAlign: "center" }}>{row.pos}</span>
+                        <div style={{ flex: 1, minWidth: 0 }}>
+                          <div style={{ fontWeight: 700, fontSize: 15, color: col, fontFamily: "Orbitron", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{row.name}</div>
+                          {row.wins > 0 && <div style={{ fontSize: 9, color: "#FFD700", fontFamily: "Orbitron", marginTop: 2 }}>🏆 {row.wins} win{row.wins !== 1 ? "s" : ""}</div>}
+                        </div>
+                        <div style={{ fontFamily: "Orbitron", fontWeight: 900, fontSize: 24, color: isTop3 ? "#e10600" : "var(--text2)", minWidth: 52, textAlign: "right" }}>{row.pts}</div>
+                      </div>
+                      <div style={{ height: 5, background: "var(--border)", borderRadius: 3, overflow: "hidden" }}>
+                        <div style={{ height: "100%", width: `${pct}%`, background: `linear-gradient(90deg, ${col}, ${col}bb)`, borderRadius: 3, transition: "width 0.8s ease", boxShadow: `0 0 8px ${col}44` }} />
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+              <div style={{ fontSize: 10, color: "var(--text4)", textAlign: "center", marginTop: 16 }}>
+                Data via Jolpica F1 API · {lastUpdated ? `Updated ${lastUpdated.toLocaleTimeString()}` : ""}
+              </div>
+            </div>
+          )}
+
+          {/* ── Points Split tab ── */}
+          {tab === "split" && (
+            <div>
+              <div className="section-title" style={{ fontSize: "clamp(13px,3vw,20px)", marginBottom: 8 }}>Constructor <span>Points Split</span></div>
+              <div className="section-line" />
+              <p style={{ fontSize: 12, color: "var(--text3)", marginBottom: 20 }}>Each constructor's total points broken down by their two drivers. Bar width is proportional to each driver's share of the team total.</p>
+              <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+                {ctorSplit.map((ctor, i) => {
+                  const col = ergastColor(ctor.constructorId);
+                  const total = ctor.total || 1;
+                  const isTop3 = i < 3;
+                  return (
+                    <div key={ctor.constructorId} className="card" style={{ padding: "16px 20px", borderLeft: `3px solid ${isTop3 ? podiumColors[i] : col}` }}>
+                      <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 12 }}>
+                        <span style={{ fontFamily: "Orbitron", fontWeight: 900, fontSize: 18, color: isTop3 ? podiumColors[i] : "var(--text3)", minWidth: 24 }}>{i+1}</span>
+                        <div style={{ fontFamily: "Orbitron", fontWeight: 700, fontSize: 14, color: col, flex: 1 }}>{ctor.name}</div>
+                        <div style={{ fontFamily: "Orbitron", fontWeight: 900, fontSize: 20, color: "var(--text)" }}>{ctor.total} <span style={{ fontSize: 10, color: "var(--text4)", fontWeight: 400 }}>pts</span></div>
+                      </div>
+                      {/* Stacked bar */}
+                      <div style={{ height: 28, borderRadius: 4, overflow: "hidden", display: "flex", background: "var(--border)", marginBottom: 10 }}>
+                        {ctor.drivers.map((drv, di) => {
+                          const pct = (drv.pts / total) * 100;
+                          const shade = di === 0 ? col : col + "88";
+                          return (
+                            <div key={drv.name} style={{
+                              width: `${pct}%`, background: shade, display: "flex",
+                              alignItems: "center", justifyContent: "center", overflow: "hidden",
+                              transition: "width 0.8s ease",
+                              borderRight: di === 0 && ctor.drivers.length > 1 ? "2px solid rgba(0,0,0,0.3)" : "none",
+                            }}>
+                              {pct > 8 && <span style={{ fontFamily: "Orbitron", fontSize: 9, fontWeight: 700, color: "#fff", textShadow: "0 1px 3px rgba(0,0,0,0.7)", whiteSpace: "nowrap", padding: "0 4px" }}>{drv.code || drv.name.split(" ").pop().slice(0,3).toUpperCase()}</span>}
+                            </div>
+                          );
+                        })}
+                      </div>
+                      {/* Driver breakdown */}
+                      <div style={{ display: "flex", gap: 16, flexWrap: "wrap" }}>
+                        {ctor.drivers.map((drv, di) => (
+                          <div key={drv.name} style={{ display: "flex", alignItems: "center", gap: 6 }}>
+                            <div style={{ width: 10, height: 10, borderRadius: 2, background: di === 0 ? col : col + "88", flexShrink: 0 }} />
+                            <span style={{ fontSize: 11, color: "var(--text2)" }}>{drv.name}</span>
+                            <span style={{ fontSize: 11, fontFamily: "Orbitron", fontWeight: 700, color: col }}>{drv.pts}</span>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+              {standingsRound && (
+                <div style={{ fontSize: 10, color: "var(--text4)", fontFamily: "Orbitron", letterSpacing: 1, marginTop: 16, display: "flex", alignItems: "center", gap: 6, justifyContent: "center" }}>
+                  <span>📡</span> DATA AS OF ROUND {standingsRound} · COMPUTED FROM DRIVER STANDINGS
+                </div>
+              )}
+            </div>
+          )}
+        </>
       )}
     </div>
   );
@@ -4255,6 +4336,10 @@ const SEARCH_INDEX = [
   { type: "Section", title: "Pit Wall", sub: "Live driver & constructor standings, calendar & paddock news", section: "pitwall", icon: "📡", color: "#d4a017" },
   { type: "Section", title: "Driver Changes", sub: "Every major move 2018–2026 explained", section: "history", icon: "📅", color: "#606080" },
   { type: "Section", title: "Car Compare 2025 vs 2026", sub: "Technical regulation changes side by side", section: "compare", icon: "⚡", color: "#e10600" },
+  { type: "Section", title: "Race Weekend Schedule", sub: "Full session timetable in your local timezone with live countdown", section: "schedule", icon: "📅", color: "#00dc78" },
+  { type: "Section", title: "Reliability Tracker", sub: "DNFs and retirements leaderboard for the 2026 season", section: "reliability", icon: "🔧", color: "#FF8000" },
+  { type: "Section", title: "Watch Your First Race", sub: "Step-by-step interactive guide for complete newcomers", section: "firstrace", icon: "🎬", color: "#27F4D2" },
+  { type: "Section", title: "Flag Guide", sub: "Every F1 flag explained — green, yellow, red, blue, black & more", section: "flags", icon: "🏴", color: "#FFD700" },
 ];
 
 // Deep search — also match keywords field
@@ -5797,6 +5882,8 @@ const NAV_GROUPS = [
       { id: "tyrestrategy", icon: "🏎", label: "Tyre Strategy",    desc: "Interactive pit stop strategies from iconic races" },
       { id: "quiz",         icon: "🧠", label: "F1 Quiz",          desc: "Test your knowledge with 15 questions" },
       { id: "teamquiz",     icon: "🎯", label: "Which Team Are You?", desc: "8 personality questions to find your F1 team" },
+      { id: "firstrace",    icon: "🎬", label: "Watch Your First Race", desc: "Step-by-step guide for complete newcomers" },
+      { id: "flags",        icon: "🏴", label: "Flag Guide",         desc: "Every F1 flag explained — yellow, red, blue & more" },
     ]
   },
   {
@@ -5822,6 +5909,8 @@ const NAV_GROUPS = [
       { id: "records",      icon: "🎖️", label: "All-Time Records",  desc: "Most wins, poles, titles & fastest laps in history" },
       { id: "news",         icon: "📰", label: "F1 News",           desc: "Latest headlines from Motorsport.com" },
       { id: "pitwall",      icon: "📡", label: "Pit Wall",           desc: "Live standings, calendar & paddock intel" },
+      { id: "schedule",     icon: "📅", label: "Race Weekend",       desc: "Full session timetable in your local time" },
+      { id: "reliability",  icon: "🔧", label: "Reliability Tracker", desc: "DNFs and retirements for the 2026 season" },
     ]
   },
 ];
@@ -5946,6 +6035,556 @@ function useAutoRefresh(fn, intervalMs, enabled = true) {
     document.addEventListener("visibilitychange", onVisibility);
     return () => { stop(); document.removeEventListener("visibilitychange", onVisibility); };
   }, [intervalMs, enabled]);
+}
+
+// ─── FLAG GUIDE SECTION ──────────────────────────────────────────────────────
+const F1_FLAGS = [
+  { color: "#00C851", name: "Green Flag", symbol: "🟢", when: "Session starts or restarts after interruption", meaning: "Track is clear — push flat out", tip: "After a safety car, the restart zone is where the racing begins again. Watch for drivers jostling for position on the way to it." },
+  { color: "#FFD700", name: "Yellow Flag", symbol: "🟡", when: "Hazard on or near the track", meaning: "Slow down — overtaking is forbidden in the yellow zone", tip: "Single yellow means be ready to slow. Double yellow (both flags waving) means be prepared to stop. Drivers who ignore yellows face drive-through penalties." },
+  { color: "#FFD700", name: "Double Yellow", symbol: "🟡🟡", when: "Major hazard blocking part of the track, or marshals on track", meaning: "Significantly reduce speed, no overtaking, be ready to stop", tip: "This is serious. A marshal or car is on the racing line. Drivers who don't visibly slow down face a black & white flag or time penalty." },
+  { color: "#e10600", name: "Red Flag", symbol: "🔴", when: "Serious accident, debris blocking track, or dangerous conditions", meaning: "Session stopped immediately — return to pit lane at reduced speed", tip: "Positions are usually taken at the previous lap or safety car line. Red flags reset the clock in qualifying — teams rush back to improve before time expires." },
+  { color: "#3399ff", name: "Blue Flag", symbol: "🔵", when: "Shown to a slower car being lapped by a leader", meaning: "The lead cars are coming — move out of the way within 3 blue flags or you'll be penalised", tip: "Being 'blue-flagged' by your teammate in a team battle is one of the most controversial moments in F1. Teams have to let the leader past, even if it costs a teammate a position." },
+  { color: "#fff", name: "White Flag", symbol: "⬜", when: "A slow-moving vehicle (e.g. safety car or recovery vehicle) is on track ahead", meaning: "Caution — slow vehicle ahead, be prepared", tip: "Rare in modern F1. You're more likely to see the SC board or VSC board for slow conditions today." },
+  { color: "#111", name: "Chequered Flag", symbol: "🏁", when: "Leader crosses the finish line at the end of the race or session", meaning: "Session over — race won!", tip: "Every driver sees the chequered flag at their finish, even if they're a lap down. The race isn't over for them until they take the flag." },
+  { color: "#111", name: "Black Flag", symbol: "⬛", when: "Shown with a driver's car number", meaning: "That driver is disqualified and must return to the pits immediately", tip: "The nuclear option. Extremely rare in races — usually applied for serious rule violations. More common in junior series." },
+  { color: "#888", name: "Black & White Flag", symbol: "🏳️", when: "Shown with a driver's car number — first warning", meaning: "Warning for unsportsmanlike conduct (e.g. blocking, cutting a corner repeatedly)", tip: "Think of it as a yellow card. A second infringement usually results in a time penalty. Two black & whites in a session = possible black flag." },
+  { color: "#f90", name: "Black & Orange Flag", symbol: "🟠", when: "Shown with a car number — mechanical damage observed", meaning: "That car has a mechanical issue dangerous to others — return to the pits to fix it", tip: "Also called the 'meatball flag'. Drivers sometimes argue the damage isn't dangerous enough to warrant it — teams can appeal to race control." },
+  { color: "#FFD700", name: "SC Board", symbol: "🛡️", when: "Safety Car is deployed on track", meaning: "Follow the safety car in queue — no overtaking, stay within 10 car lengths of the car ahead", tip: "The safety car bunches up the field. Teams use this window to make 'free' pit stops — positions can change dramatically without passing on track." },
+  { color: "#3399ff", name: "VSC Board", symbol: "🔷", when: "Virtual Safety Car — electronic speed limits enforced through delta time", meaning: "Maintain a specific delta time shown on steering wheel — no sudden braking or acceleration", tip: "Introduced in 2015 to avoid deploying the full SC for minor incidents. Teams still use it for pit stops, but the time advantage is smaller than a real SC." },
+];
+
+function FlagGuideSection() {
+  const [selected, setSelected] = useState(null);
+  return (
+    <div>
+      <SectionHeader title="F1 Flag" accent="Guide" group="Learn the Basics" icon="🏁"
+        intro="Every flag in Formula 1 explained — what it means, when you'll see it, and what drivers must do." />
+      <div className="card" style={{ marginBottom: 20, borderLeft: "3px solid #FFD700" }}>
+        <p style={{ fontSize: 12, color: "var(--text2)", lineHeight: 1.75 }}>
+          <strong style={{ color: "#FFD700" }}>Pro tip:</strong> Flag signals come from marshals stationed around the circuit. In modern F1, electronic panels supplement physical flags so drivers see warnings on their steering wheels too — but the physical flags remain the official signal.
+        </p>
+      </div>
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(min(100%, 300px), 1fr))", gap: 12 }}>
+        {F1_FLAGS.map(flag => (
+          <div key={flag.name} className="card" onClick={() => setSelected(selected?.name === flag.name ? null : flag)}
+            style={{ cursor: "pointer", borderLeft: `4px solid ${flag.color}`, transition: "all 0.2s",
+              background: selected?.name === flag.name ? `${flag.color}10` : undefined }}>
+            <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 8 }}>
+              <div style={{ width: 40, height: 28, background: flag.color, borderRadius: 4, border: "1px solid rgba(255,255,255,0.1)", flexShrink: 0, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 14 }}>
+                {flag.color === "#111" ? (flag.name.includes("Chequered") ? "🏁" : "⬛") : ""}
+              </div>
+              <div>
+                <div style={{ fontFamily: "Orbitron", fontSize: 11, fontWeight: 700, color: "var(--text)" }}>{flag.name}</div>
+                <div style={{ fontSize: 10, color: flag.color, marginTop: 2 }}>{flag.symbol}</div>
+              </div>
+            </div>
+            <div style={{ fontSize: 11, color: "var(--text3)", lineHeight: 1.6, marginBottom: 6 }}>
+              <strong style={{ color: "var(--text2)" }}>When:</strong> {flag.when}
+            </div>
+            <div style={{ fontSize: 11, color: "var(--text2)", lineHeight: 1.6, fontWeight: 600 }}>{flag.meaning}</div>
+            {selected?.name === flag.name && (
+              <div style={{ marginTop: 10, padding: "10px 12px", background: "var(--bg3)", borderRadius: 6, fontSize: 11, color: "#00dc78", lineHeight: 1.7 }}>
+                💡 {flag.tip}
+              </div>
+            )}
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+// ─── WATCH YOUR FIRST RACE GUIDE ─────────────────────────────────────────────
+const FIRST_RACE_PHASES = [
+  {
+    icon: "🏁", phase: "Before the Race", time: "Formation lap",
+    tips: [
+      "The grid is set by qualifying — P1 starts at the front. Watch for drivers weaving to warm their tyres on the formation lap.",
+      "Check each driver's starting tyre choice (shown on-screen as C1–C5 or S/M/H). Softs are fastest but wear quickly — harder tyres go longer.",
+      "Teams broadcast their strategy on the timing screen. A driver starting on softs will almost certainly pit earlier than one on mediums.",
+    ],
+    radio: "\"Box, box, box\" — your first team radio call. But that comes later. Right now listen for tyre temperature updates.",
+  },
+  {
+    icon: "🚦", phase: "Lap 1", time: "The most important 90 seconds",
+    tips: [
+      "Turn 1 is chaos — drivers arrive 5 wide at 200mph. Someone almost always gets squeezed wide, spins, or makes contact. Don't blink.",
+      "Watch the cars at the back of the grid — they have the cleanest run and often make huge gains in the first few corners.",
+      "The starting grid order can become completely different by lap 2. If there's a Safety Car on lap 1, positions are taken at the previous lap.",
+    ],
+    radio: "\"Stay wide, stay wide\" — driver to engineer when fighting for position. \"P__ in sector 1\" — their position after the first split.",
+  },
+  {
+    icon: "🏎", phase: "Early Race (Laps 2–15)", time: "Tyre management",
+    tips: [
+      "Drivers are managing tyre wear, not just racing. A driver going slowly may be 'nursing' their tyres to go longer before pitting.",
+      "DRS (Drag Reduction System) opens the rear wing on straights when a driver is within 1 second of the car ahead — you'll see them fly past.",
+      "Watch the gap between P1 and P2 on the timing screen. If it's growing, the leader has pace. If it's shrinking, P2 is pushing.",
+    ],
+    radio: "\"The rears are going\" — driver warning the team the rear tyres are degrading. This triggers a pit stop conversation.",
+  },
+  {
+    icon: "🔧", phase: "Pit Window (Laps 15–40)", time: "Where races are won and lost",
+    tips: [
+      "The 'undercut' — pit before your rival, put on fresh tyres, go fast, and come out ahead of them thanks to tyre advantage. Teams plot this on their timing screens.",
+      "The 'overcut' — stay out while rivals pit, use the clear track to go faster, then pit and come out ahead. Works on long straights where track position matters.",
+      "A pit stop takes ~2.5 seconds for a tyre change. Add in the pit lane speed limit and entry/exit, and a stop costs around 20–25 seconds.",
+    ],
+    radio: "\"We think you should box this lap\" — team telling the driver to pit. Driver might push back if they feel the tyres have more life.",
+  },
+  {
+    icon: "⚠️", phase: "Late Race Drama", time: "Safety cars, rain & decisions",
+    tips: [
+      "A Safety Car (SC) bunches up the whole field — teams frantically decide whether to pit for free (giving up track position) or stay out (keeping position but on old tyres).",
+      "If it starts raining, the call to switch to intermediate or wet tyres is one of the hardest decisions in F1. Go too early, waste time. Go too late, spin off.",
+      "Watch for drivers pitting for the fastest lap point — P1 might pit with 2 laps left just to set a fast time and gain a bonus championship point.",
+    ],
+    radio: "\"Safety car, safety car\" — massive radio traffic starts immediately. Teams yelling pit or stay decisions in real time.",
+  },
+  {
+    icon: "🏆", phase: "The Final Lap", time: "Everything on the line",
+    tips: [
+      "The chequered flag is shown to the race winner and then to every car after. All cars must take the flag — even if they're 3 laps down.",
+      "Parc fermé begins after the chequered flag — cars can't be touched by mechanics until post-race scrutineering. No last-minute repairs.",
+      "The podium ceremony: P3 walks first, P1 walks last. National anthems play. Watch for the team principals joining on the stage — often more drama there.",
+    ],
+    radio: "\"Brilliant job, brilliant job\" — engineer to driver on the cool-down lap. Or \"we'll talk when you're in the garage\" if it went badly.",
+  },
+];
+
+function FirstRaceSection() {
+  const [openPhase, setOpenPhase] = useState(0);
+  return (
+    <div>
+      <SectionHeader title="Watch Your" accent="First Race" group="Learn the Basics" icon="🎬"
+        intro="A step-by-step guide to watching a Formula 1 race for the very first time — what to look for, when to pay attention, and what all those radio calls mean." />
+
+      <div className="card" style={{ marginBottom: 20, borderLeft: "3px solid #e10600" }}>
+        <p style={{ fontSize: 12, color: "var(--text2)", lineHeight: 1.75 }}>
+          <strong style={{ color: "#e10600" }}>New to F1?</strong> A race is typically 60–70 laps over 90 minutes. Loads happen simultaneously — use this guide phase by phase as the race unfolds. Click each phase to expand it.
+        </p>
+      </div>
+
+      <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+        {FIRST_RACE_PHASES.map((phase, i) => {
+          const isOpen = openPhase === i;
+          return (
+            <div key={phase.phase} className="card" style={{ padding: 0, overflow: "hidden", borderLeft: isOpen ? "3px solid #e10600" : "3px solid var(--border2)", transition: "all 0.2s" }}>
+              <button onClick={() => setOpenPhase(isOpen ? null : i)}
+                style={{ width: "100%", padding: "14px 18px", background: "none", border: "none", cursor: "pointer", display: "flex", alignItems: "center", gap: 12, textAlign: "left" }}>
+                <span style={{ fontSize: 22, flexShrink: 0 }}>{phase.icon}</span>
+                <div style={{ flex: 1 }}>
+                  <div style={{ fontFamily: "Orbitron", fontSize: 11, fontWeight: 700, color: isOpen ? "#e10600" : "var(--text)" }}>{phase.phase}</div>
+                  <div style={{ fontSize: 10, color: "var(--text4)", marginTop: 2 }}>{phase.time}</div>
+                </div>
+                <span style={{ fontSize: 14, color: "var(--text4)", transform: isOpen ? "rotate(180deg)" : "none", transition: "transform 0.2s" }}>▼</span>
+              </button>
+              {isOpen && (
+                <div style={{ padding: "0 18px 18px" }}>
+                  <div style={{ display: "flex", flexDirection: "column", gap: 8, marginBottom: 12 }}>
+                    {phase.tips.map((tip, j) => (
+                      <div key={j} style={{ display: "flex", gap: 10, fontSize: 12, color: "var(--text2)", lineHeight: 1.7 }}>
+                        <span style={{ color: "#e10600", fontWeight: 700, flexShrink: 0 }}>{j + 1}.</span>
+                        <span>{tip}</span>
+                      </div>
+                    ))}
+                  </div>
+                  <div style={{ padding: "10px 14px", background: "rgba(39,244,210,0.06)", border: "1px solid rgba(39,244,210,0.2)", borderRadius: 6 }}>
+                    <div style={{ fontSize: 9, color: "#27F4D2", fontFamily: "Orbitron", letterSpacing: 2, marginBottom: 4 }}>📻 TEAM RADIO</div>
+                    <div style={{ fontSize: 11, color: "var(--text2)", lineHeight: 1.6, fontStyle: "italic" }}>{phase.radio}</div>
+                  </div>
+                </div>
+              )}
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
+// ─── RELIABILITY / DNF TRACKER ───────────────────────────────────────────────
+function ReliabilitySection() {
+  const [races, setRaces] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [lastUpdated, setLastUpdated] = useState(null);
+  const YEAR = new Date().getFullYear();
+
+  async function loadData() {
+    setLoading(true); setError(null);
+    try {
+      const data = await jolpicaGet(`/${YEAR}/results.json?limit=1000`);
+      setRaces(data?.MRData?.RaceTable?.Races || []);
+      setLastUpdated(new Date());
+    } catch (e) {
+      setError(e.message);
+    } finally {
+      setLoading(false);
+    }
+  }
+  useEffect(() => { loadData(); }, []);
+  useAutoRefresh(loadData, 120_000);
+
+  const { dnfsByDriver, dnfsByTeam, raceCount } = useMemo(() => {
+    const dnfsByDriver = {};
+    const dnfsByTeam = {};
+    races.forEach(race => {
+      (race.Results || []).forEach(r => {
+        const isDNF = r.status !== "Finished" && !r.status?.startsWith("+");
+        if (!isDNF) return;
+        const dId = r.Driver.driverId;
+        const dName = `${r.Driver.givenName} ${r.Driver.familyName}`;
+        const cId = r.Constructor.constructorId;
+        const cName = r.Constructor.name;
+        if (!dnfsByDriver[dId]) dnfsByDriver[dId] = { name: dName, constructorId: cId, team: cName, count: 0, reasons: {} };
+        dnfsByDriver[dId].count++;
+        dnfsByDriver[dId].reasons[r.status] = (dnfsByDriver[dId].reasons[r.status] || 0) + 1;
+        if (!dnfsByTeam[cId]) dnfsByTeam[cId] = { name: cName, constructorId: cId, count: 0, reasons: {} };
+        dnfsByTeam[cId].count++;
+        dnfsByTeam[cId].reasons[r.status] = (dnfsByTeam[cId].reasons[r.status] || 0) + 1;
+      });
+    });
+    return { dnfsByDriver, dnfsByTeam, raceCount: races.length };
+  }, [races]);
+
+  const driverList = Object.values(dnfsByDriver).sort((a, b) => b.count - a.count);
+  const teamList = Object.values(dnfsByTeam).sort((a, b) => b.count - a.count);
+
+  function reasonStr(reasons) {
+    return Object.entries(reasons).sort((a, b) => b[1] - a[1]).slice(0, 3)
+      .map(([s, n]) => `${n}× ${s}`).join(", ");
+  }
+
+  return (
+    <div>
+      <SectionHeader title={`${YEAR}`} accent="Reliability Tracker" group="Race & Stats" icon="🔧"
+        intro={`Every DNF and retirement from the ${YEAR} season. Who's been most reliable — and which teams are struggling?`} />
+
+      <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 16, flexWrap: "wrap" }}>
+        <div style={{ display: "inline-flex", alignItems: "center", gap: 6, padding: "4px 12px", background: "rgba(0,220,120,0.08)", border: "1px solid rgba(0,220,120,0.25)", borderRadius: 20 }}>
+          <div style={{ width: 6, height: 6, borderRadius: "50%", background: loading ? "#666" : "#00dc78", boxShadow: loading ? "none" : "0 0 6px #00dc78" }} />
+          <span style={{ fontSize: 10, color: "#00dc78", fontFamily: "Orbitron", letterSpacing: 1 }}>LIVE · {raceCount} races analysed</span>
+        </div>
+        {lastUpdated && <span style={{ fontSize: 10, color: "var(--text4)" }}>Updated {lastUpdated.toLocaleTimeString()}</span>}
+        <button onClick={loadData} disabled={loading} style={{ marginLeft: "auto", padding: "6px 14px", background: "transparent", border: "1px solid var(--border2)", color: "var(--text3)", fontFamily: "Orbitron", fontSize: 9, letterSpacing: 2, cursor: loading ? "wait" : "pointer", borderRadius: 20 }}>
+          <span className={loading ? "spin" : ""}>↻</span> Refresh
+        </button>
+      </div>
+
+      {loading && (
+        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16 }}>
+          {[1, 2].map(i => <div key={i} className="skeleton-card"><div className="skeleton skel skel-title" />{[1,2,3,4,5].map(j => <div key={j} className="skeleton skel skel-line w-80" style={{ marginBottom: 8 }} />)}</div>)}
+        </div>
+      )}
+      {error && !loading && <div className="card" style={{ borderLeft: "3px solid #e10600", textAlign: "center", padding: 24 }}><div style={{ fontSize: 10, color: "#e10600", fontFamily: "Orbitron", letterSpacing: 2 }}>DATA UNAVAILABLE</div><p style={{ fontSize: 12, color: "var(--text3)", marginTop: 8 }}>{error}</p></div>}
+
+      {!loading && !error && raceCount === 0 && <EmptyState icon="🔧" title="NO DATA YET" sub="Reliability data will appear once race results are available." />}
+
+      {!loading && !error && raceCount > 0 && (
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(min(100%, 420px), 1fr))", gap: 20 }}>
+          {/* Driver DNF leaderboard */}
+          <div>
+            <div className="section-title" style={{ fontSize: "clamp(13px,3vw,18px)", marginBottom: 8 }}>Driver <span>Retirements</span></div>
+            <div className="section-line" />
+            {driverList.length === 0
+              ? <div style={{ padding: 20, color: "var(--text3)", fontSize: 12 }}>✅ No retirements recorded yet!</div>
+              : driverList.map(d => {
+                const col = ergastColor(d.constructorId);
+                return (
+                  <div key={d.name} className="card" style={{ padding: "12px 16px", marginBottom: 8, borderLeft: `3px solid ${col}` }}>
+                    <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                      <span style={{ fontFamily: "Orbitron", fontWeight: 900, fontSize: 22, color: "#e10600", minWidth: 32 }}>{d.count}</span>
+                      <div style={{ flex: 1 }}>
+                        <div style={{ fontWeight: 700, fontSize: 13, color: "var(--text)" }}>{d.name}</div>
+                        <div style={{ fontSize: 10, color: "var(--text3)", marginTop: 2 }}>{d.team}</div>
+                      </div>
+                    </div>
+                    <div style={{ fontSize: 10, color: "var(--text4)", marginTop: 6, fontFamily: "Orbitron", letterSpacing: 1 }}>{reasonStr(d.reasons)}</div>
+                  </div>
+                );
+              })
+            }
+          </div>
+
+          {/* Constructor DNF leaderboard */}
+          <div>
+            <div className="section-title" style={{ fontSize: "clamp(13px,3vw,18px)", marginBottom: 8 }}>Constructor <span>Retirements</span></div>
+            <div className="section-line" />
+            {teamList.length === 0
+              ? <div style={{ padding: 20, color: "var(--text3)", fontSize: 12 }}>✅ No retirements recorded yet!</div>
+              : teamList.map(t => {
+                const col = ergastColor(t.constructorId);
+                return (
+                  <div key={t.name} className="card" style={{ padding: "12px 16px", marginBottom: 8, borderLeft: `3px solid ${col}` }}>
+                    <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                      <span style={{ fontFamily: "Orbitron", fontWeight: 900, fontSize: 22, color: "#e10600", minWidth: 32 }}>{t.count}</span>
+                      <div style={{ flex: 1 }}>
+                        <div style={{ fontWeight: 700, fontSize: 13, color: "var(--text)" }}>{t.name}</div>
+                        <div style={{ fontSize: 10, color: "var(--text4)", marginTop: 6, fontFamily: "Orbitron", letterSpacing: 1 }}>{reasonStr(t.reasons)}</div>
+                      </div>
+                    </div>
+                  </div>
+                );
+              })
+            }
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+// ─── RACE WEEKEND SCHEDULE ────────────────────────────────────────────────────
+// Sessions data for remaining 2026 rounds (UTC times)
+const SESSION_DATA = {
+  // Round 7 — Emilia Romagna GP (Imola) — standard weekend
+  7:  { fp1: "2026-05-22T11:30:00Z", fp2: "2026-05-22T15:00:00Z", fp3: "2026-05-23T10:30:00Z", quali: "2026-05-23T14:00:00Z", race: "2026-05-24T13:00:00Z" },
+  // Round 8 — Monaco GP — standard weekend
+  8:  { fp1: "2026-06-05T11:30:00Z", fp2: "2026-06-05T15:00:00Z", fp3: "2026-06-06T10:30:00Z", quali: "2026-06-06T14:00:00Z", race: "2026-06-07T13:00:00Z" },
+  // Round 9 — Canadian GP (Montreal) — standard weekend
+  9:  { fp1: "2026-06-12T17:30:00Z", fp2: "2026-06-12T21:00:00Z", fp3: "2026-06-13T16:30:00Z", quali: "2026-06-13T20:00:00Z", race: "2026-06-14T18:00:00Z" },
+  // Round 10 — Spanish GP (Barcelona) — standard weekend
+  10: { fp1: "2026-06-26T11:30:00Z", fp2: "2026-06-26T15:00:00Z", fp3: "2026-06-27T10:30:00Z", quali: "2026-06-27T14:00:00Z", race: "2026-06-28T13:00:00Z" },
+  // Round 11 — Austrian GP (sprint)
+  11: { fp1: "2026-07-03T11:30:00Z", sprintQual: "2026-07-03T15:30:00Z", sprint: "2026-07-04T11:00:00Z", quali: "2026-07-04T15:00:00Z", race: "2026-07-05T13:00:00Z" },
+  // Round 12 — British GP (Silverstone) — standard weekend
+  12: { fp1: "2026-07-10T11:30:00Z", fp2: "2026-07-10T15:00:00Z", fp3: "2026-07-11T10:30:00Z", quali: "2026-07-11T14:00:00Z", race: "2026-07-12T14:00:00Z" },
+  // Round 13 — Belgian GP (Spa) — standard weekend
+  13: { fp1: "2026-07-17T11:30:00Z", fp2: "2026-07-17T15:00:00Z", fp3: "2026-07-18T10:30:00Z", quali: "2026-07-18T14:00:00Z", race: "2026-07-19T13:00:00Z" },
+  // Round 14 — Hungarian GP — standard weekend
+  14: { fp1: "2026-07-31T11:30:00Z", fp2: "2026-07-31T15:00:00Z", fp3: "2026-08-01T10:30:00Z", quali: "2026-08-01T14:00:00Z", race: "2026-08-02T13:00:00Z" },
+  // Round 15 — Dutch GP (Zandvoort) — standard weekend
+  15: { fp1: "2026-08-28T10:30:00Z", fp2: "2026-08-28T14:00:00Z", fp3: "2026-08-29T09:30:00Z", quali: "2026-08-29T13:00:00Z", race: "2026-08-30T13:00:00Z" },
+  // Round 16 — Italian GP (Monza) — standard weekend
+  16: { fp1: "2026-09-04T11:30:00Z", fp2: "2026-09-04T15:00:00Z", fp3: "2026-09-05T10:30:00Z", quali: "2026-09-05T14:00:00Z", race: "2026-09-06T13:00:00Z" },
+  // Round 17 — Azerbaijan GP (Baku) — standard weekend
+  17: { fp1: "2026-09-18T09:30:00Z", fp2: "2026-09-18T13:00:00Z", fp3: "2026-09-19T08:30:00Z", quali: "2026-09-19T12:00:00Z", race: "2026-09-20T11:00:00Z" },
+  // Round 18 — Singapore GP — standard weekend
+  18: { fp1: "2026-10-02T09:30:00Z", fp2: "2026-10-02T13:00:00Z", fp3: "2026-10-03T09:30:00Z", quali: "2026-10-03T13:00:00Z", race: "2026-10-04T12:00:00Z" },
+  // Round 19 — United States GP (Austin, sprint)
+  19: { fp1: "2026-10-16T16:30:00Z", sprintQual: "2026-10-16T20:30:00Z", sprint: "2026-10-17T16:00:00Z", quali: "2026-10-17T20:00:00Z", race: "2026-10-18T19:00:00Z" },
+  // Round 20 — Mexico City GP — standard weekend
+  20: { fp1: "2026-10-23T18:30:00Z", fp2: "2026-10-23T22:00:00Z", fp3: "2026-10-24T17:30:00Z", quali: "2026-10-24T21:00:00Z", race: "2026-10-25T20:00:00Z" },
+  // Round 21 — São Paulo GP (sprint)
+  21: { fp1: "2026-11-06T14:30:00Z", sprintQual: "2026-11-06T18:30:00Z", sprint: "2026-11-07T14:00:00Z", quali: "2026-11-07T18:00:00Z", race: "2026-11-08T17:00:00Z" },
+  // Round 22 — Las Vegas GP — standard weekend
+  22: { fp1: "2026-11-19T21:30:00Z", fp2: "2026-11-20T01:00:00Z", fp3: "2026-11-20T21:30:00Z", quali: "2026-11-21T01:00:00Z", race: "2026-11-21T22:00:00Z" },
+  // Round 23 — Qatar GP (sprint)
+  23: { fp1: "2026-11-27T12:30:00Z", sprintQual: "2026-11-27T16:30:00Z", sprint: "2026-11-28T13:00:00Z", quali: "2026-11-28T17:00:00Z", race: "2026-11-29T15:00:00Z" },
+  // Round 24 — Abu Dhabi GP — standard weekend
+  24: { fp1: "2026-12-04T09:30:00Z", fp2: "2026-12-04T13:00:00Z", fp3: "2026-12-05T09:30:00Z", quali: "2026-12-05T13:00:00Z", race: "2026-12-06T13:00:00Z" },
+};
+
+const SESSION_LABELS = {
+  fp1: "Free Practice 1", fp2: "Free Practice 2", fp3: "Free Practice 3",
+  sprintQual: "Sprint Qualifying", sprint: "Sprint Race",
+  quali: "Qualifying", race: "Race",
+};
+const SESSION_ICONS = {
+  fp1: "🔍", fp2: "🔍", fp3: "🔍", sprintQual: "⚡", sprint: "⚡", quali: "⏱", race: "🏁",
+};
+
+function RaceScheduleSection() {
+  const now = new Date();
+  const nextRace = RACE_CALENDAR_2026.find(r => !r.cancelled && new Date(r.date) > now)
+    || RACE_CALENDAR_2026[RACE_CALENDAR_2026.length - 1];
+  const sessions = nextRace ? SESSION_DATA[nextRace.round] : null;
+  const tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
+  const [tick, setTick] = useState(0);
+
+  useEffect(() => {
+    const id = setInterval(() => setTick(t => t + 1), 1000);
+    return () => clearInterval(id);
+  }, []);
+
+  // Find current/next session
+  const sessionEntries = sessions
+    ? Object.entries(sessions).map(([key, iso]) => ({ key, iso, date: new Date(iso) })).sort((a, b) => a.date - b.date)
+    : [];
+
+  const nextSession = sessionEntries.find(s => s.date > now);
+  const currentSession = sessionEntries.slice().reverse().find(s => s.date <= now && now < new Date(s.date.getTime() + 90 * 60000));
+
+  function fmtDate(d) {
+    return d.toLocaleDateString("en-GB", { weekday: "short", day: "numeric", month: "short", timeZone: tz });
+  }
+  function fmtTime(d) {
+    return d.toLocaleTimeString("en-GB", { hour: "2-digit", minute: "2-digit", timeZone: tz });
+  }
+  function countdown(target) {
+    const diff = target - now;
+    if (diff <= 0) return "Now";
+    const h = Math.floor(diff / 3600000);
+    const m = Math.floor((diff % 3600000) / 60000);
+    const s = Math.floor((diff % 60000) / 1000);
+    if (h > 48) return `${Math.floor(h / 24)}d ${h % 24}h`;
+    if (h > 0) return `${h}h ${m}m`;
+    return `${m}m ${s}s`;
+  }
+
+  if (!nextRace) return <EmptyState icon="📅" title="SEASON COMPLETE" sub="All 2026 races finished." />;
+
+  return (
+    <div>
+      <SectionHeader title="Race Weekend" accent="Schedule" group="Race & Stats" icon="📅"
+        intro={`All session times for the next race — shown in your local timezone (${tz.replace(/_/g, " ")}).`} />
+
+      {/* Race header */}
+      <div className="card" style={{ marginBottom: 20, borderLeft: "4px solid #e10600" }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
+          <span style={{ fontSize: 40 }}>{nextRace.flag}</span>
+          <div>
+            <div style={{ fontFamily: "Orbitron", fontSize: "clamp(14px,3vw,20px)", fontWeight: 900, color: "var(--text)" }}>{nextRace.name}</div>
+            <div style={{ fontSize: 12, color: "var(--text3)", marginTop: 2 }}>{nextRace.circuit} · Round {nextRace.round}</div>
+          </div>
+          {nextSession && (
+            <div style={{ marginLeft: "auto", textAlign: "right" }}>
+              <div style={{ fontSize: 9, color: "#e10600", fontFamily: "Orbitron", letterSpacing: 2 }}>NEXT SESSION IN</div>
+              <div style={{ fontFamily: "Orbitron", fontSize: "clamp(14px,3vw,20px)", fontWeight: 900, color: "#e10600" }}>{countdown(nextSession.date)}</div>
+            </div>
+          )}
+        </div>
+      </div>
+
+      {/* Session timetable */}
+      {sessions ? (
+        <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+          {sessionEntries.map(({ key, date }) => {
+            const isPast = date < now;
+            const isNext = nextSession?.key === key;
+            const isCurrent = currentSession?.key === key;
+            return (
+              <div key={key} className="card" style={{
+                padding: "14px 18px",
+                borderLeft: isCurrent ? "4px solid #00dc78" : isNext ? "4px solid #e10600" : isPast ? "4px solid var(--border2)" : "4px solid var(--border)",
+                opacity: isPast ? 0.55 : 1,
+                display: "flex", alignItems: "center", gap: 14,
+              }}>
+                <span style={{ fontSize: 22, flexShrink: 0 }}>{SESSION_ICONS[key]}</span>
+                <div style={{ flex: 1 }}>
+                  <div style={{ display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap" }}>
+                    <span style={{ fontFamily: "Orbitron", fontSize: 12, fontWeight: 700, color: isCurrent ? "#00dc78" : isNext ? "#e10600" : "var(--text)" }}>
+                      {SESSION_LABELS[key]}
+                    </span>
+                    {isCurrent && <span style={{ fontSize: 9, background: "#00dc7820", color: "#00dc78", border: "1px solid #00dc7840", borderRadius: 10, padding: "1px 7px", fontFamily: "Orbitron", letterSpacing: 1 }}>LIVE</span>}
+                    {isPast && !isCurrent && <span style={{ fontSize: 9, color: "var(--text4)", fontFamily: "Orbitron" }}>DONE</span>}
+                  </div>
+                  <div style={{ fontSize: 11, color: "var(--text3)", marginTop: 3 }}>{fmtDate(date)} · {fmtTime(date)}</div>
+                </div>
+                {isNext && !isCurrent && (
+                  <div style={{ textAlign: "right", flexShrink: 0 }}>
+                    <div style={{ fontFamily: "Orbitron", fontWeight: 700, fontSize: 13, color: "#e10600" }}>{countdown(date)}</div>
+                    <div style={{ fontSize: 9, color: "var(--text4)", fontFamily: "Orbitron" }}>AWAY</div>
+                  </div>
+                )}
+              </div>
+            );
+          })}
+        </div>
+      ) : (
+        <div className="card" style={{ textAlign: "center", padding: 32 }}>
+          <div style={{ fontSize: 32, marginBottom: 10 }}>📅</div>
+          <div style={{ fontFamily: "Orbitron", fontSize: 10, color: "var(--text3)", letterSpacing: 2 }}>SESSION TIMES COMING SOON</div>
+          <p style={{ fontSize: 12, color: "var(--text4)", marginTop: 8 }}>Exact session times for Round {nextRace.round} will be added closer to the race weekend.</p>
+        </div>
+      )}
+
+      <div style={{ marginTop: 12, fontSize: 10, color: "var(--text4)", textAlign: "center" }}>
+        All times shown in your local timezone · {tz.replace(/_/g, " ")}
+      </div>
+    </div>
+  );
+}
+
+// ─── DRIVER PROFILE MODAL ────────────────────────────────────────────────────
+function DriverProfileModal({ driver: d, onClose, onCompare }) {
+  useEffect(() => {
+    document.body.style.overflow = "hidden";
+    return () => { document.body.style.overflow = ""; };
+  }, []);
+
+  const avg = { skill: 75, racecraft: 75, consistency: 75, media: 75 };
+  const axes = [
+    { label: "Raw Speed", key: "skill" },
+    { label: "Racecraft", key: "racecraft" },
+    { label: "Consistency", key: "consistency" },
+    { label: "Media Appeal", key: "media" },
+  ];
+
+  return (
+    <div onClick={onClose} style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.75)", zIndex: 2000, display: "flex", alignItems: "flex-start", justifyContent: "center", overflowY: "auto", padding: "20px 16px 40px" }}>
+      <div onClick={e => e.stopPropagation()} style={{ background: "var(--bg2)", borderRadius: 16, maxWidth: 560, width: "100%", border: "1px solid var(--border2)", position: "relative", marginTop: 20 }}>
+        {/* Close */}
+        <button onClick={onClose} style={{ position: "absolute", top: 14, right: 14, background: "var(--bg3)", border: "none", color: "var(--text2)", fontSize: 18, width: 32, height: 32, borderRadius: "50%", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center" }}>✕</button>
+
+        {/* Header */}
+        <div style={{ padding: "24px 24px 0", borderBottom: "1px solid var(--border)", paddingBottom: 20, borderTop: `4px solid ${d.teamColor}` }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
+            <div style={{ fontFamily: "Orbitron", fontWeight: 900, fontSize: 48, color: d.teamColor + "40", lineHeight: 1 }}>#{d.number}</div>
+            <div>
+              <div style={{ fontFamily: "Orbitron", fontWeight: 900, fontSize: "clamp(16px,4vw,22px)", color: "var(--text)", lineHeight: 1.1 }}>{d.name}</div>
+              <div style={{ fontSize: 12, color: "var(--text3)", marginTop: 4 }}>{d.country}</div>
+              <div style={{ display: "inline-block", background: d.teamColor + "22", color: d.teamColor, border: `1px solid ${d.teamColor}44`, padding: "2px 8px", borderRadius: 4, fontSize: 10, fontWeight: 700, fontFamily: "Orbitron", marginTop: 6 }}>{d.team}</div>
+            </div>
+          </div>
+          {/* Stats row */}
+          <div style={{ display: "flex", gap: 20, marginTop: 16, flexWrap: "wrap" }}>
+            {[["🏆", d.championships, "Titles"], ["🏁", d.wins, "Wins"], ["🥇", d.poles, "Poles"], ["📅", d.seasons, "Active"]].map(([ic, v, l]) => (
+              <div key={l} style={{ textAlign: "center" }}>
+                <div style={{ fontFamily: "Orbitron", fontSize: 16, fontWeight: 900, color: d.teamColor }}>{ic} {v}</div>
+                <div style={{ fontSize: 9, color: "var(--text4)", letterSpacing: 1, fontFamily: "Orbitron" }}>{l}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <div style={{ padding: 24 }}>
+          {/* Ratings bars */}
+          <div style={{ marginBottom: 20 }}>
+            <div style={{ fontFamily: "Orbitron", fontSize: 9, color: "#e10600", letterSpacing: 2, marginBottom: 10 }}>RATINGS</div>
+            {axes.map(({ label, key }) => (
+              <div key={key} style={{ marginBottom: 10 }}>
+                <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 4 }}>
+                  <span style={{ fontSize: 11, color: "var(--text3)" }}>{label}</span>
+                  <span style={{ fontFamily: "Orbitron", fontSize: 12, fontWeight: 700, color: d.teamColor }}>{d[key]}</span>
+                </div>
+                <div style={{ height: 6, background: "var(--bg3)", borderRadius: 3, overflow: "hidden" }}>
+                  <div style={{ height: "100%", width: `${d[key]}%`, background: d.teamColor, boxShadow: `0 0 6px ${d.teamColor}80`, borderRadius: 3, transition: "width 0.7s" }} />
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {/* Radar */}
+          <div style={{ marginBottom: 20 }}>
+            <div style={{ fontFamily: "Orbitron", fontSize: 9, color: "#e10600", letterSpacing: 2, marginBottom: 10 }}>RADAR vs AVERAGE (75)</div>
+            <div className="radar-wrap" style={{ maxWidth: 260, margin: "0 auto" }}>
+              <RadarChart d1={d} d2={avg} color1={d.teamColor} color2="rgba(255,255,255,0.2)" />
+            </div>
+          </div>
+
+          {/* Bio */}
+          <div style={{ marginBottom: 16 }}>
+            <div style={{ fontFamily: "Orbitron", fontSize: 9, color: "#e10600", letterSpacing: 2, marginBottom: 8 }}>DRIVER PROFILE</div>
+            <p style={{ fontSize: 12, color: "var(--text2)", lineHeight: 1.8 }}>{d.desc}</p>
+          </div>
+          {d.mediaNote && (
+            <div style={{ padding: "10px 14px", background: "rgba(153,102,255,0.08)", border: "1px solid rgba(153,102,255,0.2)", borderRadius: 6, marginBottom: 20 }}>
+              <div style={{ fontSize: 9, color: "#9966FF", fontFamily: "Orbitron", letterSpacing: 2, marginBottom: 4 }}>MEDIA & PERSONALITY</div>
+              <p style={{ fontSize: 11, color: "var(--text2)", lineHeight: 1.7 }}>{d.mediaNote}</p>
+            </div>
+          )}
+
+          {/* Compare button */}
+          <button onClick={() => { onCompare(d.id); onClose(); }}
+            style={{ width: "100%", padding: "12px 20px", background: "#e10600", border: "none", color: "#fff", fontFamily: "Orbitron", fontSize: 11, letterSpacing: 2, cursor: "pointer", borderRadius: 8, boxShadow: "0 4px 20px rgba(225,6,0,0.35)" }}>
+            COMPARE WITH ANOTHER DRIVER →
+          </button>
+        </div>
+      </div>
+    </div>
+  );
 }
 
 // ─── PIT WALL SECTION ────────────────────────────────────────────────────────
@@ -6383,16 +7022,21 @@ export class ErrorBoundary extends Component {
 export default function F1Guide() {
   const [active, setActive] = useState("home");
   const [openGroup, setOpenGroup] = useState(null);
-  const [darkMode, setDarkMode] = useState(true);
+  const [darkMode, setDarkMode] = useState(() => {
+    const saved = localStorage.getItem("f1guide_darkmode");
+    return saved !== null ? saved === "true" : true;
+  });
   const [showOnboarding, setShowOnboarding] = useState(() => !localStorage.getItem("f1guide_visited"));
   const [bookmarks, setBookmarks] = useState(() => {
     try { return JSON.parse(localStorage.getItem("f1guide_bookmarks") || "[]"); } catch { return []; }
   });
 
-  // Persist bookmarks
+  // Persist bookmarks + dark mode preference
   useEffect(() => { localStorage.setItem("f1guide_bookmarks", JSON.stringify(bookmarks)); }, [bookmarks]);
+  useEffect(() => { localStorage.setItem("f1guide_darkmode", darkMode); }, [darkMode]);
 
   const [toastMsg, showToast] = useToast();
+  const [profileDriver, setProfileDriver] = useState(null);
 
   function toggleBookmark(id) {
     setBookmarks(bms => {
@@ -6416,10 +7060,19 @@ export default function F1Guide() {
     localStorage.setItem("f1guide_visited", "1");
   }
 
+  // Deep-link: read hash on mount and navigate to it
+  useEffect(() => {
+    const hash = window.location.hash.slice(1);
+    const valid = NAV_GROUPS.flatMap(g => g.sections.map(s => s.id))
+      .concat(["home", "bookmarks"]);
+    if (hash && valid.includes(hash)) setActive(hash);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+
   function selectSection(id) {
     setActive(id);
     setOpenGroup(null);
     window.scrollTo(0, 0);
+    window.location.hash = id; // update URL for shareability
     // If the onboarding modal is open, close it and mark as visited —
     // navigating away is an implicit dismissal. Don't stamp localStorage
     // on every nav click, or the modal never shows again after the first click.
@@ -6506,7 +7159,7 @@ export default function F1Guide() {
               {active === "home"         && <HomeSection onNavigate={selectSection} />}
               {active === "how"          && <HowItWorks />}
               {active === "points"       && <PointsSystem />}
-              {active === "drivers"      && <DriversSection />}
+              {active === "drivers"      && <DriversSection onProfile={setProfileDriver} />}
               {active === "teams"        && <TeamsSection />}
               {active === "history"      && <HistorySection />}
               {active === "circuits"     && <CircuitsSection />}
@@ -6527,11 +7180,22 @@ export default function F1Guide() {
               {active === "preview"      && <SeasonPreviewSection onNavigate={selectSection} />}
               {active === "bookmarks"    && <BookmarksSection bookmarks={bookmarks} onNavigate={selectSection} onRemove={id => toggleBookmark(id)} />}
               {active === "pitwall"      && <PitWallSection />}
+              {active === "schedule"     && <RaceScheduleSection />}
+              {active === "flags"        && <FlagGuideSection />}
+              {active === "firstrace"    && <FirstRaceSection />}
+              {active === "reliability"  && <ReliabilitySection />}
             </div>
           </main>
           <MobileNav active={active} onSelect={selectSection} />
         </div>
       </div>
+      {profileDriver && (
+        <DriverProfileModal
+          driver={profileDriver}
+          onClose={() => setProfileDriver(null)}
+          onCompare={(id) => { setProfileDriver(null); selectSection("drivercompare"); }}
+        />
+      )}
     </>
   );
 }
