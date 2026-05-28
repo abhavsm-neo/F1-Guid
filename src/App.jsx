@@ -3854,7 +3854,10 @@ function RecordsSection() {
 }
 
 // ─── 2026 Race Calendar ──────────────────────────────────────────────────────
-const RACE_CALENDAR_2026 = [
+// `let` — entries are mutated in place by `syncRaceCalendarFromAPI()` on app
+// mount so dates / cancellations / new rounds reflect the current Jolpica feed
+// while preserving the rich static metadata (circuit info, lap records, desc).
+let RACE_CALENDAR_2026 = [
   { round: 1,  flag: "🇦🇺", name: "Australian GP",       circuit: "Albert Park", date: "2026-03-08T05:00:00Z",  laps: 58, length: "5.278 km", lapRecord: "1:20.235 (Bottas, 2023)",          drs: 3, tags: ["Street-adjacent","Fast","Overtaking"],          desc: "The season opener in Melbourne. A fast, flowing street-adjacent circuit that rewards car balance. The Albert Park lake provides a stunning backdrop." },
   { round: 2,  flag: "🇨🇳", name: "Chinese GP",           circuit: "Shanghai", date: "2026-03-15T07:00:00Z",  laps: 56, length: "5.451 km", lapRecord: "1:32.238 (M.Schumacher, 2004)",    drs: 2, tags: ["High-deg","Technical","Sprint"],                  desc: "Shanghai's long back straight rewards straight-line speed with 2026's active aero. Tyres take a heavy hit through the sweeping final sector. A Sprint weekend." },
   { round: 3,  flag: "🇯🇵", name: "Japanese GP",          circuit: "Suzuka", date: "2026-03-29T05:00:00Z",  laps: 53, length: "5.807 km", lapRecord: "1:30.983 (Verstappen, 2023)",      drs: 2, tags: ["Driver Favourite","Figure-8","High Speed"],       desc: "One of the most beloved circuits in the world. Suzuka's figure-of-eight layout and legendary corners like 130R and the Esses make it a true driver's circuit." },
@@ -3880,6 +3883,102 @@ const RACE_CALENDAR_2026 = [
   { round: 23, flag: "🇶🇦", name: "Qatar GP",             circuit: "Lusail", date: "2026-11-29T15:00:00Z",  laps: 57, length: "5.380 km", lapRecord: "1:24.319 (Russell, 2023)",         drs: 2, tags: ["Sprint","High Speed","Night"],                    desc: "Lusail is a flowing, high-speed circuit under lights. Heavy tyre degradation and physically demanding corners. A Sprint weekend." },
   { round: 24, flag: "🇦🇪", name: "Abu Dhabi GP",         circuit: "Yas Marina", date: "2026-12-06T13:00:00Z",  laps: 58, length: "5.281 km", lapRecord: "1:26.103 (Leclerc, 2023)",         drs: 3, tags: ["Season Finale","Twilight","Championships"],        desc: "The season finale. Yas Marina runs from sunset into night — stunning visually. Championships are won and lost here, and it's where the paddock says goodbye for another year." },
 ];
+
+// Flag fallback for any rounds the API surfaces that aren't in the static seed.
+// Maps Jolpica `Circuit.Location.country` (and a few historical names) → emoji flag.
+const COUNTRY_FLAGS = {
+  Australia: "🇦🇺", China: "🇨🇳", Japan: "🇯🇵", Bahrain: "🇧🇭",
+  "Saudi Arabia": "🇸🇦", USA: "🇺🇸", "United States": "🇺🇸", Canada: "🇨🇦",
+  Monaco: "🇲🇨", Spain: "🇪🇸", Austria: "🇦🇹", UK: "🇬🇧",
+  "United Kingdom": "🇬🇧", Belgium: "🇧🇪", Hungary: "🇭🇺", Netherlands: "🇳🇱",
+  Italy: "🇮🇹", Azerbaijan: "🇦🇿", Singapore: "🇸🇬", Mexico: "🇲🇽",
+  Brazil: "🇧🇷", Qatar: "🇶🇦", UAE: "🇦🇪", "United Arab Emirates": "🇦🇪",
+  Germany: "🇩🇪", France: "🇫🇷", Portugal: "🇵🇹", Russia: "🇷🇺",
+  Turkey: "🇹🇷", Korea: "🇰🇷", Malaysia: "🇲🇾", India: "🇮🇳",
+};
+
+/**
+ * Fetch the current season schedule from Jolpica and merge live updates
+ * (dates, race-name tweaks, added rounds, cancellation inference) into the
+ * static `RACE_CALENDAR_2026` array in place. Static metadata (circuit length,
+ * lap record, tags, desc) is preserved — only the volatile fields are touched.
+ * Returns `true` if anything actually changed so callers can trigger a re-render.
+ */
+async function syncRaceCalendarFromAPI() {
+  const year = new Date().getFullYear();
+  try {
+    const data = await jolpicaGet(`/${year}.json`);
+    const races = data?.MRData?.RaceTable?.Races || [];
+    if (races.length === 0) return false;
+
+    const apiByRound = new Map(races.map(r => [parseInt(r.round, 10), r]));
+    const maxApiRound = Math.max(...races.map(r => parseInt(r.round, 10)));
+    let changed = false;
+
+    // 1. Update existing entries from the API
+    RACE_CALENDAR_2026.forEach(race => {
+      const apiRace = apiByRound.get(race.round);
+      if (apiRace) {
+        // Build the canonical ISO date from API date + time
+        const apiDate = apiRace.time
+          ? `${apiRace.date}T${apiRace.time.replace(/Z?$/, "Z")}`
+          : `${apiRace.date}T00:00:00Z`;
+        if (apiDate && apiDate !== race.date) {
+          race.date = apiDate;
+          changed = true;
+        }
+        // Trust the API name if the static one differs (e.g. sponsor changes)
+        if (apiRace.raceName && apiRace.raceName !== race.name && !race.cancelled) {
+          // Only adopt if API name isn't a generic placeholder
+          if (!/TBD|TBC/i.test(apiRace.raceName)) {
+            race.name = apiRace.raceName;
+            changed = true;
+          }
+        }
+      } else if (!race.cancelled && race.round < maxApiRound) {
+        // API has later rounds but skipped this one → it was dropped from the
+        // calendar mid-season. Mark cancelled but keep description intact.
+        race.cancelled = true;
+        if (!race.tags?.includes("CANCELLED")) {
+          race.tags = [...(race.tags || []), "CANCELLED"];
+        }
+        changed = true;
+      }
+    });
+
+    // 2. Append any rounds the API has that aren't in the static seed
+    races.forEach(apiRace => {
+      const round = parseInt(apiRace.round, 10);
+      if (RACE_CALENDAR_2026.find(r => r.round === round)) return;
+      const country = apiRace.Circuit?.Location?.country;
+      const apiDate = apiRace.time
+        ? `${apiRace.date}T${apiRace.time.replace(/Z?$/, "Z")}`
+        : `${apiRace.date}T00:00:00Z`;
+      RACE_CALENDAR_2026.push({
+        round,
+        flag: COUNTRY_FLAGS[country] || "🏁",
+        name: apiRace.raceName,
+        circuit: apiRace.Circuit?.circuitName || "—",
+        date: apiDate,
+        laps: 0,
+        length: "—",
+        lapRecord: "—",
+        drs: 0,
+        tags: ["Live from API"],
+        desc: `${apiRace.raceName} at ${apiRace.Circuit?.circuitName || "—"}${country ? ", " + country : ""}. Schedule data sourced live from the Jolpica F1 API.`,
+      });
+      changed = true;
+    });
+
+    if (changed) {
+      RACE_CALENDAR_2026.sort((a, b) => a.round - b.round);
+    }
+    return changed;
+  } catch {
+    // Silent fallback — static calendar already contains a usable schedule
+    return false;
+  }
+}
 
 // ─── QUIZ DATA ────────────────────────────────────────────────────────────────
 const QUIZ_QUESTIONS = [
@@ -7037,6 +7136,19 @@ export default function F1Guide() {
 
   const [toastMsg, showToast] = useToast();
   const [profileDriver, setProfileDriver] = useState(null);
+  // Bump on calendar sync so every child re-renders against the mutated
+  // RACE_CALENDAR_2026 (dates, cancellations, late-added rounds).
+  const [, setCalendarVersion] = useState(0);
+
+  // Sync the race calendar with Jolpica on mount — preserves static metadata
+  // but overrides volatile fields (date, cancellations, added rounds).
+  useEffect(() => {
+    let cancelled = false;
+    syncRaceCalendarFromAPI().then(changed => {
+      if (changed && !cancelled) setCalendarVersion(v => v + 1);
+    });
+    return () => { cancelled = true; };
+  }, []);
 
   function toggleBookmark(id) {
     setBookmarks(bms => {
