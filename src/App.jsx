@@ -2930,6 +2930,42 @@ async function jolpicaGet(path) {
   return res.json();
 }
 
+// Jolpica silently caps `limit` at 100 result rows per response, regardless of
+// what the caller asks for. At ~22 rows per race that's only ~4.5 races per
+// page — past about 5 completed races the most recent rounds silently fall
+// off the first page. This helper paginates by offset until MRData.total is
+// satisfied and merges races that span pages (the last race on a page often
+// has its result rows split across two responses).
+async function fetchAllSeasonResults(year) {
+  const byRound = new Map();
+  let offset = 0;
+  const PAGE = 100;
+  const MAX_PAGES = 8; // safety cap — 8 * 100 = 800 rows ≈ 36 races
+  for (let page = 0; page < MAX_PAGES; page++) {
+    let data;
+    try {
+      data = await jolpicaGet(`/${year}/results.json?limit=${PAGE}&offset=${offset}`);
+    } catch {
+      break; // graceful — return whatever we already merged
+    }
+    const mr = data?.MRData;
+    const races = mr?.RaceTable?.Races || [];
+    const total = parseInt(mr?.total || "0", 10);
+    races.forEach(r => {
+      const round = parseInt(r.round, 10);
+      const existing = byRound.get(round);
+      if (existing) {
+        existing.Results = [...(existing.Results || []), ...(r.Results || [])];
+      } else {
+        byRound.set(round, { ...r, Results: [...(r.Results || [])] });
+      }
+    });
+    offset += PAGE;
+    if (offset >= total) break;
+  }
+  return Array.from(byRound.values()).sort((a, b) => parseInt(a.round, 10) - parseInt(b.round, 10));
+}
+
 function ergastColor(constructorId) {
   const MAP = {
     red_bull: "#3671C6", ferrari: "#E8002D", mercedes: "#27F4D2",
@@ -2958,17 +2994,15 @@ function ResultsSection() {
     setLoading(true);
     setError(null);
     try {
-      // Fetch races, driver standings, and constructor standings in parallel
-      // limit=1000 because Ergast paginates by individual result rows (~20/race),
-      // so limit=50 only returns ~2–3 races worth of data.
-      const [racesData, drvData, ctorData] = await Promise.all([
-        jolpicaGet(`/${YEAR}/results.json?limit=1000`),
+      // Use fetchAllSeasonResults to walk Jolpica's 100-row pagination cap.
+      // Without it, /results.json silently drops the most recent races once the
+      // season exceeds ~5 completed rounds.
+      const [allRaces, drvData, ctorData] = await Promise.all([
+        fetchAllSeasonResults(YEAR),
         jolpicaGet(`/${YEAR}/driverStandings.json`),
         jolpicaGet(`/${YEAR}/constructorStandings.json`),
       ]);
 
-      const allRaces = racesData?.MRData?.RaceTable?.Races || [];
-      // Only races with results
       const completed = allRaces.filter(r => r.Results && r.Results.length > 0);
       setRaces(completed);
       if (completed.length > 0) setSelectedIdx(completed.length - 1);
@@ -3008,7 +3042,7 @@ function ResultsSection() {
   // Load on mount
   useEffect(() => { loadAll(); }, []);
   // Auto-refresh every 90s while tab is visible
-  useAutoRefresh(loadAll, 90_000);
+  useAutoRefresh(loadAll, usePollingInterval(90_000, 30_000));
 
   const selectedRace = races[selectedIdx];
   const raceResults = selectedRace?.Results || [];
@@ -3028,6 +3062,7 @@ function ResultsSection() {
           <div style={{ width: 6, height: 6, borderRadius: "50%", background: loading ? "#666" : "#00dc78", boxShadow: loading ? "none" : "0 0 6px #00dc78" }} />
           <span style={{ fontSize: 10, color: "#00dc78", fontFamily: "Orbitron", letterSpacing: 1 }}>LIVE · Jolpica F1 API</span>
         </div>
+        <RaceWindowChip />
         {lastUpdated && <span style={{ fontSize: 10, color: "var(--text4)" }}>Updated {lastUpdated.toLocaleTimeString()}</span>}
         <button onClick={loadAll} disabled={loading} style={{ marginLeft: "auto", padding: "6px 14px", background: "transparent", border: "1px solid var(--border2)", color: "var(--text3)", fontFamily: "Orbitron", fontSize: 9, letterSpacing: 2, cursor: loading ? "wait" : "pointer", borderRadius: 20, transition: "all 0.2s" }}
           onMouseEnter={e => { e.currentTarget.style.borderColor="#e10600"; e.currentTarget.style.color="var(--text)"; }}
@@ -3321,7 +3356,7 @@ function LiveStandingsSection() {
 
   useEffect(() => { loadStandings(); }, []);
   // Auto-refresh every 60s while tab is visible
-  useAutoRefresh(loadStandings, 60_000);
+  useAutoRefresh(loadStandings, usePollingInterval(60_000, 30_000));
 
   const [tab, setTab] = useState("drivers");
 
@@ -3351,6 +3386,7 @@ function LiveStandingsSection() {
           <div style={{ width: 6, height: 6, borderRadius: "50%", background: loading ? "#666" : "#00dc78", boxShadow: loading ? "none" : "0 0 6px #00dc78", animation: loading ? "none" : "pulse 2s infinite" }} />
           <span style={{ fontSize: 10, color: "#00dc78", fontFamily: "Orbitron", letterSpacing: 1 }}>LIVE · Jolpica F1 API</span>
         </div>
+        <RaceWindowChip />
         {lastUpdated && <span style={{ fontSize: 10, color: "var(--text4)" }}>Updated {lastUpdated.toLocaleTimeString()}</span>}
         <button onClick={loadStandings} disabled={loading} style={{ marginLeft: "auto", padding: "6px 14px", background: "transparent", border: "1px solid var(--border2)", color: "var(--text3)", fontFamily: "Orbitron", fontSize: 9, letterSpacing: 2, cursor: loading ? "wait" : "pointer", borderRadius: 20 }}><span className={loading ? "spin" : ""}>↻</span> Refresh</button>
       </div>
@@ -6201,6 +6237,54 @@ function useAutoRefresh(fn, intervalMs, enabled = true) {
   }, [intervalMs, enabled]);
 }
 
+// True if `now` falls within `windowHours` after any non-cancelled race's
+// start time. The window covers the ~2 h race plus Jolpica's typical 3–6 h
+// ingestion delay so live data sections can poll faster while results are
+// actively being published.
+function isInPostRaceWindow(windowHours = 12) {
+  const now = Date.now();
+  const windowMs = windowHours * 3600 * 1000;
+  return RACE_CALENDAR_2026.some(r => {
+    if (r.cancelled) return false;
+    const t = new Date(r.date).getTime();
+    return now >= t && now <= t + windowMs;
+  });
+}
+
+// Small chip rendered next to LIVE pills during post-race windows so users
+// know the app is polling more aggressively. Re-evaluates with the polling
+// interval so it disappears when the window closes.
+function RaceWindowChip() {
+  const [show, setShow] = useState(() => isInPostRaceWindow());
+  useEffect(() => {
+    const tick = setInterval(() => setShow(isInPostRaceWindow()), 5 * 60 * 1000);
+    return () => clearInterval(tick);
+  }, []);
+  if (!show) return null;
+  return (
+    <div style={{ display: "inline-flex", alignItems: "center", gap: 6, padding: "4px 12px", background: "rgba(225,6,0,0.10)", border: "1px solid rgba(225,6,0,0.35)", borderRadius: 20 }}>
+      <div style={{ width: 6, height: 6, borderRadius: "50%", background: "#e10600", boxShadow: "0 0 6px #e10600", animation: "pulse 1.5s infinite" }} />
+      <span style={{ fontSize: 10, color: "#e10600", fontFamily: "Orbitron", letterSpacing: 1 }}>RACE WINDOW · 30s POLLING</span>
+    </div>
+  );
+}
+
+// Returns `fastMs` while inside a post-race window, otherwise `normalMs`.
+// Re-evaluates every 5 min so a session left open during a race weekend
+// automatically picks up the faster cadence without a reload.
+function usePollingInterval(normalMs, fastMs) {
+  const [intervalMs, setIntervalMs] = useState(
+    () => (isInPostRaceWindow() ? fastMs : normalMs)
+  );
+  useEffect(() => {
+    const tick = setInterval(() => {
+      setIntervalMs(isInPostRaceWindow() ? fastMs : normalMs);
+    }, 5 * 60 * 1000);
+    return () => clearInterval(tick);
+  }, [normalMs, fastMs]);
+  return intervalMs;
+}
+
 // ─── FLAG GUIDE SECTION ──────────────────────────────────────────────────────
 const F1_FLAGS = [
   { color: "#00C851", name: "Green Flag", symbol: "🟢", when: "Session starts or restarts after interruption", meaning: "Track is clear — push flat out", tip: "After a safety car, the restart zone is where the racing begins again. Watch for drivers jostling for position on the way to it." },
@@ -6378,8 +6462,8 @@ function ReliabilitySection() {
   async function loadData() {
     setLoading(true); setError(null);
     try {
-      const data = await jolpicaGet(`/${YEAR}/results.json?limit=1000`);
-      setRaces(data?.MRData?.RaceTable?.Races || []);
+      // Paginated full-season fetch — Jolpica caps each response at 100 rows.
+      setRaces(await fetchAllSeasonResults(YEAR));
       setLastUpdated(new Date());
     } catch (e) {
       setError(e.message);
@@ -6388,7 +6472,7 @@ function ReliabilitySection() {
     }
   }
   useEffect(() => { loadData(); }, []);
-  useAutoRefresh(loadData, 120_000);
+  useAutoRefresh(loadData, usePollingInterval(120_000, 30_000));
 
   const { dnfsByDriver, dnfsByTeam, raceCount } = useMemo(() => {
     const dnfsByDriver = {};
@@ -6783,12 +6867,13 @@ function PitWallSection() {
     try {
       // /last/results.json returns the latest *scheduled* round even when it
       // hasn't been run yet (Jolpica sometimes pre-stamps future races as
-      // "Finished"). Use full results listing instead and pick the most recent
-      // race whose date is in the past — avoids showing a future podium.
-      const [drvData, ctorData, lastRaceData] = await Promise.all([
+      // "Finished"). Use paginated full-season results instead and pick the
+      // most recent race whose date is in the past — avoids showing a future
+      // podium and avoids Jolpica's silent 100-row pagination cap.
+      const [drvData, ctorData, allRacesArr] = await Promise.all([
         jolpicaGet(`/${YEAR}/driverStandings.json`),
         jolpicaGet(`/${YEAR}/constructorStandings.json`),
-        jolpicaGet(`/${YEAR}/results.json?limit=1000`),
+        fetchAllSeasonResults(YEAR),
       ]);
       const drvList = drvData?.MRData?.StandingsTable?.StandingsLists?.[0]?.DriverStandings || [];
       const ctorList = ctorData?.MRData?.StandingsTable?.StandingsLists?.[0]?.ConstructorStandings || [];
@@ -6817,9 +6902,8 @@ function PitWallSection() {
       // Pick the most recent race that has actually happened (date in the past)
       // AND has result rows. Defends against Jolpica pre-stamping future races
       // with status="Finished".
-      const allRaces = lastRaceData?.MRData?.RaceTable?.Races || [];
       const nowTs = Date.now();
-      const completed = allRaces.filter(r => r.Results?.length > 0 && new Date(r.date).getTime() < nowTs);
+      const completed = (allRacesArr || []).filter(r => r.Results?.length > 0 && new Date(r.date).getTime() < nowTs);
       const latestRace = completed.length ? completed[completed.length - 1] : null;
       if (latestRace) setLastRace(latestRace);
       setLastUpdated(new Date());
@@ -6828,7 +6912,7 @@ function PitWallSection() {
   }, [YEAR]);
 
   useEffect(() => { loadData(); }, [loadData]);
-  useAutoRefresh(loadData, 60_000);
+  useAutoRefresh(loadData, usePollingInterval(60_000, 30_000));
 
   const loadNews = useCallback(() => {
     fetch("/api/news")
