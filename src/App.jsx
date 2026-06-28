@@ -3181,8 +3181,15 @@ function ResultsSection() {
               <div className="section-title" style={{ fontSize: "clamp(13px,3vw,18px)", marginBottom: 8 }}>Drivers' <span>Championship</span></div>
               <div className="section-line" />
               {standingsRound && (
-                <div style={{ fontSize: 10, color: "var(--text4)", fontFamily: "Orbitron", letterSpacing: 1, marginBottom: 10, display: "flex", alignItems: "center", gap: 6 }}>
-                  <span>📡</span> DATA AS OF ROUND {standingsRound} · JOLPICA/ERGAST
+                <div style={{ fontSize: 10, color: "var(--text4)", fontFamily: "Orbitron", letterSpacing: 1, marginBottom: 10, display: "flex", flexDirection: "column", gap: 2 }}>
+                  <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+                    <span>📡</span> DATA AS OF ROUND {standingsRound} · JOLPICA/ERGAST
+                  </div>
+                  {parseInt(standingsRound, 10) > getRacesActuallyRun() && (
+                    <div style={{ color: "#FFD700", marginLeft: 16 }}>
+                      ⚠ Jolpica may include rounds not yet run ({getRacesActuallyRun()} of {RACE_CALENDAR_2026.filter(r => !r.cancelled).length} actually completed)
+                    </div>
+                  )}
                 </div>
               )}
               <div style={{ overflowX: "auto", marginBottom: 24 }}>
@@ -3393,8 +3400,15 @@ function LiveStandingsSection() {
               <div className="section-title" style={{ fontSize: "clamp(13px,3vw,20px)", marginBottom: 8 }}>Drivers' <span>Championship</span></div>
               <div className="section-line" />
               {standingsRound && (
-                <div style={{ fontSize: 10, color: "var(--text4)", fontFamily: "Orbitron", letterSpacing: 1, marginBottom: 12, display: "flex", alignItems: "center", gap: 6 }}>
-                  <span>📡</span> DATA AS OF ROUND {standingsRound} · JOLPICA/ERGAST
+                <div style={{ fontSize: 10, color: "var(--text4)", fontFamily: "Orbitron", letterSpacing: 1, marginBottom: 12, display: "flex", flexDirection: "column", gap: 2 }}>
+                  <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+                    <span>📡</span> DATA AS OF ROUND {standingsRound} · JOLPICA/ERGAST
+                  </div>
+                  {parseInt(standingsRound, 10) > getRacesActuallyRun() && (
+                    <div style={{ color: "#FFD700", marginLeft: 16 }}>
+                      ⚠ Jolpica may include rounds not yet run ({getRacesActuallyRun()} of {RACE_CALENDAR_2026.filter(r => !r.cancelled).length} actually completed)
+                    </div>
+                  )}
                 </div>
               )}
               <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
@@ -3431,8 +3445,15 @@ function LiveStandingsSection() {
               <div className="section-title" style={{ fontSize: "clamp(13px,3vw,20px)", marginBottom: 8 }}>Constructors' <span>Championship</span></div>
               <div className="section-line" />
               {standingsRound && (
-                <div style={{ fontSize: 10, color: "var(--text4)", fontFamily: "Orbitron", letterSpacing: 1, marginBottom: 12, display: "flex", alignItems: "center", gap: 6 }}>
-                  <span>📡</span> DATA AS OF ROUND {standingsRound} · JOLPICA/ERGAST
+                <div style={{ fontSize: 10, color: "var(--text4)", fontFamily: "Orbitron", letterSpacing: 1, marginBottom: 12, display: "flex", flexDirection: "column", gap: 2 }}>
+                  <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+                    <span>📡</span> DATA AS OF ROUND {standingsRound} · JOLPICA/ERGAST
+                  </div>
+                  {parseInt(standingsRound, 10) > getRacesActuallyRun() && (
+                    <div style={{ color: "#FFD700", marginLeft: 16 }}>
+                      ⚠ Jolpica may include rounds not yet run ({getRacesActuallyRun()} of {RACE_CALENDAR_2026.filter(r => !r.cancelled).length} actually completed)
+                    </div>
+                  )}
                 </div>
               )}
               <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
@@ -3513,8 +3534,15 @@ function LiveStandingsSection() {
                 })}
               </div>
               {standingsRound && (
-                <div style={{ fontSize: 10, color: "var(--text4)", fontFamily: "Orbitron", letterSpacing: 1, marginTop: 16, display: "flex", alignItems: "center", gap: 6, justifyContent: "center" }}>
-                  <span>📡</span> DATA AS OF ROUND {standingsRound} · COMPUTED FROM DRIVER STANDINGS
+                <div style={{ fontSize: 10, color: "var(--text4)", fontFamily: "Orbitron", letterSpacing: 1, marginTop: 16, display: "flex", flexDirection: "column", gap: 2, alignItems: "center" }}>
+                  <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+                    <span>📡</span> DATA AS OF ROUND {standingsRound} · COMPUTED FROM DRIVER STANDINGS
+                  </div>
+                  {parseInt(standingsRound, 10) > getRacesActuallyRun() && (
+                    <div style={{ color: "#FFD700" }}>
+                      ⚠ Jolpica may include rounds not yet run ({getRacesActuallyRun()} of {RACE_CALENDAR_2026.filter(r => !r.cancelled).length} actually completed)
+                    </div>
+                  )}
                 </div>
               )}
             </div>
@@ -3904,6 +3932,20 @@ const COUNTRY_FLAGS = {
  * lap record, tags, desc) is preserved — only the volatile fields are touched.
  * Returns `true` if anything actually changed so callers can trigger a re-render.
  */
+// Normalize circuit names so "Albert Park Grand Prix Circuit" matches "Albert Park".
+function normalizeCircuit(name) {
+  return (name || "")
+    .toLowerCase()
+    .replace(/grand prix circuit|street circuit|international circuit|autodrome|autódromo|autodromo nazionale di|circuit de|circuit park|city circuit|circuit/gi, "")
+    .replace(/[^a-z0-9]/g, "")
+    .trim();
+}
+
+// Reverse-lookup country from a static row's flag emoji.
+const FLAG_TO_COUNTRY = Object.fromEntries(
+  Object.entries(COUNTRY_FLAGS).map(([country, flag]) => [flag, country])
+);
+
 async function syncRaceCalendarFromAPI() {
   const year = new Date().getFullYear();
   try {
@@ -3911,33 +3953,50 @@ async function syncRaceCalendarFromAPI() {
     const races = data?.MRData?.RaceTable?.Races || [];
     if (races.length === 0) return false;
 
-    const apiByRound = new Map(races.map(r => [parseInt(r.round, 10), r]));
-    const maxApiRound = Math.max(...races.map(r => parseInt(r.round, 10)));
+    // Index API races by normalized circuit name AND by country, so we can
+    // match static rows regardless of round-number drift caused by mid-season
+    // cancellations being renumbered out of the live feed.
+    const apiByCircuit = new Map();
+    const apiByCountry = new Map();
+    races.forEach(r => {
+      const ck = normalizeCircuit(r.Circuit?.circuitName);
+      if (ck) apiByCircuit.set(ck, r);
+      const country = r.Circuit?.Location?.country;
+      if (country && !apiByCountry.has(country)) apiByCountry.set(country, r);
+    });
+
+    const matchedApiRounds = new Set();
+    const now = new Date();
     let changed = false;
 
-    // 1. Update existing entries from the API
+    // 1. Match each static row to an API row by circuit (primary) or country
+    //    (fallback). Update date, name, AND round number from the API.
     RACE_CALENDAR_2026.forEach(race => {
-      const apiRace = apiByRound.get(race.round);
+      const country = FLAG_TO_COUNTRY[race.flag];
+      const apiRace =
+        apiByCircuit.get(normalizeCircuit(race.circuit)) ||
+        (country ? apiByCountry.get(country) : null);
+
       if (apiRace) {
-        // Build the canonical ISO date from API date + time
+        matchedApiRounds.add(parseInt(apiRace.round, 10));
         const apiDate = apiRace.time
           ? `${apiRace.date}T${apiRace.time.replace(/Z?$/, "Z")}`
           : `${apiRace.date}T00:00:00Z`;
-        if (apiDate && apiDate !== race.date) {
-          race.date = apiDate;
+        if (apiDate !== race.date) { race.date = apiDate; changed = true; }
+        const apiRound = parseInt(apiRace.round, 10);
+        if (apiRound && apiRound !== race.round) { race.round = apiRound; changed = true; }
+        if (apiRace.raceName && apiRace.raceName !== race.name && !race.cancelled) {
+          if (!/TBD|TBC/i.test(apiRace.raceName)) { race.name = apiRace.raceName; changed = true; }
+        }
+        // API has this row → cancellation (if any) was reversed
+        if (race.cancelled) {
+          race.cancelled = false;
+          race.tags = (race.tags || []).filter(t => t !== "CANCELLED");
           changed = true;
         }
-        // Trust the API name if the static one differs (e.g. sponsor changes)
-        if (apiRace.raceName && apiRace.raceName !== race.name && !race.cancelled) {
-          // Only adopt if API name isn't a generic placeholder
-          if (!/TBD|TBC/i.test(apiRace.raceName)) {
-            race.name = apiRace.raceName;
-            changed = true;
-          }
-        }
-      } else if (!race.cancelled && race.round < maxApiRound) {
-        // API has later rounds but skipped this one → it was dropped from the
-        // calendar mid-season. Mark cancelled but keep description intact.
+      } else if (!race.cancelled && new Date(race.date) < now) {
+        // Past-dated static row that the API has no record of → it was
+        // dropped before running. Mark cancelled.
         race.cancelled = true;
         if (!race.tags?.includes("CANCELLED")) {
           race.tags = [...(race.tags || []), "CANCELLED"];
@@ -3946,10 +4005,10 @@ async function syncRaceCalendarFromAPI() {
       }
     });
 
-    // 2. Append any rounds the API has that aren't in the static seed
+    // 2. Append any rounds the API has that no static row matched.
     races.forEach(apiRace => {
       const round = parseInt(apiRace.round, 10);
-      if (RACE_CALENDAR_2026.find(r => r.round === round)) return;
+      if (matchedApiRounds.has(round)) return;
       const country = apiRace.Circuit?.Location?.country;
       const apiDate = apiRace.time
         ? `${apiRace.date}T${apiRace.time.replace(/Z?$/, "Z")}`
@@ -3975,9 +4034,15 @@ async function syncRaceCalendarFromAPI() {
     }
     return changed;
   } catch {
-    // Silent fallback — static calendar already contains a usable schedule
     return false;
   }
+}
+
+// Count rounds whose date is in the past — used by freshness badges to detect
+// when Jolpica reports more "completed" rounds than have actually been run.
+function getRacesActuallyRun() {
+  const now = Date.now();
+  return RACE_CALENDAR_2026.filter(r => !r.cancelled && new Date(r.date).getTime() < now).length;
 }
 
 // ─── QUIZ DATA ────────────────────────────────────────────────────────────────
@@ -6716,12 +6781,14 @@ function PitWallSection() {
 
   const loadData = useCallback(async () => {
     try {
-      // Use /last/results.json to always get the most recent race Jolpica has,
-      // avoiding the pagination issue of results.json (paginates by result row, not race)
+      // /last/results.json returns the latest *scheduled* round even when it
+      // hasn't been run yet (Jolpica sometimes pre-stamps future races as
+      // "Finished"). Use full results listing instead and pick the most recent
+      // race whose date is in the past — avoids showing a future podium.
       const [drvData, ctorData, lastRaceData] = await Promise.all([
         jolpicaGet(`/${YEAR}/driverStandings.json`),
         jolpicaGet(`/${YEAR}/constructorStandings.json`),
-        jolpicaGet(`/${YEAR}/last/results.json`),
+        jolpicaGet(`/${YEAR}/results.json?limit=1000`),
       ]);
       const drvList = drvData?.MRData?.StandingsTable?.StandingsLists?.[0]?.DriverStandings || [];
       const ctorList = ctorData?.MRData?.StandingsTable?.StandingsLists?.[0]?.ConstructorStandings || [];
@@ -6747,8 +6814,13 @@ function PitWallSection() {
         wins: parseInt(c.wins),
       })));
 
-      // /last/results.json returns the single most recent race as Races[0]
-      const latestRace = lastRaceData?.MRData?.RaceTable?.Races?.[0] || null;
+      // Pick the most recent race that has actually happened (date in the past)
+      // AND has result rows. Defends against Jolpica pre-stamping future races
+      // with status="Finished".
+      const allRaces = lastRaceData?.MRData?.RaceTable?.Races || [];
+      const nowTs = Date.now();
+      const completed = allRaces.filter(r => r.Results?.length > 0 && new Date(r.date).getTime() < nowTs);
+      const latestRace = completed.length ? completed[completed.length - 1] : null;
       if (latestRace) setLastRace(latestRace);
       setLastUpdated(new Date());
     } catch { /* keep existing state */ }
